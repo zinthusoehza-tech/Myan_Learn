@@ -41,11 +41,13 @@ module.exports = async (req, res) => {
 
     // ---------------- SETTINGS ----------------
     if (action === 'getSettings') {
-      const settings = await settingsCol.findOne({ key: 'paymentInfo' }) || { kpayPhone: '', kpayQr: '', wavePhone: '', waveQr: '' };
+      const settings = await settingsCol.findOne({ key: 'globalSettings' }) || { 
+        kpayPhone: '', kpayQr: '', wavePhone: '', waveQr: '', loginBg: '' 
+      };
       return send(res, { success: true, settings });
     }
     if (action === 'adminSaveSettings') {
-      await settingsCol.updateOne({ key: 'paymentInfo' }, { $set: body.settings }, { upsert: true });
+      await settingsCol.updateOne({ key: 'globalSettings' }, { $set: body.settings }, { upsert: true });
       return send(res, { success: true });
     }
 
@@ -58,7 +60,7 @@ module.exports = async (req, res) => {
       const newUser = {
         username: username.toLowerCase(), passwordHash: hashPassword(password), displayName: username,
         role: role === 'teacher' ? 'student' : role, isVerifiedStudent: false, isApprovedTeacher: false, isAdmin: false,
-        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', bio: '', specialty: '', rating: 0, ratingCount: 0, createdAt: nowIso()
+        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', coverImage: '', bio: '', specialty: '', rating: 0, ratingCount: 0, createdAt: nowIso()
       };
       await usersCol.insertOne(newUser);
       if (role === 'teacher') await requestsCol.insertOne({ username: newUser.username, type: 'teacher', status: 'pending', createdAt: nowIso() });
@@ -78,8 +80,8 @@ module.exports = async (req, res) => {
     }
 
     if (action === 'updateProfile') {
-      const { username, displayName, bio, profileImage, specialty } = body;
-      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, specialty } });
+      const { username, displayName, bio, profileImage, coverImage, specialty } = body;
+      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, coverImage, specialty } });
       const updatedUser = await usersCol.findOne({ username: username.toLowerCase() });
       const { passwordHash, _id, ...safeUser } = updatedUser;
       return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
@@ -120,11 +122,11 @@ module.exports = async (req, res) => {
 
     // ---------------- COURSES ----------------
     if (action === 'createCourse') {
-      const { username, title, description, zoomLink, pdfLink, coverImage, isFree, price } = body;
+      const { username, title, description, lockedDescription, zoomLink, pdfLink, coverImage, isFree, price } = body;
       const teacher = await usersCol.findOne({ username: username.toLowerCase() });
       await coursesCol.insertOne({
         teacherId: teacher.username, teacherName: teacher.displayName, teacherImage: teacher.profileImage,
-        title, description, zoomLink, pdfLink, coverImage, isFree, price: Number(price) || 0, createdAt: nowIso()
+        title, description, lockedDescription, zoomLink, pdfLink, coverImage, isFree, price: Number(price) || 0, createdAt: nowIso()
       });
       return send(res, { success: true });
     }
@@ -167,7 +169,7 @@ module.exports = async (req, res) => {
       return send(res, { success: true, messages: normalizeDocs(msgs) });
     }
     if (action === 'deleteMessages') {
-      const { ids } = body; // Array of message IDs
+      const { ids } = body;
       for(const id of ids) {
         await chatsCol.deleteOne({ _id: toObjectId(id) });
       }
