@@ -1,0 +1,11 @@
+{
+  "name": "myanlearn-api",
+  "version": "1.0.0",
+  "description": "Myan Learn Backend",
+  "main": "api/index.js",
+  "dependencies": {
+    "mongodb": "^6.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "crypto-js": "^4.2.0"
+  }
+}
