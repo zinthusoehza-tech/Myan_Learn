@@ -60,7 +60,8 @@ module.exports = async (req, res) => {
       const newUser = {
         username: username.toLowerCase(), passwordHash: hashPassword(password), displayName: username,
         role: role === 'teacher' ? 'student' : role, isVerifiedStudent: false, isApprovedTeacher: false, isAdmin: false,
-        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', coverImage: '', bio: '', specialty: '', rating: 0, ratingCount: 0, createdAt: nowIso()
+        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', coverImage: '', bio: '', specialty: '', 
+        experience: '', studentsCount: '', rating: 0, ratingCount: 0, createdAt: nowIso()
       };
       await usersCol.insertOne(newUser);
       if (role === 'teacher') await requestsCol.insertOne({ username: newUser.username, type: 'teacher', status: 'pending', createdAt: nowIso() });
@@ -80,8 +81,8 @@ module.exports = async (req, res) => {
     }
 
     if (action === 'updateProfile') {
-      const { username, displayName, bio, profileImage, coverImage, specialty } = body;
-      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, coverImage, specialty } });
+      const { username, displayName, bio, profileImage, coverImage, specialty, experience, studentsCount } = body;
+      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, coverImage, specialty, experience, studentsCount } });
       const updatedUser = await usersCol.findOne({ username: username.toLowerCase() });
       const { passwordHash, _id, ...safeUser } = updatedUser;
       return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
