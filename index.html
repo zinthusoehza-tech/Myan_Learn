@@ -9,13 +9,13 @@
   
   :root {
     --primary: #4F9CF9; --primary-hover: #3B82F6;
-    --bg: #F0F4F8; --surface: rgba(255, 255, 255, 0.75); --surface-solid: #FFFFFF;
+    --bg: #F0F4F8; --surface: rgba(255, 255, 255, 0.85); --surface-solid: #FFFFFF;
     --text: #1E293B; --text-muted: #64748B; --border: rgba(255, 255, 255, 0.8);
     --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
     --radius: 24px;
   }
   body.dark {
-    --bg: #0F172A; --surface: rgba(30, 41, 59, 0.7); --surface-solid: #1E293B;
+    --bg: #0F172A; --surface: rgba(30, 41, 59, 0.85); --surface-solid: #1E293B;
     --text: #F8FAFC; --text-muted: #94A3B8; --border: rgba(255, 255, 255, 0.1);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
   }
@@ -34,12 +34,10 @@
   .input-group { margin-bottom: 1rem; position: relative; }
   .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 600; }
   .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 0.9rem; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-solid); color: var(--text); outline: none; font-size: 0.95rem; transition: 0.2s; }
-  
-  /* Beautiful Password Eye */
   .eye-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
   .eye-icon svg { width: 20px; height: 20px; }
 
-  /* Colorful Loading Overlay */
+  /* Loading */
   #loadingOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: 0.3s; }
   #loadingOverlay.show { display: flex; opacity: 1; }
   .loader-bar-container { width: 250px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
@@ -47,8 +45,9 @@
   @keyframes gradientMove { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
 
   /* Layout */
-  #authScreen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; }
-  .auth-box { width: 100%; max-width: 420px; padding: 2.5rem 2rem; border-radius: 32px; text-align: center; position: relative; }
+  #authScreen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; background-size: cover; background-position: center; transition: 0.5s; }
+  .auth-box { width: 100%; max-width: 420px; padding: 2.5rem 2rem; border-radius: 32px; text-align: center; position: relative; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); }
+  body.dark .auth-box { background: rgba(30,41,59,0.9); }
   
   #app { display: none; flex-direction: column; max-width: 1100px; margin: 0 auto; padding-bottom: 80px; }
   @media (min-width: 768px) { #app { flex-direction: row; padding-bottom: 0; gap: 24px; padding-top: 24px; } .main-content { flex: 1; max-width: 700px; } .side-nav { width: 260px; height: calc(100vh - 48px); position: sticky; top: 24px; border-radius: var(--radius); padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; } }
@@ -60,7 +59,7 @@
   .nav-item.active { color: var(--primary); background: rgba(79, 156, 249, 0.1); }
   @media (min-width: 768px) { .nav-item { flex-direction: row; justify-content: flex-start; padding: 0.8rem 1rem; font-size: 1rem; gap: 12px; } }
 
-  /* Cards & Feed */
+  /* Cards */
   .header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: sticky; top: 0; z-index: 40; margin: 1rem; border-radius: var(--radius); }
   @media (min-width: 768px) { .header { margin: 0 0 1rem 0; } }
   
@@ -84,19 +83,41 @@
   .coin-pill svg { width: 18px; height: 18px; stroke-width: 2.5; }
 
   /* Modals */
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: 0.3s; }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s; }
   .modal.open { opacity: 1; pointer-events: auto; }
-  .modal-content { background: var(--surface-solid); width: 90%; max-width: 450px; padding: 1.5rem; border-radius: 28px; max-height: 85vh; overflow-y: auto; transform: translateY(20px); transition: 0.3s; }
+  .modal-content { background: var(--surface-solid); width: 90%; max-width: 450px; padding: 1.5rem; border-radius: 28px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: 0.3s; }
   .modal.open .modal-content { transform: translateY(0); }
+  
+  /* Confirm Dialog Highest Z-Index */
+  #confirmModal { z-index: 10000; }
+  #confirmModal .modal-content { max-width: 340px; text-align: center; }
+
+  /* Teacher Profile Custom Design */
+  #teacherProfileModal .modal-content { padding: 0; overflow: hidden; max-width: 500px; }
+  .tp-hero { display: flex; height: 280px; background: #E0F2FE; position: relative; }
+  body.dark .tp-hero { background: #1E3A8A; }
+  .tp-image { width: 50%; height: 100%; object-fit: cover; object-position: top center; }
+  .tp-details { width: 50%; padding: 1.5rem; display: flex; flex-direction: column; justify-content: flex-end; }
+  .tp-name { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.2rem; }
+  .tp-specialty { font-size: 0.9rem; color: var(--primary); font-weight: 700; margin-bottom: 0.5rem; }
+  .tp-rating { display: flex; align-items: center; gap: 4px; font-weight: 700; color: #F59E0B; font-size: 0.9rem; }
+  .tp-stats { display: flex; justify-content: space-around; padding: 1rem 0; border-bottom: 1px solid var(--border); margin: 0 1rem; }
+  .tp-stat { text-align: center; }
+  .tp-stat b { display: block; font-size: 1.1rem; }
+  .tp-stat span { font-size: 0.75rem; color: var(--text-muted); }
+  .tp-body { padding: 1rem; }
+  
+  /* Read More */
+  .desc-text { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; transition: 0.3s; }
+  .desc-text.expanded { -webkit-line-clamp: unset; }
+  .read-more-btn { color: var(--primary); font-weight: 700; font-size: 0.85rem; cursor: pointer; margin-top: 5px; display: inline-block; }
 
   /* Chat */
   .chat-box { display: flex; flex-direction: column; height: 400px; overflow-y: auto; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 20px; margin-bottom: 1rem; }
-  .chat-msg { max-width: 80%; padding: 0.8rem 1rem; border-radius: 20px; margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.4; position: relative; word-break: break-word; cursor: pointer; transition: 0.2s; }
+  .chat-msg { max-width: 80%; padding: 0.8rem 1rem; border-radius: 20px; margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.4; position: relative; word-break: break-word; cursor: pointer; transition: 0.2s; user-select: none; }
   .chat-msg.mine { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 4px; }
   .chat-msg.theirs { align-self: flex-start; background: var(--surface-solid); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-  .chat-msg.selected { opacity: 0.7; border: 2px solid var(--primary); }
-  
-  /* Chat Progress Bar */
+  .chat-msg.selected { opacity: 0.7; border: 2px solid #EF4444; }
   .msg-progress { position: absolute; bottom: 0; left: 0; height: 3px; background: rgba(255,255,255,0.8); border-radius: 0 0 20px 20px; width: 0%; transition: width 0.3s; }
   .chat-msg.mine .msg-progress { background: #fff; }
 
@@ -238,12 +259,16 @@
       <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;">သင်ခန်းစာအသစ်တင်မည်</h2>
       <div class="post-card glass" style="margin: 0 1rem;">
         <div class="input-group"><label>ခေါင်းစဉ် (Title)</label><input id="cTitle" placeholder="e.g. Basic English Grammar" /></div>
-        <div class="input-group"><label>ရှင်းလင်းချက် (Description)</label><textarea id="cDesc" rows="3" placeholder="သင်ခန်းစာအကြောင်း အသေးစိတ်..."></textarea></div>
+        <div class="input-group"><label>ရှင်းလင်းချက် (Free Description)</label><textarea id="cDesc" rows="2" placeholder="သင်ခန်းစာအကြောင်း အကျဉ်းချုပ်..."></textarea></div>
+        <div class="input-group"><label>ဝယ်မှဖတ်ရမည့် ရှင်းလင်းချက် (Paid Description)</label><textarea id="cLockedDesc" rows="3" placeholder="Coins ပေးမှ ဖတ်ရမည့် အသေးစိတ်..."></textarea></div>
         <div class="input-group"><label>Zoom Link</label><input id="cZoom" placeholder="https://zoom.us/j/..." /></div>
-        <div class="input-group"><label>PDF File Link</label><input id="cPdf" placeholder="https://drive.google.com/..." /></div>
+        <div class="input-group"><label>PDF File Link (Drive)</label><input id="cPdf" placeholder="https://drive.google.com/..." /></div>
         <div class="input-group">
-          <label>သင်ခန်းစာ မျက်နှာဖုံးပုံ (Optional)</label>
-          <input type="file" id="cImgInput" accept="image/*" onchange="handleCourseImage(this)" style="padding:0.5rem;background:transparent;border:1px dashed var(--border);" />
+          <label>သင်ခန်းစာ မျက်နှာဖုံးပုံ</label>
+          <div style="display:flex;gap:10px;">
+             <input type="text" id="cImgUrl" placeholder="Google Drive Link ထည့်ပါ..." style="flex:1;" />
+             <label class="btn btn-glass" style="padding:0.5rem 1rem;">File<input type="file" id="cImgInput" accept="image/*" style="display:none;" onchange="handleCourseImage(this)" /></label>
+          </div>
           <span id="cImgStatus" style="font-size:0.8rem;color:var(--text-muted);"></span>
         </div>
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:1rem;">
@@ -296,14 +321,46 @@
   </div>
 </div>
 
-<!-- TEACHER DETAIL MODAL -->
-<div class="modal" id="teacherModal">
+<!-- TEACHER PROFILE REDESIGNED MODAL -->
+<div class="modal" id="teacherProfileModal">
   <div class="modal-content">
-    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-      <h3 style="font-weight:800;" data-i18n="teacherprofile">Teacher Profile</h3>
-      <span onclick="closeModal('teacherModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
+    <div style="position:absolute; top:10px; right:10px; z-index:10; background:rgba(0,0,0,0.3); border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="closeModal('teacherProfileModal')">
+      <svg class="icon" viewBox="0 0 24 24" style="color:white;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </div>
-    <div id="tProfileContent"></div>
+    <div class="tp-hero">
+      <img id="tpImg" class="tp-image" src="" />
+      <div class="tp-details">
+        <h2 id="tpName" class="tp-name">Teacher Name</h2>
+        <p id="tpSpecialty" class="tp-specialty">Specialty</p>
+        <div class="tp-rating">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span id="tpRating">4.8</span> <span style="color:var(--text-muted);font-size:0.8rem;font-weight:normal;">(120 Reviews)</span>
+        </div>
+      </div>
+    </div>
+    <div class="tp-stats">
+      <div class="tp-stat"><b id="tpExp">5 Yrs</b><span>Experience</span></div>
+      <div class="tp-stat"><b id="tpStudents">100+</b><span>Students</span></div>
+      <div class="tp-stat"><b id="tpCourses">12</b><span>Courses</span></div>
+    </div>
+    <div class="tp-body">
+      <div style="display:flex;gap:10px;margin-bottom:1rem;">
+        <button class="btn" onclick="openChatWithFromProfile()" style="flex:1;border-radius:30px;">Message</button>
+        <button class="btn btn-glass" onclick="showRatingStars()" style="flex:1;border-radius:30px;">Rate</button>
+      </div>
+      <div id="ratingArea" style="display:none;text-align:center;margin-bottom:1rem;">
+        <p style="font-size:0.9rem;font-weight:700;margin-bottom:5px;">ဆရာ့ကို Rating ပေးပါ</p>
+        <div class="star-rating" id="starRating">
+          <svg onclick="submitRating(1)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg onclick="submitRating(2)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg onclick="submitRating(3)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg onclick="submitRating(4)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg onclick="submitRating(5)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+      </div>
+      <h4 style="margin-top:1rem;margin-bottom:0.5rem;font-weight:800;">Courses</h4>
+      <div id="tpCourseList" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
   </div>
 </div>
 
@@ -314,22 +371,54 @@
       <h3 style="font-weight:800;" id="cTitleDisplay">Course Title</h3>
       <span onclick="closeModal('courseModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
     </div>
-    <p id="cDescDisplay" style="font-size:0.95rem;color:var(--text-muted);margin-bottom:1rem;white-space:pre-wrap;"></p>
-    <div id="cActionArea"></div>
+    <img id="cImgDisplay" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:12px; margin-bottom:1rem; display:none;" />
+    <p id="cDescDisplay" class="desc-text"></p>
+    <span class="read-more-btn" onclick="toggleReadMore(this)">ဆက်ဖတ်ရန်</span>
+    
+    <div id="cLockedArea" style="margin-top:1rem; padding:1rem; background:rgba(0,0,0,0.05); border-radius:12px; text-align:center;">
+      <!-- Filled by JS -->
+    </div>
+    
+    <div id="cActionArea" style="margin-top:1rem;"></div>
   </div>
 </div>
 
-<!-- COMMENT MODAL -->
-<div class="modal" id="commentsModal">
+<!-- CONFIRM MODAL -->
+<div class="modal" id="confirmModal">
   <div class="modal-content">
-    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-      <h3 style="font-weight:800;">Comments</h3>
-      <span onclick="closeModal('commentsModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
+    <div style="width:60px;height:60px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+      <svg class="icon icon-lg" viewBox="0 0 24 24" style="color:#EF4444;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     </div>
-    <div id="mCommentsList" style="max-height:300px;overflow-y:auto;margin-bottom:1rem;"></div>
+    <h3 id="confirmTitle" style="margin-bottom:0.5rem;font-weight:800;text-align:center;">Are you sure?</h3>
+    <p id="confirmMsg" style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;text-align:center;">ဒီလုပ်ဆောင်ချက်ကို ပြန်ပြင်၍ မရနိုင်ပါ။</p>
     <div style="display:flex;gap:10px;">
-      <input id="mCommentInput" placeholder="မန့်ချင်တာရေးပါ..." style="flex:1;padding:0.8rem;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;" />
-      <button class="btn" onclick="submitComment()" style="padding:0.8rem 1.2rem;border-radius:20px;">Send</button>
+      <button class="btn btn-glass" style="flex:1;" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn" style="flex:1;background:#EF4444;" id="confirmYesBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT MODAL -->
+<div class="modal" id="chatModal">
+  <div class="modal-content" style="display:flex;flex-direction:column;height:80vh;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;">
+      <h3 id="chatWithName" style="font-weight:800;font-size:1.1rem;">User</h3>
+      <div style="display:flex;gap:10px;">
+        <span id="chatSelBtn" onclick="toggleChatSelectMode()" style="cursor:pointer;color:var(--primary);font-weight:600;font-size:0.9rem;display:none;">Select</span>
+        <span onclick="closeModal('chatModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
+      </div>
+    </div>
+    <div class="chat-box" id="chatBox"></div>
+    <div id="chatSelectBar" style="display:none;justify-content:space-between;align-items:center;background:var(--bg);padding:10px;border-radius:12px;margin-bottom:10px;">
+      <span id="selCount">0 selected</span>
+      <div>
+        <button class="btn btn-outline" onclick="toggleChatSelectMode()" style="padding:0.4rem 0.8rem;font-size:0.8rem;">Cancel</button>
+        <button class="btn" onclick="deleteSelectedChats()" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#EF4444;">Delete</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;" id="chatInputArea">
+      <input id="chatInput" placeholder="Message..." style="flex:1;padding:0.8rem;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;" onkeypress="if(event.key==='Enter') sendChat()" />
+      <button class="btn" onclick="sendChat()" style="padding:0.8rem 1.2rem;border-radius:20px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
     </div>
   </div>
 </div>
@@ -377,54 +466,15 @@
     <div style="text-align:center;margin-bottom:1rem;">
       <label for="epImgInput" style="cursor:pointer;">
         <div class="avatar avatar-lg" id="epAvatar" style="margin:0 auto;">U</div>
-        <div style="font-size:0.8rem;color:var(--primary);margin-top:0.5rem;font-weight:600;">Change Photo</div>
+        <div style="font-size:0.8rem;color:var(--primary);margin-top:0.5rem;font-weight:600;">Change Photo (File)</div>
       </label>
       <input type="file" id="epImgInput" accept="image/*" style="display:none;" onchange="handleProfileImage(this)" />
+      <input type="text" id="epImgUrl" placeholder="သို့မဟုတ် Drive Link ထည့်ပါ" style="margin-top:10px;width:100%;padding:0.5rem;border-radius:8px;border:1px solid var(--border);" />
     </div>
     <div class="input-group"><label>Display Name</label><input id="epName" /></div>
     <div class="input-group"><label>Bio</label><textarea id="epBio" rows="2"></textarea></div>
     <div class="input-group"><label>Inbox / Specialty (e.g. Math, English)</label><input id="epSpecialty" placeholder="သင်ကြားသော ဘာသာရပ်..." /></div>
     <button class="btn" style="width:100%;" onclick="saveProfile()">Save Changes</button>
-  </div>
-</div>
-
-<!-- CHAT MODAL -->
-<div class="modal" id="chatModal">
-  <div class="modal-content" style="display:flex;flex-direction:column;height:80vh;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;">
-      <h3 id="chatWithName" style="font-weight:800;font-size:1.1rem;">User</h3>
-      <div style="display:flex;gap:10px;">
-        <span id="chatSelBtn" onclick="toggleChatSelectMode()" style="cursor:pointer;color:var(--primary);font-weight:600;font-size:0.9rem;display:none;">Select</span>
-        <span onclick="closeModal('chatModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
-      </div>
-    </div>
-    <div class="chat-box" id="chatBox"></div>
-    <div id="chatSelectBar" style="display:none;justify-content:space-between;align-items:center;background:var(--bg);padding:10px;border-radius:12px;margin-bottom:10px;">
-      <span id="selCount">0 selected</span>
-      <div>
-        <button class="btn btn-outline" onclick="toggleChatSelectMode()" style="padding:0.4rem 0.8rem;font-size:0.8rem;">Cancel</button>
-        <button class="btn" onclick="deleteSelectedChats()" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#EF4444;">Delete</button>
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;" id="chatInputArea">
-      <input id="chatInput" placeholder="Message..." style="flex:1;padding:0.8rem;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;" onkeypress="if(event.key==='Enter') sendChat()" />
-      <button class="btn" onclick="sendChat()" style="padding:0.8rem 1.2rem;border-radius:20px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-    </div>
-  </div>
-</div>
-
-<!-- CONFIRM DIALOG -->
-<div class="modal" id="confirmModal">
-  <div class="modal-content" style="text-align:center;max-width:320px;">
-    <div style="width:60px;height:60px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-      <svg class="icon icon-lg" viewBox="0 0 24 24" style="color:#EF4444;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    </div>
-    <h3 style="margin-bottom:0.5rem;font-weight:800;">Are you sure?</h3>
-    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">ဒီလုပ်ဆောင်ချက်ကို ပြန်ပြင်၍ မရနိုင်ပါ။</p>
-    <div style="display:flex;gap:10px;">
-      <button class="btn btn-glass" style="flex:1;" onclick="closeModal('confirmModal')">Cancel</button>
-      <button class="btn" style="flex:1;background:#EF4444;" id="confirmYesBtn">Delete</button>
-    </div>
   </div>
 </div>
 
@@ -451,9 +501,9 @@
 <script>
   // --- TRANSLATIONS ---
   const i18n = {
-    en: { username: "Username", password: "Password", signin: "Sign In", noacc: "No account?", register: "Register", haveacc: "Have an account?", login: "Login", student: "Student", teacher: "Teacher", createacc: "Create Account", home: "Home", teachers: "Teachers", messages: "Messages", profile: "Profile", theme: "Theme", logout: "Log Out", whatsup: "What's on your mind?", addphoto: "Add Photo", postbtn: "Post", editprofile: "Edit Profile", myposts: "My Posts", shop: "Coin Shop", teacherprofile: "Teacher Profile", paytitle: "Payment", submitpay: "I've Paid (Submit)" },
-    mm: { username: "အသုံးပြုသူအမည်", password: "စကားဝှက်", signin: "ဝင်ရောက်မည်", noacc: "အကောင့်မရှိဘူးလား?", register: "အကောင့်ဖွင့်မည်", haveacc: "အကောင့်ရှိပြီးသားလား?", login: "ဝင်ရောက်မည်", student: "ကျောင်းသား", teacher: "ဆရာ/ဆရာမ", createacc: "အကောင့်ဖွင့်မည်", home: "ပင်မ", teachers: "ဆရာများ", messages: "စာတိုများ", profile: "ကိုယ်ရေးအချက်အလက်", theme: "အရောင်", logout: "ထွက်မည်", whatsup: "ဘာတွေမျှဝေချင်လဲ?", addphoto: "ပုံထည့်", postbtn: "တင်မည်", editprofile: "ပြင်ဆင်မည်", myposts: "ကျွန်ုပ်၏ ပို့စ်များ", shop: "ရွှေစင်ဆိုင်", teacherprofile: "ဆရာ၏ အချက်အလက်", paytitle: "ငွေပေးချေမှု", submitpay: "ငွေလွှဲပြီးပါပြီ (Submit)" },
-    jp: { username: "ユーザー名", password: "パスワード", signin: "サインイン", noacc: "アカウントをお持ちでないですか？", register: "登録", haveacc: "すでにアカウントをお持ちですか？", login: "ログイン", student: "学生", teacher: "先生", createacc: "アカウント作成", home: "ホーム", teachers: "先生", messages: "メッセージ", profile: "プロフィール", theme: "テーマ", logout: "ログアウト", whatsup: "何を共有しますか？", addphoto: "写真を追加", postbtn: "投稿", editprofile: "プロフィール編集", myposts: "私の投稿", shop: "コインショップ", teacherprofile: "先生のプロフィール", paytitle: "支払い", submitpay: "支払いました（送信）" }
+    en: { username: "Username", password: "Password", signin: "Sign In", noacc: "No account?", register: "Register", haveacc: "Have an account?", login: "Login", student: "Student", teacher: "Teacher", createacc: "Create Account", home: "Home", teachers: "Teachers", messages: "Messages", profile: "Profile", theme: "Theme", logout: "Log Out", whatsup: "What's on your mind?", addphoto: "Add Photo", postbtn: "Post", editprofile: "Edit Profile", myposts: "My Posts", shop: "Coin Shop", teacherprofile: "Teacher Profile", paytitle: "Payment", submitpay: "I've Paid (Submit)", viewbtn: "View", readmore: "Read More", readless: "Read Less", unlock: "Unlock", buyconfirm: "Are you sure you want to buy?", buyyes: "Yes, Buy" },
+    mm: { username: "အသုံးပြုသူအမည်", password: "စကားဝှက်", signin: "ဝင်ရောက်မည်", noacc: "အကောင့်မရှိဘူးလား?", register: "အကောင့်ဖွင့်မည်", haveacc: "အကောင့်ရှိပြီးသားလား?", login: "ဝင်ရောက်မည်", student: "ကျောင်းသား", teacher: "ဆရာ/ဆရာမ", createacc: "အကောင့်ဖွင့်မည်", home: "ပင်မ", teachers: "ဆရာများ", messages: "စာတိုများ", profile: "ကိုယ်ရေးအချက်အလက်", theme: "အရောင်", logout: "ထွက်မည်", whatsup: "ဘာတွေမျှဝေချင်လဲ?", addphoto: "ပုံထည့်", postbtn: "တင်မည်", editprofile: "ပြင်ဆင်မည်", myposts: "ကျွန်ုပ်၏ ပို့စ်များ", shop: "ရွှေစင်ဆိုင်", teacherprofile: "ဆရာ၏ အချက်အလက်", paytitle: "ငွေပေးချေမှု", submitpay: "ငွေလွှဲပြီးပါပြီ (Submit)", viewbtn: "ကြည့်မည်", readmore: "ဆက်ဖတ်ရန်", readless: "လျှော့ပြရန်", unlock: "ဖွင့်မည်", buyconfirm: "သေချာပြီလား? Coins ဖြင့် ဝယ်ယူမှာလား?", buyyes: "ဝယ်မည်" },
+    jp: { username: "ユーザー名", password: "パスワード", signin: "サインイン", noacc: "アカウントをお持ちでないですか？", register: "登録", haveacc: "すでにアカウントをお持ちですか？", login: "ログイン", student: "学生", teacher: "先生", createacc: "アカウント作成", home: "ホーム", teachers: "先生", messages: "メッセージ", profile: "プロフィール", theme: "テーマ", logout: "ログアウト", whatsup: "何を共有しますか？", addphoto: "写真を追加", postbtn: "投稿", editprofile: "プロフィール編集", myposts: "私の投稿", shop: "コインショップ", teacherprofile: "先生のプロフィール", paytitle: "支払い", submitpay: "支払いました（送信）", viewbtn: "表示", readmore: "続きを読む", readless: "閉じる", unlock: "ロック解除", buyconfirm: "購入してもよろしいですか？", buyyes: "購入する" }
   };
   let curLang = localStorage.getItem('ml_lang') || 'mm';
 
@@ -465,20 +515,9 @@
         else el.innerText = i18n[curLang][key];
       }
     });
-    const cl = document.getElementById('curLang');
-    if(cl) cl.innerText = curLang.toUpperCase();
-    const cld = document.getElementById('curLangDesk');
-    if(cld) cld.innerText = curLang.toUpperCase();
-    const clm = document.getElementById('curLangMobile');
-    if(clm) clm.innerText = curLang.toUpperCase();
+    ['curLang', 'curLangDesk', 'curLangMobile'].forEach(id => { if($(id)) $(id).innerText = curLang.toUpperCase(); });
   }
-  function toggleLang() {
-    if(curLang === 'mm') curLang = 'en';
-    else if(curLang === 'en') curLang = 'jp';
-    else curLang = 'mm';
-    localStorage.setItem('ml_lang', curLang);
-    applyLang();
-  }
+  function toggleLang() { curLang = curLang === 'mm' ? 'en' : curLang === 'en' ? 'jp' : 'mm'; localStorage.setItem('ml_lang', curLang); applyLang(); }
 
   // --- CONFIG & STATE ---
   const API_URL = '/api/index.js';
@@ -497,7 +536,11 @@
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return s ? String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) : ''; }
-  function imgUrl(u) { if(!u) return ''; return u; }
+  function imgUrl(u) {
+    if(!u) return '';
+    if(u.includes('drive.google.com/file/d/')) return `https://lh3.googleusercontent.com/d/${u.split('/d/')[1].split('/')[0]}=w1000`;
+    return u;
+  }
   
   async function api(action, body = {}) {
     body.action = action;
@@ -537,18 +580,15 @@
     if(icon) icon.innerHTML = isDark ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>' : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
   }
 
-  // ADMIN LOGIN TRIGGER (Hold Logo)
+  // ADMIN LOGIN TRIGGER
   let holdTimer, holdStart;
   const logo = $('mainLogo');
   function startHold(e) {
     if(e.type === 'touchstart') e.preventDefault();
     holdStart = Date.now();
     holdTimer = setInterval(() => {
-      const pct = Math.min(100, ((Date.now() - holdStart) / 3000) * 100); // 3 seconds hold
-      if (pct >= 100) {
-        clearInterval(holdTimer);
-        $('adminLoginModal').classList.add('open');
-      }
+      const pct = Math.min(100, ((Date.now() - holdStart) / 3000) * 100);
+      if (pct >= 100) { clearInterval(holdTimer); $('adminLoginModal').classList.add('open'); }
     }, 100);
   }
   logo.addEventListener('mousedown', startHold); logo.addEventListener('touchstart', startHold, {passive:false});
@@ -600,6 +640,12 @@
     State.user = r.user; State.feed = r.feed;
     const tr = await api('getTeachers'); State.teachers = tr.teachers;
     const sr = await api('getSettings'); State.settings = sr.settings || {};
+    
+    if (State.settings.loginBg) {
+      $('authScreen').style.backgroundImage = `url(${imgUrl(State.settings.loginBg)})`;
+    } else {
+      $('authScreen').style.backgroundImage = 'none';
+    }
     hideLoading();
     
     const avHtml = State.user.profileImage ? `<img src="${imgUrl(State.user.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : State.user.displayName.charAt(0);
@@ -651,9 +697,6 @@
           <div class="like-btn" id="like-btn-${p.id}" onclick="toggleLike('${p.id}')" style="color:${p.hasLiked ? '#EF4444' : 'inherit'};">
             ${p.hasLiked ? ICONS.heartFill : ICONS.heart} <span id="like-count-${p.id}">${p.likeCount}</span>
           </div>
-          <div onclick="openComments('${p.id}')" style="cursor:pointer;display:flex;align-items:center;gap:6px;">
-            ${ICONS.comment} ${p.commentCount}
-          </div>
         </div>
       </div>
     `).join('');
@@ -663,24 +706,24 @@
     const c = $('teacherList');
     if (!State.teachers.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-muted);">ဆရာ/ဆရာမ မရှိသေးပါ</p>'; return; }
     c.innerHTML = State.teachers.map(t => `
-      <div class="teacher-card glass" onclick="openTeacher('${t.username}')">
+      <div class="teacher-card glass" style="margin: 0 1rem 1rem 1rem;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;">
           <div class="avatar avatar-lg">
             ${t.profileImage ? `<img src="${imgUrl(t.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : t.displayName.charAt(0)}
           </div>
-          <div style="background:rgba(255,255,255,0.6);padding:10px;border-radius:50%;cursor:pointer;" onclick="event.stopPropagation(); openChatWith('${t.username}', '${t.displayName}')">
+          <div style="background:rgba(255,255,255,0.6);padding:10px;border-radius:50%;cursor:pointer;" onclick="openChatWith('${t.username}', '${t.displayName}')">
             <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           </div>
         </div>
         <h3 style="margin-top:1rem;font-size:1.4rem;font-weight:800;">${esc(t.displayName)}</h3>
         <p style="color:var(--primary);font-size:0.9rem;font-weight:600;margin-bottom:0.2rem;">${esc(t.specialty || 'Teacher')}</p>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">${esc(t.bio || '')}</p>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${esc(t.bio || '')}</p>
         
         <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:auto;">
           <div style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:1.1rem;color:#F59E0B;">
             ${ICONS.star} ${(t.rating || 0).toFixed(1)} <span style="font-size:0.8rem;color:var(--text-muted);font-weight:normal;">(${t.ratingCount || 0})</span>
           </div>
-          <button class="btn" style="padding:0.5rem 1rem;border-radius:30px;font-size:0.85rem;">ကြည့်မည်</button>
+          <button class="btn" style="padding:0.5rem 1rem;border-radius:30px;font-size:0.85rem;" data-i18n="viewbtn" onclick="openTeacherProfile('${t.username}')">ကြည့်မည်</button>
         </div>
       </div>
     `).join('');
@@ -727,6 +770,9 @@
   }
 
   function deletePost(id) {
+    $('confirmTitle').textContent = "Delete Post?";
+    $('confirmMsg').textContent = "ဒီ Post ကို ဖျက်မှာ သေချာလား?";
+    $('confirmYesBtn').textContent = "Delete";
     $('confirmYesBtn').onclick = async () => {
       closeModal('confirmModal');
       showLoading(); await api('deletePost', { postId: id }); hideLoading();
@@ -750,66 +796,50 @@
     }
   }
 
-  async function openTeacher(username) {
+  // TEACHER PROFILE (NEW DESIGN)
+  async function openTeacherProfile(username) {
     State.currentTeacher = State.teachers.find(x => x.username === username);
     const t = State.currentTeacher;
     showLoading();
     const r = await api('getTeacherCourses', { teacherId: username });
     hideLoading();
     
-    $('tProfileContent').innerHTML = `
-      <div style="text-align:center;margin-bottom:1.5rem;">
-        <div class="avatar avatar-lg" style="margin:0 auto 10px;">
-          ${t.profileImage ? `<img src="${imgUrl(t.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : t.displayName.charAt(0)}
-        </div>
-        <h3 style="font-size:1.4rem;font-weight:800;">${esc(t.displayName)}</h3>
-        <p style="color:var(--primary);font-size:0.9rem;font-weight:600;">${esc(t.specialty || 'Teacher')}</p>
-        <p style="color:var(--text-muted);font-size:0.9rem;">${esc(t.bio || '')}</p>
-        <div style="display:flex;justify-content:center;margin-top:10px;">
-          <div style="background:rgba(245,158,11,0.1);padding:5px 15px;border-radius:20px;display:inline-flex;align-items:center;gap:5px;color:#F59E0B;font-weight:800;">
-            ${ICONS.star} ${(t.rating || 0).toFixed(1)} / 5
-          </div>
-        </div>
-      </div>
-      <h4 style="margin-bottom:0.5rem;font-weight:700;">သင်ကြားနေသော ဘာသာရပ်</h4>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1rem;">
-        ${r.courses.length ? r.courses.map(c => `
-          <div style="border:1px solid var(--border);padding:10px;border-radius:12px;cursor:pointer;" onclick="openCourse('${c.id}')">
-            <b style="font-size:0.95rem;">${esc(c.title)}</b>
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-top:3px;">${c.isFree ? 'Free' : `${c.price} Coins`}</div>
-          </div>
-        `).join('') : '<p style="font-size:0.85rem;color:var(--text-muted);">သင်ခန်းစာ မရှိသေးပါ</p>'}
-      </div>
-      
-      <div style="border-top:1px solid var(--border);padding-top:1rem;margin-bottom:1rem;">
-        <p style="font-size:0.9rem;font-weight:700;margin-bottom:5px;">ဆရာ့ကို Rating ပေးပါ</p>
-        <div class="star-rating" id="ratingStars">
-          <svg onclick="rateTeacher(1)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg onclick="rateTeacher(2)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg onclick="rateTeacher(3)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg onclick="rateTeacher(4)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg onclick="rateTeacher(5)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    $('tpImg').src = t.coverImage ? imgUrl(t.coverImage) : (t.profileImage ? imgUrl(t.profileImage) : '');
+    $('tpName').textContent = t.displayName;
+    $('tpSpecialty').textContent = t.specialty || 'Teacher';
+    $('tpRating').textContent = (t.rating || 0).toFixed(1);
+    
+    $('tpCourseList').innerHTML = r.courses.length ? r.courses.map(c => `
+      <div style="border:1px solid var(--border);padding:10px;border-radius:12px;cursor:pointer;display:flex;gap:10px;align-items:center;" onclick="openCourse('${c.id}')">
+        ${c.coverImage ? `<img src="${imgUrl(c.coverImage)}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;" />` : ''}
+        <div style="flex:1;">
+          <b style="font-size:0.95rem;">${esc(c.title)}</b>
+          <div style="font-size:0.8rem;color:var(--primary);font-weight:700;">${c.isFree ? 'Free' : `${c.price} Coins`}</div>
         </div>
       </div>
+    `).join('') : '<p style="font-size:0.85rem;color:var(--text-muted);">သင်ခန်းစာ မရှိသေးပါ</p>';
 
-      <div style="display:flex;gap:10px;">
-        <button class="btn" onclick="closeModal('teacherModal'); openChatWith('${t.username}', '${t.displayName}')" style="flex:1;">စာပို့မည်</button>
-      </div>
-    `;
-    $('teacherModal').classList.add('open');
+    $('teacherProfileModal').classList.add('open');
   }
 
-  async function rateTeacher(val) {
-    const stars = document.querySelectorAll('#ratingStars svg');
+  function openChatWithFromProfile() {
+    closeModal('teacherProfileModal');
+    openChatWith(State.currentTeacher.username, State.currentTeacher.displayName);
+  }
+
+  function showRatingStars() { $('ratingArea').style.display = 'block'; }
+  async function submitRating(val) {
+    const stars = document.querySelectorAll('#starRating svg');
     stars.forEach((s, i) => { if(i < val) s.classList.add('active'); else s.classList.remove('active'); });
     showLoading();
     await api('rateTeacher', { teacherUsername: State.currentTeacher.username, rating: val });
     hideLoading();
     toast('Rating ပေးပြီးပါပြီ!');
     await loadData();
-    closeModal('teacherModal');
+    closeModal('teacherProfileModal');
   }
 
+  // COURSE DETAIL
   async function openCourse(id) {
     const r = await api('getTeacherCourses', { teacherId: State.currentTeacher.username });
     const c = r.courses.find(x => x.id === id);
@@ -818,12 +848,15 @@
     
     $('cTitleDisplay').textContent = c.title;
     $('cDescDisplay').textContent = c.description;
+    if (c.coverImage) { $('cImgDisplay').src = imgUrl(c.coverImage); $('cImgDisplay').style.display = 'block'; }
+    else { $('cImgDisplay').style.display = 'none'; }
     
     const hasBought = (State.user.purchasedCourses || []).includes(c.id);
     const isTeacher = State.user.username === c.teacherId;
     const isAdmin = State.user.isAdmin;
     
     if(c.isFree || hasBought || isTeacher || isAdmin || State.user.isVerifiedStudent) {
+      $('cLockedArea').innerHTML = `<p style="font-size:0.95rem;text-align:left;white-space:pre-wrap;">${esc(c.lockedDescription || 'No extra details.')}</p>`;
       $('cActionArea').innerHTML = `
         <div style="display:flex;flex-direction:column;gap:10px;">
           ${c.zoomLink ? `<a href="${c.zoomLink}" target="_blank" class="btn" style="background:#0369A1;">Join Zoom Meeting</a>` : ''}
@@ -831,21 +864,37 @@
         </div>
       `;
     } else {
+      $('cLockedArea').innerHTML = `
+        <svg class="icon icon-lg" viewBox="0 0 24 24" style="color:var(--text-muted);margin-bottom:10px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <p style="font-size:0.85rem;color:var(--text-muted);">Coins ပေးမှ ဖတ်ရှုနိုင်မည့် အသေးစိတ် အချက်အလက်များ</p>
+      `;
       $('cActionArea').innerHTML = `
-        <p style="text-align:center;color:#EF4444;font-size:0.9rem;margin-bottom:1rem;">ဤသင်ခန်းစာကို ကြည့်ရှုရန် Coins ${c.price} လိုအပ်ပါသည်။</p>
-        <button class="btn" style="width:100%;" onclick="buyCourse('${c.id}')">Unlock for ${c.price} Coins</button>
+        <button class="btn" style="width:100%;" onclick="confirmBuyCourse('${c.id}', ${c.price})">Unlock for ${c.price} Coins</button>
       `;
     }
+    closeModal('teacherProfileModal');
     $('courseModal').classList.add('open');
   }
 
-  async function buyCourse(id) {
-    if(!confirm(`Coins ${State.currentCourse.price} ဖြင့် ဝယ်ယူမှာလား?`)) return;
-    showLoading();
-    const r = await api('buyCourse', { username: State.user.username, courseId: id });
-    hideLoading();
-    if(r.success) { toast('ဝယ်ယူပြီးပါပြီ'); await loadData(); openCourse(id); }
-    else toast(r.error);
+  function toggleReadMore(btn) {
+    const p = btn.previousElementSibling;
+    p.classList.toggle('expanded');
+    btn.textContent = p.classList.contains('expanded') ? i18n[curLang].readless : i18n[curLang].readmore;
+  }
+
+  function confirmBuyCourse(id, price) {
+    $('confirmTitle').textContent = i18n[curLang].buyconfirm;
+    $('confirmMsg').textContent = `Coins ${price} ကုန်ကျပါမည်။`;
+    $('confirmYesBtn').textContent = i18n[curLang].buyyes;
+    $('confirmYesBtn').onclick = async () => {
+      closeModal('confirmModal');
+      showLoading();
+      const r = await api('buyCourse', { username: State.user.username, courseId: id });
+      hideLoading();
+      if(r.success) { toast('ဝယ်ယူပြီးပါပြီ'); await loadData(); openCourse(id); }
+      else toast(r.error);
+    };
+    $('confirmModal').classList.add('open');
   }
 
   // TEACHER COURSE
@@ -856,11 +905,13 @@
     showLoading();
     await api('createCourse', {
       username: State.user.username, title: $('cTitle').value, description: $('cDesc').value,
-      zoomLink: $('cZoom').value, pdfLink: $('cPdf').value, coverImage: State.cImgUrl, isFree, price
+      lockedDescription: $('cLockedDesc').value,
+      zoomLink: $('cZoom').value, pdfLink: $('cPdf').value, 
+      coverImage: $('cImgUrl').value || State.cImgUrl, isFree, price
     });
     hideLoading();
     toast('သင်ခန်းစာ တင်ပြီးပါပြီ!');
-    $('cTitle').value = ''; $('cDesc').value = ''; $('cZoom').value = ''; $('cPdf').value = ''; State.cImgUrl = '';
+    $('cTitle').value = ''; $('cDesc').value = ''; $('cLockedDesc').value = ''; $('cZoom').value = ''; $('cPdf').value = ''; $('cImgUrl').value = ''; State.cImgUrl = '';
     switchView('home');
   }
 
@@ -884,6 +935,9 @@
 
   function deleteSelectedChats() {
     if(State.selectedMsgs.size === 0) return;
+    $('confirmTitle').textContent = "Delete Messages?";
+    $('confirmMsg').textContent = "ရွေးချယ်ထားသော စာများကို ဖျက်မှာ သေချာလား?";
+    $('confirmYesBtn').textContent = "Delete";
     $('confirmYesBtn').onclick = async () => {
       closeModal('confirmModal');
       showLoading();
@@ -932,7 +986,7 @@
 
   function renderMessagesUI() {
     $('chatBox').innerHTML = currentMsgs.map(m => `
-      <div class="chat-msg ${m.from === State.user.username ? 'mine' : 'theirs'} ${State.selectedMsgs.has(m.id) ? 'selected' : ''}" onclick="selectMsg('${m.id}')">
+      <div class="chat-msg ${m.from === State.user.username ? 'mine' : 'theirs'} ${State.selectedMsgs.has(m.id) ? 'selected' : ''}" onclick="selectMsg('${m.id}')" oncontextmenu="event.preventDefault(); if(!State.chatSelectMode){toggleChatSelectMode(); selectMsg('${m.id}');}">
         ${esc(m.text)}
       </div>
     `).join('');
@@ -943,12 +997,10 @@
     const txt = $('chatInput').value.trim(); if (!txt) return;
     $('chatInput').value = '';
     
-    // Optimistic UI
     const tempId = 'tmp_' + Date.now();
     currentMsgs.push({ id: tempId, from: State.user.username, text: txt });
     renderMessagesUI();
     
-    // Progress Bar Animation
     const tmpEl = document.querySelector(`.chat-msg:last-child`);
     const prog = document.createElement('div');
     prog.className = 'msg-progress';
@@ -987,6 +1039,7 @@
     $('epName').value = State.user.displayName; 
     $('epBio').value = State.user.bio || ''; 
     $('epSpecialty').value = State.user.specialty || '';
+    $('epImgUrl').value = State.user.profileImage || '';
     $('editProfileModal').classList.add('open'); 
   }
   async function saveProfile() {
@@ -996,13 +1049,13 @@
       displayName: $('epName').value, 
       bio: $('epBio').value, 
       specialty: $('epSpecialty').value,
-      profileImage: State.epImgUrl || State.user.profileImage 
+      profileImage: $('epImgUrl').value || State.epImgUrl || State.user.profileImage 
     });
     hideLoading(); 
     closeModal('editProfileModal'); 
     if(r.success) {
-      State.user = r.user; // Update local state
-      await loadData(); // Refresh UI
+      State.user = r.user;
+      await loadData();
       toast('Saved!');
     }
   }
@@ -1095,6 +1148,9 @@
   }
   async function banUser(username, isBanned) { showLoading(); await api('adminToggleBan', { username, isBanned }); hideLoading(); loadAdminUsers(); }
   async function deleteUser(username) {
+    $('confirmTitle').textContent = "Delete User?";
+    $('confirmMsg').textContent = `@${username} ကို ဖျက်ပြစ်မှာ သေချာလား?`;
+    $('confirmYesBtn').textContent = "Delete";
     $('confirmYesBtn').onclick = async () => {
       closeModal('confirmModal');
       showLoading(); await api('adminDeleteUser', { username }); hideLoading(); loadAdminUsers();
@@ -1105,7 +1161,9 @@
   function loadAdminSettings() {
     const s = State.settings;
     $('adminContentArea').innerHTML = `
-      <h4 style="margin-bottom:10px;">KPay Setup</h4>
+      <h4 style="margin-bottom:10px;">Login Screen Background</h4>
+      <div class="input-group"><label>Background Image URL</label><input id="setLoginBg" value="${s.loginBg || ''}" placeholder="Drive Link or Image URL" /></div>
+      <h4 style="margin:15px 0 10px;">KPay Setup</h4>
       <div class="input-group"><label>KPay Phone</label><input id="setKpay" value="${s.kpayPhone || ''}" /></div>
       <div class="input-group"><label>KPay QR Image</label><input type="file" onchange="uploadQr(this, 'kpay')" /></div>
       <h4 style="margin:15px 0 10px;">Wave Setup</h4>
@@ -1127,6 +1185,7 @@
   async function saveSettings() {
     showLoading();
     await api('adminSaveSettings', { settings: {
+      loginBg: $('setLoginBg').value,
       kpayPhone: $('setKpay').value, kpayQr: tmpKpayQr || State.settings.kpayQr,
       wavePhone: $('setWave').value, waveQr: tmpWaveQr || State.settings.waveQr
     }});
@@ -1155,11 +1214,11 @@
     
     const s = State.settings;
     $('kpayNum').textContent = s.kpayPhone || 'Not set';
-    if(s.kpayQr) { $('kpayQrImg').src = s.kpayQr; $('kpayQrImg').style.display = 'block'; }
+    if(s.kpayQr) { $('kpayQrImg').src = imgUrl(s.kpayQr); $('kpayQrImg').style.display = 'block'; }
     else $('kpayQrImg').style.display = 'none';
 
     $('waveNum').textContent = s.wavePhone || 'Not set';
-    if(s.waveQr) { $('waveQrImg').src = s.waveQr; $('waveQrImg').style.display = 'block'; }
+    if(s.waveQr) { $('waveQrImg').src = imgUrl(s.waveQr); $('waveQrImg').style.display = 'block'; }
     else $('waveQrImg').style.display = 'none';
 
     $('paymentModal').classList.add('open');
