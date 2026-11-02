@@ -34,7 +34,10 @@
   .input-group { margin-bottom: 1rem; position: relative; }
   .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 600; }
   .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 0.9rem; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-solid); color: var(--text); outline: none; font-size: 0.95rem; transition: 0.2s; }
-  .eye-icon { position: absolute; right: 12px; top: 36px; cursor: pointer; color: var(--text-muted); }
+  
+  /* Beautiful Password Eye */
+  .eye-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
+  .eye-icon svg { width: 20px; height: 20px; }
 
   /* Colorful Loading Overlay */
   #loadingOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: 0.3s; }
@@ -61,19 +64,24 @@
   .header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: sticky; top: 0; z-index: 40; margin: 1rem; border-radius: var(--radius); }
   @media (min-width: 768px) { .header { margin: 0 0 1rem 0; } }
   
-  .teacher-card { padding: 1.5rem; border-radius: 32px; margin-bottom: 1.2rem; position: relative; overflow: hidden; transition: transform 0.2s; display: flex; flex-direction: column; background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,248,255,0.7)); }
+  .teacher-card { padding: 1.5rem; border-radius: 32px; margin: 0 1rem 1.5rem 1rem; position: relative; overflow: hidden; transition: transform 0.2s; display: flex; flex-direction: column; background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,248,255,0.7)); border: 1px solid var(--border); box-shadow: var(--glass-shadow); }
   body.dark .teacher-card { background: linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.7)); }
   .teacher-card:hover { transform: translateY(-4px); }
   .teacher-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--primary); filter: blur(60px); opacity: 0.2; border-radius: 50%; }
   
   .avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; flex-shrink: 0; overflow: hidden; border: 2px solid var(--border); }
-  .avatar-lg { width: 80px; height: 80px; font-size: 2rem; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .avatar-lg { width: 100px; height: 100px; font-size: 2.5rem; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-  .post-card { padding: 1.2rem; border-radius: 24px; margin-bottom: 1rem; }
+  .post-card { padding: 1.2rem; border-radius: 24px; margin-bottom: 1rem; margin: 0 1rem 1rem 1rem; }
   .post-image-169 { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 20px; margin-bottom: 1rem; display: block; }
   .preview-box { position: relative; display: inline-block; margin-top: 10px; }
   .preview-box img { height: 80px; border-radius: 12px; object-fit: cover; }
   .remove-preview { position: absolute; top: -8px; right: -8px; background: #EF4444; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; border: 2px solid var(--surface-solid); }
+
+  /* Coins Display */
+  .coin-pill { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #FDE68A, #F59E0B); color: #78350F; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); border: 1px solid #FCD34D; transition: 0.2s; }
+  .coin-pill:active { transform: scale(0.95); }
+  .coin-pill svg { width: 18px; height: 18px; stroke-width: 2.5; }
 
   /* Modals */
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: 0.3s; }
@@ -83,11 +91,14 @@
 
   /* Chat */
   .chat-box { display: flex; flex-direction: column; height: 400px; overflow-y: auto; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 20px; margin-bottom: 1rem; }
-  .chat-msg { max-width: 80%; padding: 0.8rem 1rem; border-radius: 20px; margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.4; position: relative; word-break: break-word; }
+  .chat-msg { max-width: 80%; padding: 0.8rem 1rem; border-radius: 20px; margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.4; position: relative; word-break: break-word; cursor: pointer; transition: 0.2s; }
   .chat-msg.mine { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 4px; }
   .chat-msg.theirs { align-self: flex-start; background: var(--surface-solid); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-  .msg-actions { display: flex; gap: 10px; margin-top: 5px; font-size: 0.75rem; opacity: 0.7; }
-  .msg-actions span { cursor: pointer; text-decoration: underline; }
+  .chat-msg.selected { opacity: 0.7; border: 2px solid var(--primary); }
+  
+  /* Chat Progress Bar */
+  .msg-progress { position: absolute; bottom: 0; left: 0; height: 3px; background: rgba(255,255,255,0.8); border-radius: 0 0 20px 20px; width: 0%; transition: width 0.3s; }
+  .chat-msg.mine .msg-progress { background: #fff; }
 
   /* Like Animation */
   .like-btn { cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
@@ -102,6 +113,11 @@
   .role-selector input:checked + label { color: var(--primary); }
   #roleStudent:checked ~ .role-slider { transform: translateX(0); }
   #roleTeacher:checked ~ .role-slider { transform: translateX(100%); }
+  
+  /* Rating Stars */
+  .star-rating { display: flex; gap: 5px; justify-content: center; margin: 10px 0; }
+  .star-rating svg { width: 30px; height: 30px; cursor: pointer; fill: #E2E8F0; stroke: #CBD5E1; transition: 0.2s; }
+  .star-rating svg.active { fill: #F59E0B; stroke: #F59E0B; }
 </style>
 </head>
 <body>
@@ -118,7 +134,7 @@
     <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:1.5rem;" onclick="toggleLang()">
       🌐 <span id="curLang" style="font-size:0.8rem;font-weight:bold;vertical-align:middle;">MM</span>
     </div>
-    <h1 style="color:var(--primary);margin-bottom:1.5rem;font-size:2rem;display:flex;justify-content:center;align-items:center;gap:10px;font-weight:800;">
+    <h1 id="mainLogo" style="color:var(--primary);margin-bottom:1.5rem;font-size:2rem;display:flex;justify-content:center;align-items:center;gap:10px;font-weight:800;user-select:none;cursor:pointer;">
       <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       Myan Learn
     </h1>
@@ -127,18 +143,17 @@
       <div class="input-group"><input id="loginUser" data-i18n="username" placeholder="Username" /></div>
       <div class="input-group">
         <input type="password" id="loginPass" data-i18n="password" placeholder="Password" />
-        <span class="eye-icon" onclick="togglePass('loginPass', this)"><svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <span class="eye-icon" onclick="togglePass('loginPass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
       </div>
       <button class="btn" id="loginBtn" data-i18n="signin" style="width:100%;margin-bottom:1rem;">Sign In</button>
       <p style="font-size:0.9rem;color:var(--text-muted);"><span data-i18n="noacc">No account?</span> <a href="#" onclick="toggleAuth(true)" style="color:var(--primary);font-weight:700;" data-i18n="register">Register</a></p>
-      <p style="font-size:0.8rem;color:var(--text-muted);margin-top:1rem;cursor:pointer;text-decoration:underline;" onclick="$('adminLoginModal').classList.add('open')">Admin Login</p>
     </div>
 
     <div id="registerForm" style="display:none;">
       <div class="input-group"><input id="regUser" data-i18n="username" placeholder="Username" /></div>
       <div class="input-group">
         <input type="password" id="regPass" data-i18n="password" placeholder="Password" />
-        <span class="eye-icon" onclick="togglePass('regPass', this)"><svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <span class="eye-icon" onclick="togglePass('regPass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
       </div>
       <div class="role-selector">
         <input type="radio" name="role" id="roleStudent" value="student" checked>
@@ -160,7 +175,7 @@
     <div class="input-group"><input id="adminUser" placeholder="Admin Username" value="admin" /></div>
     <div class="input-group">
       <input type="password" id="adminPass" placeholder="Password" />
-      <span class="eye-icon" onclick="togglePass('adminPass', this)"><svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+      <span class="eye-icon" onclick="togglePass('adminPass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
     </div>
     <button class="btn" style="width:100%;" onclick="doAdminLogin()">Verify</button>
     <button class="btn btn-outline" style="width:100%;margin-top:10px;" onclick="closeModal('adminLoginModal')">Cancel</button>
@@ -173,9 +188,11 @@
     <div style="font-size:1.5rem;font-weight:800;color:var(--primary);margin-bottom:1.5rem;padding-left:0.5rem;">MyanLearn</div>
     <div class="nav-item active" onclick="switchView('home')"><svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span data-i18n="home">Home</span></div>
     <div class="nav-item" onclick="switchView('teachers')"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span data-i18n="teachers">Teachers</span></div>
+    <div class="nav-item" id="navTeachDesk" style="display:none;" onclick="switchView('teach')"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> <span>Teach / Create</span></div>
     <div class="nav-item" onclick="switchView('chats')"><svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> <span data-i18n="messages">Messages</span></div>
     <div class="nav-item" onclick="switchView('profile')"><svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span data-i18n="profile">Profile</span></div>
     <div style="margin-top:auto;">
+      <div class="nav-item" onclick="toggleLang()"><span style="font-size:1.2rem;">🌐</span> <span id="curLangDesk">MM</span></div>
       <div class="nav-item" onclick="toggleTheme()"><svg class="icon" viewBox="0 0 24 24" id="themeIcon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> <span data-i18n="theme">Theme</span></div>
       <div class="nav-item" onclick="logout()" style="color:#EF4444;"><svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> <span data-i18n="logout">Log Out</span></div>
     </div>
@@ -185,11 +202,11 @@
     <div class="header glass">
       <h2 style="font-size:1.2rem;font-weight:800;">Myan Learn</h2>
       <div style="display:flex;gap:12px;align-items:center;">
-        <span class="badge" style="background:#FEF9C3;color:#854D0E;font-size:0.85rem;display:inline-flex;align-items:center;gap:4px;cursor:pointer;" onclick="switchView('shop')">
-          <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5"/></svg>
+        <div class="coin-pill" onclick="switchView('shop')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5"/></svg>
           <span id="coinValue">0</span>
-        </span>
-        <div class="avatar" id="headerAvatar" onclick="switchView('profile')" style="width:36px;height:36px;font-size:1rem;cursor:pointer;">U</div>
+        </div>
+        <div class="avatar" id="headerAvatar" onclick="switchView('profile')" style="width:40px;height:40px;font-size:1.1rem;cursor:pointer;">U</div>
       </div>
     </div>
 
@@ -215,6 +232,28 @@
     <div id="viewTeachers" style="display:none;">
       <div id="teacherList"></div>
     </div>
+    
+    <!-- TEACHER CREATE COURSE -->
+    <div id="viewTeach" style="display:none;">
+      <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;">သင်ခန်းစာအသစ်တင်မည်</h2>
+      <div class="post-card glass" style="margin: 0 1rem;">
+        <div class="input-group"><label>ခေါင်းစဉ် (Title)</label><input id="cTitle" placeholder="e.g. Basic English Grammar" /></div>
+        <div class="input-group"><label>ရှင်းလင်းချက် (Description)</label><textarea id="cDesc" rows="3" placeholder="သင်ခန်းစာအကြောင်း အသေးစိတ်..."></textarea></div>
+        <div class="input-group"><label>Zoom Link</label><input id="cZoom" placeholder="https://zoom.us/j/..." /></div>
+        <div class="input-group"><label>PDF File Link</label><input id="cPdf" placeholder="https://drive.google.com/..." /></div>
+        <div class="input-group">
+          <label>သင်ခန်းစာ မျက်နှာဖုံးပုံ (Optional)</label>
+          <input type="file" id="cImgInput" accept="image/*" onchange="handleCourseImage(this)" style="padding:0.5rem;background:transparent;border:1px dashed var(--border);" />
+          <span id="cImgStatus" style="font-size:0.8rem;color:var(--text-muted);"></span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:1rem;">
+          <input type="checkbox" id="cIsFree" onchange="document.getElementById('cPrice').disabled=this.checked" />
+          <label for="cIsFree" style="font-size:0.9rem;">အခမဲ့ သင်ကြားမည် (Free)</label>
+        </div>
+        <div class="input-group"><label>ဈေးနှုန်း (Coins)</label><input type="number" id="cPrice" placeholder="50" /></div>
+        <button class="btn" style="width:100%;" onclick="publishCourse()">သင်ခန်းစာ တင်မည်</button>
+      </div>
+    </div>
 
     <div id="viewChats" style="display:none;">
       <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;" data-i18n="messages">Messages</h2>
@@ -222,16 +261,18 @@
     </div>
 
     <div id="viewProfile" style="display:none;">
-      <div class="teacher-card glass" style="text-align:center;align-items:center;">
+      <div class="teacher-card glass" style="text-align:center;align-items:center; margin: 0 1rem 1rem 1rem;">
         <div class="avatar avatar-lg" id="profileAvatar" style="margin:0 auto 1rem;">U</div>
         <h2 id="profileName" style="margin-bottom:0.2rem;">User</h2>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem;" id="profileUsername">@user</p>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.2rem;" id="profileUsername">@user</p>
+        <p id="profileSpecialty" style="color:var(--primary);font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;"></p>
         <p id="profileBio" style="font-size:0.95rem;margin-bottom:1rem;max-width:80%;">Bio here...</p>
         
         <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
           <button class="btn btn-glass" onclick="openEditProfile()" data-i18n="editprofile">Edit Profile</button>
           <button class="btn btn-glass" id="adminPanelBtn" onclick="openAdminPanel()" style="display:none;background:var(--primary);color:white;">Admin Panel</button>
           <button class="btn btn-glass" onclick="toggleTheme()" style="display:flex;align-items:center;gap:5px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Theme</button>
+          <button class="btn btn-glass" onclick="toggleLang()" style="display:flex;align-items:center;gap:5px;"><span style="font-size:1.2rem;">🌐</span> <span id="curLangMobile">MM</span></button>
           <button class="btn btn-glass" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:5px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
         </div>
       </div>
@@ -249,6 +290,7 @@
   <div class="bottom-nav glass">
     <div class="nav-item active" onclick="switchView('home')"><svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span data-i18n="home">Home</span></div>
     <div class="nav-item" onclick="switchView('teachers')"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span data-i18n="teachers">Teachers</span></div>
+    <div class="nav-item" id="navTeachMobile" style="display:none;" onclick="switchView('teach')"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create</div>
     <div class="nav-item" onclick="switchView('chats')"><svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span data-i18n="messages">Chats</span></div>
     <div class="nav-item" onclick="switchView('profile')"><svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span data-i18n="profile">Profile</span></div>
   </div>
@@ -269,10 +311,10 @@
 <div class="modal" id="courseModal">
   <div class="modal-content">
     <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-      <h3 style="font-weight:800;" id="cTitle">Course Title</h3>
+      <h3 style="font-weight:800;" id="cTitleDisplay">Course Title</h3>
       <span onclick="closeModal('courseModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
     </div>
-    <p id="cDesc" style="font-size:0.95rem;color:var(--text-muted);margin-bottom:1rem;white-space:pre-wrap;"></p>
+    <p id="cDescDisplay" style="font-size:0.95rem;color:var(--text-muted);margin-bottom:1rem;white-space:pre-wrap;"></p>
     <div id="cActionArea"></div>
   </div>
 </div>
@@ -340,7 +382,8 @@
       <input type="file" id="epImgInput" accept="image/*" style="display:none;" onchange="handleProfileImage(this)" />
     </div>
     <div class="input-group"><label>Display Name</label><input id="epName" /></div>
-    <div class="input-group"><label>Bio</label><textarea id="epBio" rows="3"></textarea></div>
+    <div class="input-group"><label>Bio</label><textarea id="epBio" rows="2"></textarea></div>
+    <div class="input-group"><label>Inbox / Specialty (e.g. Math, English)</label><input id="epSpecialty" placeholder="သင်ကြားသော ဘာသာရပ်..." /></div>
     <button class="btn" style="width:100%;" onclick="saveProfile()">Save Changes</button>
   </div>
 </div>
@@ -350,12 +393,37 @@
   <div class="modal-content" style="display:flex;flex-direction:column;height:80vh;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;">
       <h3 id="chatWithName" style="font-weight:800;font-size:1.1rem;">User</h3>
-      <span onclick="closeModal('chatModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
+      <div style="display:flex;gap:10px;">
+        <span id="chatSelBtn" onclick="toggleChatSelectMode()" style="cursor:pointer;color:var(--primary);font-weight:600;font-size:0.9rem;display:none;">Select</span>
+        <span onclick="closeModal('chatModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
+      </div>
     </div>
     <div class="chat-box" id="chatBox"></div>
-    <div style="display:flex;gap:10px;">
+    <div id="chatSelectBar" style="display:none;justify-content:space-between;align-items:center;background:var(--bg);padding:10px;border-radius:12px;margin-bottom:10px;">
+      <span id="selCount">0 selected</span>
+      <div>
+        <button class="btn btn-outline" onclick="toggleChatSelectMode()" style="padding:0.4rem 0.8rem;font-size:0.8rem;">Cancel</button>
+        <button class="btn" onclick="deleteSelectedChats()" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#EF4444;">Delete</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;" id="chatInputArea">
       <input id="chatInput" placeholder="Message..." style="flex:1;padding:0.8rem;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;" onkeypress="if(event.key==='Enter') sendChat()" />
       <button class="btn" onclick="sendChat()" style="padding:0.8rem 1.2rem;border-radius:20px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="modal" id="confirmModal">
+  <div class="modal-content" style="text-align:center;max-width:320px;">
+    <div style="width:60px;height:60px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+      <svg class="icon icon-lg" viewBox="0 0 24 24" style="color:#EF4444;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <h3 style="margin-bottom:0.5rem;font-weight:800;">Are you sure?</h3>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;">ဒီလုပ်ဆောင်ချက်ကို ပြန်ပြင်၍ မရနိုင်ပါ။</p>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-glass" style="flex:1;" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn" style="flex:1;background:#EF4444;" id="confirmYesBtn">Delete</button>
     </div>
   </div>
 </div>
@@ -397,7 +465,12 @@
         else el.innerText = i18n[curLang][key];
       }
     });
-    $('curLang').innerText = curLang.toUpperCase();
+    const cl = document.getElementById('curLang');
+    if(cl) cl.innerText = curLang.toUpperCase();
+    const cld = document.getElementById('curLangDesk');
+    if(cld) cld.innerText = curLang.toUpperCase();
+    const clm = document.getElementById('curLangMobile');
+    if(clm) clm.innerText = curLang.toUpperCase();
   }
   function toggleLang() {
     if(curLang === 'mm') curLang = 'en';
@@ -412,7 +485,8 @@
   const State = { 
     user: null, teachers: [], feed: [], chats: [], packages: [], settings: {},
     currentPost: null, currentTeacher: null, currentCourse: null, chatWith: null,
-    postImgUrl: '', epImgUrl: '', proofImgUrl: '', selectedPkg: null
+    postImgUrl: '', epImgUrl: '', proofImgUrl: '', cImgUrl: '', selectedPkg: null,
+    chatSelectMode: false, selectedMsgs: new Set()
   };
   const ICONS = {
     heart: '<svg class="icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
@@ -452,8 +526,8 @@
 
   function togglePass(id, el) {
     const input = $(id);
-    if(input.type === 'password') { input.type = 'text'; el.style.color = 'var(--primary)'; }
-    else { input.type = 'password'; el.style.color = 'var(--text-muted)'; }
+    if(input.type === 'password') { input.type = 'text'; el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'; }
+    else { input.type = 'password'; el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'; }
   }
 
   function toggleTheme() {
@@ -462,6 +536,23 @@
     const icon = document.getElementById('themeIcon');
     if(icon) icon.innerHTML = isDark ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>' : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
   }
+
+  // ADMIN LOGIN TRIGGER (Hold Logo)
+  let holdTimer, holdStart;
+  const logo = $('mainLogo');
+  function startHold(e) {
+    if(e.type === 'touchstart') e.preventDefault();
+    holdStart = Date.now();
+    holdTimer = setInterval(() => {
+      const pct = Math.min(100, ((Date.now() - holdStart) / 3000) * 100); // 3 seconds hold
+      if (pct >= 100) {
+        clearInterval(holdTimer);
+        $('adminLoginModal').classList.add('open');
+      }
+    }, 100);
+  }
+  logo.addEventListener('mousedown', startHold); logo.addEventListener('touchstart', startHold, {passive:false});
+  logo.addEventListener('mouseup', () => clearInterval(holdTimer)); logo.addEventListener('mouseleave', () => clearInterval(holdTimer)); logo.addEventListener('touchend', () => clearInterval(holdTimer));
 
   // AUTH
   function toggleAuth(isReg) { $('loginForm').style.display = isReg ? 'none' : 'block'; $('registerForm').style.display = isReg ? 'block' : 'none'; }
@@ -520,8 +611,17 @@
     $('coinValue').textContent = State.user.coins;
     $('profileName').textContent = State.user.displayName;
     $('profileUsername').textContent = '@' + State.user.username;
-    $('profileBio').textContent = State.user.bio || 'No bio yet.';
+    $('profileBio').textContent = State.user.bio || 'Bio မရှိသေးပါ';
+    $('profileSpecialty').textContent = State.user.specialty ? `📚 ${State.user.specialty}` : '';
+    
     $('adminPanelBtn').style.display = State.user.isAdmin ? 'block' : 'none';
+    if (State.user.role === 'teacher' || State.user.isAdmin) {
+      $('navTeachDesk').style.display = 'flex';
+      $('navTeachMobile').style.display = 'flex';
+    } else {
+      $('navTeachDesk').style.display = 'none';
+      $('navTeachMobile').style.display = 'none';
+    }
 
     renderFeed(); renderTeachers(); renderMyPosts();
   }
@@ -543,7 +643,7 @@
             </div>
             <div style="font-size:0.75rem;color:var(--text-muted);">${new Date(p.createdAt).toLocaleDateString()}</div>
           </div>
-          ${(p.author === State.user.username || State.user.isAdmin) ? `<span onclick="deletePost('${p.id}')" style="cursor:pointer;color:#EF4444;font-weight:bold;">✕</span>` : ''}
+          ${(p.author === State.user.username || State.user.isAdmin) ? `<span onclick="deletePost('${p.id}')" style="cursor:pointer;color:#EF4444;font-weight:bold;padding:5px;">✕</span>` : ''}
         </div>
         <p style="font-size:1rem;line-height:1.6;margin-bottom:1rem;white-space:pre-wrap;">${esc(p.content)}</p>
         ${p.imageUrl ? `<img src="${imgUrl(p.imageUrl)}" class="post-image-169" />` : ''}
@@ -564,17 +664,24 @@
     if (!State.teachers.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-muted);">ဆရာ/ဆရာမ မရှိသေးပါ</p>'; return; }
     c.innerHTML = State.teachers.map(t => `
       <div class="teacher-card glass" onclick="openTeacher('${t.username}')">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;">
           <div class="avatar avatar-lg">
             ${t.profileImage ? `<img src="${imgUrl(t.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : t.displayName.charAt(0)}
           </div>
-          <div style="background:rgba(255,255,255,0.5);padding:8px;border-radius:50%;cursor:pointer;" onclick="event.stopPropagation(); openChatWith('${t.username}', '${t.displayName}')">
+          <div style="background:rgba(255,255,255,0.6);padding:10px;border-radius:50%;cursor:pointer;" onclick="event.stopPropagation(); openChatWith('${t.username}', '${t.displayName}')">
             <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           </div>
         </div>
-        <h3 style="margin-top:1rem;font-size:1.3rem;font-weight:800;">${esc(t.displayName)}</h3>
-        <p style="color:var(--text-muted);font-size:0.9rem;">${esc(t.bio || 'Teacher')}</p>
-        <button class="btn" style="margin-top:1.5rem;width:100%;border-radius:30px;">Get in touch / ကြည့်မည်</button>
+        <h3 style="margin-top:1rem;font-size:1.4rem;font-weight:800;">${esc(t.displayName)}</h3>
+        <p style="color:var(--primary);font-size:0.9rem;font-weight:600;margin-bottom:0.2rem;">${esc(t.specialty || 'Teacher')}</p>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">${esc(t.bio || '')}</p>
+        
+        <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:auto;">
+          <div style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:1.1rem;color:#F59E0B;">
+            ${ICONS.star} ${(t.rating || 0).toFixed(1)} <span style="font-size:0.8rem;color:var(--text-muted);font-weight:normal;">(${t.ratingCount || 0})</span>
+          </div>
+          <button class="btn" style="padding:0.5rem 1rem;border-radius:30px;font-size:0.85rem;">ကြည့်မည်</button>
+        </div>
       </div>
     `).join('');
   }
@@ -594,7 +701,7 @@
 
   // ACTIONS
   function switchView(v) {
-    ['home','teachers','chats','profile','shop'].forEach(x => {
+    ['home','teachers','teach','chats','profile','shop'].forEach(x => {
       const el = $('view' + x.charAt(0).toUpperCase() + x.slice(1));
       if(el) el.style.display = 'none';
     });
@@ -619,16 +726,16 @@
     State.postImgUrl = ''; await loadData(); toast('Post တင်ပြီးပါပြီ!');
   }
 
-  async function deletePost(id) {
-    if(!confirm("ဒီ Post ကို ဖျက်မှာလား?")) return;
-    showLoading();
-    await api('deletePost', { postId: id });
-    hideLoading();
-    await loadData(); toast('ဖျက်ပြီးပါပြီ');
+  function deletePost(id) {
+    $('confirmYesBtn').onclick = async () => {
+      closeModal('confirmModal');
+      showLoading(); await api('deletePost', { postId: id }); hideLoading();
+      await loadData(); toast('ဖျက်ပြီးပါပြီ');
+    };
+    $('confirmModal').classList.add('open');
   }
 
   async function toggleLike(id) {
-    // Optimistic UI
     const btn = $(`like-btn-${id}`);
     const countSpan = $(`like-count-${id}`);
     const isLiked = btn.style.color === 'rgb(239, 68, 68)';
@@ -656,7 +763,13 @@
           ${t.profileImage ? `<img src="${imgUrl(t.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : t.displayName.charAt(0)}
         </div>
         <h3 style="font-size:1.4rem;font-weight:800;">${esc(t.displayName)}</h3>
+        <p style="color:var(--primary);font-size:0.9rem;font-weight:600;">${esc(t.specialty || 'Teacher')}</p>
         <p style="color:var(--text-muted);font-size:0.9rem;">${esc(t.bio || '')}</p>
+        <div style="display:flex;justify-content:center;margin-top:10px;">
+          <div style="background:rgba(245,158,11,0.1);padding:5px 15px;border-radius:20px;display:inline-flex;align-items:center;gap:5px;color:#F59E0B;font-weight:800;">
+            ${ICONS.star} ${(t.rating || 0).toFixed(1)} / 5
+          </div>
+        </div>
       </div>
       <h4 style="margin-bottom:0.5rem;font-weight:700;">သင်ကြားနေသော ဘာသာရပ်</h4>
       <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1rem;">
@@ -667,11 +780,34 @@
           </div>
         `).join('') : '<p style="font-size:0.85rem;color:var(--text-muted);">သင်ခန်းစာ မရှိသေးပါ</p>'}
       </div>
+      
+      <div style="border-top:1px solid var(--border);padding-top:1rem;margin-bottom:1rem;">
+        <p style="font-size:0.9rem;font-weight:700;margin-bottom:5px;">ဆရာ့ကို Rating ပေးပါ</p>
+        <div class="star-rating" id="ratingStars">
+          <svg onclick="rateTeacher(1)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg onclick="rateTeacher(2)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg onclick="rateTeacher(3)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg onclick="rateTeacher(4)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg onclick="rateTeacher(5)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+      </div>
+
       <div style="display:flex;gap:10px;">
         <button class="btn" onclick="closeModal('teacherModal'); openChatWith('${t.username}', '${t.displayName}')" style="flex:1;">စာပို့မည်</button>
       </div>
     `;
     $('teacherModal').classList.add('open');
+  }
+
+  async function rateTeacher(val) {
+    const stars = document.querySelectorAll('#ratingStars svg');
+    stars.forEach((s, i) => { if(i < val) s.classList.add('active'); else s.classList.remove('active'); });
+    showLoading();
+    await api('rateTeacher', { teacherUsername: State.currentTeacher.username, rating: val });
+    hideLoading();
+    toast('Rating ပေးပြီးပါပြီ!');
+    await loadData();
+    closeModal('teacherModal');
   }
 
   async function openCourse(id) {
@@ -680,8 +816,8 @@
     if(!c) return;
     State.currentCourse = c;
     
-    $('cTitle').textContent = c.title;
-    $('cDesc').textContent = c.description;
+    $('cTitleDisplay').textContent = c.title;
+    $('cDescDisplay').textContent = c.description;
     
     const hasBought = (State.user.purchasedCourses || []).includes(c.id);
     const isTeacher = State.user.username === c.teacherId;
@@ -712,33 +848,57 @@
     else toast(r.error);
   }
 
-  function openComments(id) { State.currentPost = id; loadComments(); $('commentsModal').classList.add('open'); }
-  async function loadComments() {
-    const r = await api('getComments', { postId: State.currentPost });
-    $('mCommentsList').innerHTML = r.comments.map(c => `
-      <div style="display:flex;gap:10px;margin-bottom:1rem;">
-        <div class="avatar" style="width:30px;height:30px;font-size:0.8rem;">${c.authorData.displayName.charAt(0)}</div>
-        <div>
-          <div style="font-weight:700;font-size:0.85rem;">${esc(c.authorData.displayName)}</div>
-          <div style="font-size:0.9rem;">${esc(c.content)}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-  async function submitComment() {
-    const val = $('mCommentInput').value.trim(); if (!val) return;
-    await api('addComment', { postId: State.currentPost, username: State.user.username, content: val });
-    $('mCommentInput').value = ''; loadComments(); loadData();
-  }
-
-  function openEditProfile() { $('epName').value = State.user.displayName; $('epBio').value = State.user.bio || ''; $('editProfileModal').classList.add('open'); }
-  async function saveProfile() {
+  // TEACHER COURSE
+  async function publishCourse() {
+    const isFree = $('cIsFree').checked;
+    const price = isFree ? 0 : Number($('cPrice').value);
+    if(!$('cTitle').value) return toast('ခေါင်းစဉ် ထည့်ပါ');
     showLoading();
-    await api('updateProfile', { username: State.user.username, displayName: $('epName').value, bio: $('epBio').value, profileImage: State.epImgUrl || State.user.profileImage });
-    hideLoading(); closeModal('editProfileModal'); await loadData(); toast('Saved!');
+    await api('createCourse', {
+      username: State.user.username, title: $('cTitle').value, description: $('cDesc').value,
+      zoomLink: $('cZoom').value, pdfLink: $('cPdf').value, coverImage: State.cImgUrl, isFree, price
+    });
+    hideLoading();
+    toast('သင်ခန်းစာ တင်ပြီးပါပြီ!');
+    $('cTitle').value = ''; $('cDesc').value = ''; $('cZoom').value = ''; $('cPdf').value = ''; State.cImgUrl = '';
+    switchView('home');
   }
 
-  // CHAT
+  // CHAT & SELECT MODE
+  function toggleChatSelectMode() {
+    State.chatSelectMode = !State.chatSelectMode;
+    State.selectedMsgs.clear();
+    $('chatSelBtn').textContent = State.chatSelectMode ? 'Cancel' : 'Select';
+    $('chatSelectBar').style.display = State.chatSelectMode ? 'flex' : 'none';
+    $('chatInputArea').style.display = State.chatSelectMode ? 'none' : 'flex';
+    renderMessagesUI();
+  }
+
+  function selectMsg(id) {
+    if(!State.chatSelectMode) return;
+    if(State.selectedMsgs.has(id)) State.selectedMsgs.delete(id);
+    else State.selectedMsgs.add(id);
+    $('selCount').textContent = `${State.selectedMsgs.size} selected`;
+    renderMessagesUI();
+  }
+
+  function deleteSelectedChats() {
+    if(State.selectedMsgs.size === 0) return;
+    $('confirmYesBtn').onclick = async () => {
+      closeModal('confirmModal');
+      showLoading();
+      await api('deleteMessages', { ids: Array.from(State.selectedMsgs) });
+      hideLoading();
+      State.chatSelectMode = false; State.selectedMsgs.clear();
+      $('chatSelBtn').textContent = 'Select';
+      $('chatSelectBar').style.display = 'none';
+      $('chatInputArea').style.display = 'flex';
+      await loadMessages();
+      toast('ဖျက်ပြီးပါပြီ');
+    };
+    $('confirmModal').classList.add('open');
+  }
+
   async function loadChatList() {
     $('chatList').innerHTML = '<p style="text-align:center;color:var(--text-muted);">Loading...</p>';
     const r = await api('getChatList', { username: State.user.username });
@@ -756,17 +916,24 @@
 
   async function openChatWith(username, displayName) {
     State.chatWith = username; $('chatWithName').textContent = displayName;
+    State.chatSelectMode = false; State.selectedMsgs.clear();
+    $('chatSelBtn').textContent = 'Select'; $('chatSelectBar').style.display = 'none'; $('chatInputArea').style.display = 'flex';
     $('chatModal').classList.add('open');
     await loadMessages();
   }
 
+  let currentMsgs = [];
   async function loadMessages() {
     $('chatBox').innerHTML = '';
     const r = await api('getMessages', { user1: State.user.username, user2: State.chatWith });
-    $('chatBox').innerHTML = r.messages.map(m => `
-      <div class="chat-msg ${m.from === State.user.username ? 'mine' : 'theirs'}">
+    currentMsgs = r.messages;
+    renderMessagesUI();
+  }
+
+  function renderMessagesUI() {
+    $('chatBox').innerHTML = currentMsgs.map(m => `
+      <div class="chat-msg ${m.from === State.user.username ? 'mine' : 'theirs'} ${State.selectedMsgs.has(m.id) ? 'selected' : ''}" onclick="selectMsg('${m.id}')">
         ${esc(m.text)}
-        ${m.from === State.user.username ? `<div class="msg-actions"><span onclick="deleteMsg('${m.id}')" style="color:white;opacity:0.8;">Delete</span></div>` : ''}
       </div>
     `).join('');
     $('chatBox').scrollTop = $('chatBox').scrollHeight;
@@ -775,56 +942,80 @@
   async function sendChat() {
     const txt = $('chatInput').value.trim(); if (!txt) return;
     $('chatInput').value = '';
+    
     // Optimistic UI
-    $('chatBox').innerHTML += `<div class="chat-msg mine" id="tmpmsg">${esc(txt)} <div class="spinner" style="width:10px;height:10px;display:inline-block;margin-left:5px;"></div></div>`;
-    $('chatBox').scrollTop = $('chatBox').scrollHeight;
+    const tempId = 'tmp_' + Date.now();
+    currentMsgs.push({ id: tempId, from: State.user.username, text: txt });
+    renderMessagesUI();
+    
+    // Progress Bar Animation
+    const tmpEl = document.querySelector(`.chat-msg:last-child`);
+    const prog = document.createElement('div');
+    prog.className = 'msg-progress';
+    tmpEl.appendChild(prog);
+    setTimeout(() => prog.style.width = '100%', 100);
+
     await api('sendMessage', { from: State.user.username, to: State.chatWith, text: txt });
     await loadMessages();
   }
 
-  async function deleteMsg(id) {
-    if(!confirm('ဒီစာကို ဖျက်မှာလား?')) return;
-    showLoading(); await api('deleteMessage', { messageId: id }); hideLoading();
-    await loadMessages();
+  // PROFILE & UPLOAD
+  function handlePostImage(input) {
+    if (input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
+        if (r.success) { State.postImgUrl = r.url; $('postPreviewContainer').innerHTML = `<div class="preview-box"><img src="${r.url}" /><div class="remove-preview" onclick="removePostImg()">✕</div></div>`; }
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+  function removePostImg() { State.postImgUrl = ''; $('postPreviewContainer').innerHTML = ''; }
+
+  function handleCourseImage(input) {
+    if (input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
+        if (r.success) { State.cImgUrl = r.url; $('cImgStatus').textContent = '✅ Image Ready'; }
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
   }
 
-  // SHOP & PAYMENT
-  async function loadShop() {
+  function openEditProfile() { 
+    $('epName').value = State.user.displayName; 
+    $('epBio').value = State.user.bio || ''; 
+    $('epSpecialty').value = State.user.specialty || '';
+    $('editProfileModal').classList.add('open'); 
+  }
+  async function saveProfile() {
     showLoading();
-    const r = await api('getPackages'); State.packages = r.packages;
-    hideLoading();
-    $('shopList').innerHTML = State.packages.map(p => `
-      <div class="post-card glass" style="text-align:center;cursor:pointer;" onclick="openPayment('${p.id}', ${p.coins})">
-        ${p.imageUrl ? `<img src="${imgUrl(p.imageUrl)}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 10px;" />` : ''}
-        <h4 style="font-weight:800;font-size:1.1rem;">${esc(p.name)}</h4>
-        <div style="color:var(--primary);font-weight:800;font-size:1.2rem;margin:5px 0;">${p.coins} 🪙</div>
-        <div style="font-size:0.85rem;color:var(--text-muted);">${p.price} MMK</div>
-      </div>
-    `).join('');
+    const r = await api('updateProfile', { 
+      username: State.user.username, 
+      displayName: $('epName').value, 
+      bio: $('epBio').value, 
+      specialty: $('epSpecialty').value,
+      profileImage: State.epImgUrl || State.user.profileImage 
+    });
+    hideLoading(); 
+    closeModal('editProfileModal'); 
+    if(r.success) {
+      State.user = r.user; // Update local state
+      await loadData(); // Refresh UI
+      toast('Saved!');
+    }
   }
 
-  function openPayment(pkgId, coins) {
-    State.selectedPkg = pkgId; State.proofImgUrl = '';
-    $('payAmount').textContent = `${coins} Coins`;
-    $('proofPreview').innerHTML = '';
-    
-    const s = State.settings;
-    $('kpayNum').textContent = s.kpayPhone || 'Not set';
-    if(s.kpayQr) { $('kpayQrImg').src = s.kpayQr; $('kpayQrImg').style.display = 'block'; }
-    else $('kpayQrImg').style.display = 'none';
-
-    $('waveNum').textContent = s.wavePhone || 'Not set';
-    if(s.waveQr) { $('waveQrImg').src = s.waveQr; $('waveQrImg').style.display = 'block'; }
-    else $('waveQrImg').style.display = 'none';
-
-    $('paymentModal').classList.add('open');
-  }
-
-  async function submitPurchase() {
-    if(!State.proofImgUrl) return toast('ငွေလွှဲပြေစာ တင်ပါဦး');
-    showLoading();
-    await api('submitPurchase', { username: State.user.username, packageId: State.selectedPkg, proofImage: State.proofImgUrl });
-    hideLoading(); closeModal('paymentModal'); toast('Admin စစ်ဆေးပြီးရင် Coins ရပါမည်');
+  function handleProfileImage(input) {
+    if (input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
+        if (r.success) { State.epImgUrl = r.url; $('epAvatar').innerHTML = `<img src="${r.url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`; }
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
   }
 
   // ADMIN
@@ -897,11 +1088,19 @@
         <div><b>@${esc(u.username)}</b><br/><span style="font-size:0.75rem;color:var(--text-muted)">${u.role}</span></div>
         <div>
           <button class="btn ${u.isBanned ? 'btn-outline' : ''}" style="padding:0.3rem 0.6rem;font-size:0.75rem;${u.isBanned?'border-color:#10B981;color:#10B981;':''}" onclick="banUser('${u.username}', ${!u.isBanned})">${u.isBanned ? 'Unban' : 'Ban'}</button>
+          <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.75rem;border-color:#EF4444;color:#EF4444;" onclick="deleteUser('${u.username}')">Delete</button>
         </div>
       </div>
     `).join('');
   }
   async function banUser(username, isBanned) { showLoading(); await api('adminToggleBan', { username, isBanned }); hideLoading(); loadAdminUsers(); }
+  async function deleteUser(username) {
+    $('confirmYesBtn').onclick = async () => {
+      closeModal('confirmModal');
+      showLoading(); await api('adminDeleteUser', { username }); hideLoading(); loadAdminUsers();
+    };
+    $('confirmModal').classList.add('open');
+  }
 
   function loadAdminSettings() {
     const s = State.settings;
@@ -934,28 +1133,43 @@
     hideLoading(); toast('Saved!'); await loadData();
   }
 
-  // FILE UPLOADS
-  function handlePostImage(input) {
-    if (input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
-        if (r.success) { State.postImgUrl = r.url; $('postPreviewContainer').innerHTML = `<div class="preview-box"><img src="${r.url}" /><div class="remove-preview" onclick="removePostImg()">✕</div></div>`; }
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
+  // SHOP & PAYMENT
+  async function loadShop() {
+    showLoading();
+    const r = await api('getPackages'); State.packages = r.packages;
+    hideLoading();
+    $('shopList').innerHTML = State.packages.map(p => `
+      <div class="post-card glass" style="text-align:center;cursor:pointer;" onclick="openPayment('${p.id}', ${p.coins})">
+        ${p.imageUrl ? `<img src="${imgUrl(p.imageUrl)}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 10px;" />` : ''}
+        <h4 style="font-weight:800;font-size:1.1rem;">${esc(p.name)}</h4>
+        <div style="color:var(--primary);font-weight:800;font-size:1.2rem;margin:5px 0;">${p.coins} 🪙</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);">${p.price} MMK</div>
+      </div>
+    `).join('');
   }
-  function removePostImg() { State.postImgUrl = ''; $('postPreviewContainer').innerHTML = ''; }
 
-  function handleProfileImage(input) {
-    if (input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
-        if (r.success) { State.epImgUrl = r.url; $('epAvatar').innerHTML = `<img src="${r.url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`; }
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
+  function openPayment(pkgId, coins) {
+    State.selectedPkg = pkgId; State.proofImgUrl = '';
+    $('payAmount').textContent = `${coins} Coins`;
+    $('proofPreview').innerHTML = '';
+    
+    const s = State.settings;
+    $('kpayNum').textContent = s.kpayPhone || 'Not set';
+    if(s.kpayQr) { $('kpayQrImg').src = s.kpayQr; $('kpayQrImg').style.display = 'block'; }
+    else $('kpayQrImg').style.display = 'none';
+
+    $('waveNum').textContent = s.wavePhone || 'Not set';
+    if(s.waveQr) { $('waveQrImg').src = s.waveQr; $('waveQrImg').style.display = 'block'; }
+    else $('waveQrImg').style.display = 'none';
+
+    $('paymentModal').classList.add('open');
+  }
+
+  async function submitPurchase() {
+    if(!State.proofImgUrl) return toast('ငွေလွှဲပြေစာ တင်ပါဦး');
+    showLoading();
+    await api('submitPurchase', { username: State.user.username, packageId: State.selectedPkg, proofImage: State.proofImgUrl });
+    hideLoading(); closeModal('paymentModal'); toast('Admin စစ်ဆေးပြီးရင် Coins ရပါမည်');
   }
 
   function handleProofImage(input) {
