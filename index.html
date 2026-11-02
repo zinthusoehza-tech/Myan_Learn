@@ -21,8 +21,21 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Padauk', 'Noto Sans JP', sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); transition: all 0.3s; background-image: radial-gradient(circle at 10% 20%, rgba(79, 156, 249, 0.15) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(167, 139, 250, 0.15) 0%, transparent 40%); background-attachment: fixed; min-height: 100vh; }
+  body { background: var(--bg); color: var(--text); transition: all 0.3s; min-height: 100vh; overflow-x: hidden; }
   
+  /* Animated Background */
+  .animated-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab, #4F9CF9);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   .glass { background: var(--surface); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); box-shadow: var(--glass-shadow); }
   .icon { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: inline-block; vertical-align: middle; }
   .icon-sm { width: 16px; height: 16px; }
@@ -45,33 +58,31 @@
   @keyframes gradientMove { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
 
   /* Layout */
-  #authScreen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; background-size: cover; background-position: center; transition: 0.5s; }
-  .auth-box { width: 100%; max-width: 420px; padding: 2.5rem 2rem; border-radius: 32px; text-align: center; position: relative; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); }
-  body.dark .auth-box { background: rgba(30,41,59,0.9); }
+  #authScreen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; z-index: 10; position: relative; }
+  .auth-box { width: 100%; max-width: 400px; padding: 2.5rem 2rem; border-radius: 32px; text-align: center; background: rgba(255,255,255,0.95); box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; }
+  body.dark .auth-box { background: rgba(30,41,59,0.95); }
   
-  #app { display: none; flex-direction: column; max-width: 1100px; margin: 0 auto; padding-bottom: 80px; }
+  #app { display: none; flex-direction: column; max-width: 1100px; margin: 0 auto; padding-bottom: 80px; position: relative; }
   @media (min-width: 768px) { #app { flex-direction: row; padding-bottom: 0; gap: 24px; padding-top: 24px; } .main-content { flex: 1; max-width: 700px; } .side-nav { width: 260px; height: calc(100vh - 48px); position: sticky; top: 24px; border-radius: var(--radius); padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; } }
 
   .side-nav { display: none; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0.8rem; z-index: 50; border-radius: 24px 24px 0 0; border-bottom: none; }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0.8rem; z-index: 50; border-radius: 24px 24px 0 0; border-bottom: none; background: var(--surface-solid); box-shadow: 0 -4px 20px rgba(0,0,0,0.1); }
   @media (min-width: 768px) { .bottom-nav { display: none; } .side-nav { display: flex; } }
   .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); cursor: pointer; padding: 0.5rem; border-radius: 12px; transition: 0.2s; }
   .nav-item.active { color: var(--primary); background: rgba(79, 156, 249, 0.1); }
   @media (min-width: 768px) { .nav-item { flex-direction: row; justify-content: flex-start; padding: 0.8rem 1rem; font-size: 1rem; gap: 12px; } }
 
   /* Cards */
-  .header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: sticky; top: 0; z-index: 40; margin: 1rem; border-radius: var(--radius); }
+  .header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: sticky; top: 0; z-index: 40; margin: 1rem; border-radius: var(--radius); background: var(--surface); backdrop-filter: blur(10px); }
   @media (min-width: 768px) { .header { margin: 0 0 1rem 0; } }
   
-  .teacher-card { padding: 1.5rem; border-radius: 32px; margin: 0 1rem 1.5rem 1rem; position: relative; overflow: hidden; transition: transform 0.2s; display: flex; flex-direction: column; background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,248,255,0.7)); border: 1px solid var(--border); box-shadow: var(--glass-shadow); }
-  body.dark .teacher-card { background: linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.7)); }
+  .teacher-card { padding: 1.5rem; border-radius: 32px; margin: 0 1rem 1.5rem 1rem; position: relative; overflow: hidden; transition: transform 0.2s; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--glass-shadow); }
   .teacher-card:hover { transform: translateY(-4px); }
-  .teacher-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--primary); filter: blur(60px); opacity: 0.2; border-radius: 50%; }
   
   .avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; flex-shrink: 0; overflow: hidden; border: 2px solid var(--border); }
   .avatar-lg { width: 100px; height: 100px; font-size: 2.5rem; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-  .post-card { padding: 1.2rem; border-radius: 24px; margin-bottom: 1rem; margin: 0 1rem 1rem 1rem; }
+  .post-card { padding: 1.2rem; border-radius: 24px; margin-bottom: 1rem; margin: 0 1rem 1rem 1rem; background: var(--surface); border: 1px solid var(--border); }
   .post-image-169 { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 20px; margin-bottom: 1rem; display: block; }
   .preview-box { position: relative; display: inline-block; margin-top: 10px; }
   .preview-box img { height: 80px; border-radius: 12px; object-fit: cover; }
@@ -80,7 +91,6 @@
   /* Coins Display */
   .coin-pill { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #FDE68A, #F59E0B); color: #78350F; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); border: 1px solid #FCD34D; transition: 0.2s; }
   .coin-pill:active { transform: scale(0.95); }
-  .coin-pill svg { width: 18px; height: 18px; stroke-width: 2.5; }
 
   /* Modals */
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s; }
@@ -92,20 +102,19 @@
   #confirmModal { z-index: 10000; }
   #confirmModal .modal-content { max-width: 340px; text-align: center; }
 
-  /* Teacher Profile Custom Design */
-  #teacherProfileModal .modal-content { padding: 0; overflow: hidden; max-width: 500px; }
-  .tp-hero { display: flex; height: 280px; background: #E0F2FE; position: relative; }
+  /* Teacher Profile Page Custom Design */
+  #viewTeacherProfile { padding: 1rem; }
+  .tp-hero { display: flex; height: 300px; background: #E0F2FE; position: relative; border-radius: 24px; overflow: hidden; margin-bottom: 1rem; }
   body.dark .tp-hero { background: #1E3A8A; }
   .tp-image { width: 50%; height: 100%; object-fit: cover; object-position: top center; }
   .tp-details { width: 50%; padding: 1.5rem; display: flex; flex-direction: column; justify-content: flex-end; }
-  .tp-name { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.2rem; }
-  .tp-specialty { font-size: 0.9rem; color: var(--primary); font-weight: 700; margin-bottom: 0.5rem; }
-  .tp-rating { display: flex; align-items: center; gap: 4px; font-weight: 700; color: #F59E0B; font-size: 0.9rem; }
-  .tp-stats { display: flex; justify-content: space-around; padding: 1rem 0; border-bottom: 1px solid var(--border); margin: 0 1rem; }
+  .tp-name { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.2rem; line-height: 1.1; }
+  .tp-specialty { font-size: 1rem; color: var(--primary); font-weight: 700; margin-bottom: 0.5rem; }
+  .tp-rating { display: flex; align-items: center; gap: 4px; font-weight: 700; color: #F59E0B; font-size: 1rem; }
+  .tp-stats { display: flex; justify-content: space-around; padding: 1rem; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); margin-bottom: 1rem; }
   .tp-stat { text-align: center; }
-  .tp-stat b { display: block; font-size: 1.1rem; }
-  .tp-stat span { font-size: 0.75rem; color: var(--text-muted); }
-  .tp-body { padding: 1rem; }
+  .tp-stat b { display: block; font-size: 1.2rem; }
+  .tp-stat span { font-size: 0.8rem; color: var(--text-muted); }
   
   /* Read More */
   .desc-text { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; transition: 0.3s; }
@@ -139,9 +148,14 @@
   .star-rating { display: flex; gap: 5px; justify-content: center; margin: 10px 0; }
   .star-rating svg { width: 30px; height: 30px; cursor: pointer; fill: #E2E8F0; stroke: #CBD5E1; transition: 0.2s; }
   .star-rating svg.active { fill: #F59E0B; stroke: #F59E0B; }
+
+  /* Language Select */
+  .lang-select { background: transparent; border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; color: var(--text); font-weight: 600; outline: none; cursor: pointer; }
 </style>
 </head>
 <body>
+
+<div class="animated-bg"></div>
 
 <div id="loadingOverlay">
   <div class="spinner" style="width:40px;height:40px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;"></div>
@@ -151,10 +165,15 @@
 
 <!-- AUTH SCREEN -->
 <div id="authScreen">
-  <div class="auth-box glass">
-    <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:1.5rem;" onclick="toggleLang()">
-      🌐 <span id="curLang" style="font-size:0.8rem;font-weight:bold;vertical-align:middle;">MM</span>
+  <div class="auth-box">
+    <div style="position:absolute; top:15px; right:15px;">
+      <select class="lang-select" onchange="changeLang(this.value)">
+        <option value="mm">🇲🇲 မြန်မာ</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="jp">🇯🇵 日本語</option>
+      </select>
     </div>
+    
     <h1 id="mainLogo" style="color:var(--primary);margin-bottom:1.5rem;font-size:2rem;display:flex;justify-content:center;align-items:center;gap:10px;font-weight:800;user-select:none;cursor:pointer;">
       <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       Myan Learn
@@ -213,7 +232,6 @@
     <div class="nav-item" onclick="switchView('chats')"><svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> <span data-i18n="messages">Messages</span></div>
     <div class="nav-item" onclick="switchView('profile')"><svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span data-i18n="profile">Profile</span></div>
     <div style="margin-top:auto;">
-      <div class="nav-item" onclick="toggleLang()"><span style="font-size:1.2rem;">🌐</span> <span id="curLangDesk">MM</span></div>
       <div class="nav-item" onclick="toggleTheme()"><svg class="icon" viewBox="0 0 24 24" id="themeIcon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> <span data-i18n="theme">Theme</span></div>
       <div class="nav-item" onclick="logout()" style="color:#EF4444;"><svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> <span data-i18n="logout">Log Out</span></div>
     </div>
@@ -223,6 +241,7 @@
     <div class="header glass">
       <h2 style="font-size:1.2rem;font-weight:800;">Myan Learn</h2>
       <div style="display:flex;gap:12px;align-items:center;">
+        <select class="lang-select" onchange="changeLang(this.value)" style="display:none;" id="deskLang"></select>
         <div class="coin-pill" onclick="switchView('shop')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5"/></svg>
           <span id="coinValue">0</span>
@@ -232,7 +251,7 @@
     </div>
 
     <!-- Views -->
-    <div id="viewHome" style="display:none;">
+    <div id="viewHome" class="app-view" style="display:none;">
       <div class="post-card glass" style="padding:1rem;">
         <div style="display:flex;gap:12px;">
           <div class="avatar" id="postAvatar">U</div>
@@ -250,14 +269,61 @@
       <div id="feedList"></div>
     </div>
 
-    <div id="viewTeachers" style="display:none;">
+    <div id="viewTeachers" class="app-view" style="display:none;">
       <div id="teacherList"></div>
     </div>
     
+    <!-- TEACHER PROFILE PAGE (Full Page) -->
+    <div id="viewTeacherProfile" class="app-view" style="display:none;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+        <button class="btn btn-glass" onclick="switchView('teachers')" style="padding:0.5rem; border-radius:50%;">
+          <svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h2 style="font-size:1.2rem;font-weight:800;" data-i18n="teacherprofile">Teacher Profile</h2>
+      </div>
+      
+      <div class="tp-hero">
+        <img id="tpImg" class="tp-image" src="" />
+        <div class="tp-details">
+          <h2 id="tpName" class="tp-name">Teacher Name</h2>
+          <p id="tpSpecialty" class="tp-specialty">Specialty</p>
+          <div class="tp-rating">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span id="tpRating">0.0</span> <span id="tpReviews" style="color:var(--text-muted);font-size:0.8rem;font-weight:normal;">(0 Reviews)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tp-stats">
+        <div class="tp-stat"><b id="tpExp">-</b><span>Experience</span></div>
+        <div class="tp-stat"><b id="tpStudents">-</b><span>Students</span></div>
+        <div class="tp-stat"><b id="tpCourses">0</b><span>Courses</span></div>
+      </div>
+
+      <div class="post-card glass">
+        <div style="display:flex;gap:10px;margin-bottom:1rem;">
+          <button class="btn" onclick="openChatWithFromProfile()" style="flex:1;border-radius:30px;">Message</button>
+          <button class="btn btn-glass" onclick="showRatingStars()" style="flex:1;border-radius:30px;">Rate</button>
+        </div>
+        <div id="ratingArea" style="display:none;text-align:center;margin-bottom:1rem;">
+          <p style="font-size:0.9rem;font-weight:700;margin-bottom:5px;">ဆရာ့ကို Rating ပေးပါ</p>
+          <div class="star-rating" id="starRating">
+            <svg onclick="submitRating(1)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg onclick="submitRating(2)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg onclick="submitRating(3)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg onclick="submitRating(4)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg onclick="submitRating(5)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+        <h4 style="margin-top:1rem;margin-bottom:0.5rem;font-weight:800;">Courses</h4>
+        <div id="tpCourseList" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+
     <!-- TEACHER CREATE COURSE -->
-    <div id="viewTeach" style="display:none;">
+    <div id="viewTeach" class="app-view" style="display:none;">
       <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;">သင်ခန်းစာအသစ်တင်မည်</h2>
-      <div class="post-card glass" style="margin: 0 1rem;">
+      <div class="post-card glass">
         <div class="input-group"><label>ခေါင်းစဉ် (Title)</label><input id="cTitle" placeholder="e.g. Basic English Grammar" /></div>
         <div class="input-group"><label>ရှင်းလင်းချက် (Free Description)</label><textarea id="cDesc" rows="2" placeholder="သင်ခန်းစာအကြောင်း အကျဉ်းချုပ်..."></textarea></div>
         <div class="input-group"><label>ဝယ်မှဖတ်ရမည့် ရှင်းလင်းချက် (Paid Description)</label><textarea id="cLockedDesc" rows="3" placeholder="Coins ပေးမှ ဖတ်ရမည့် အသေးစိတ်..."></textarea></div>
@@ -280,12 +346,12 @@
       </div>
     </div>
 
-    <div id="viewChats" style="display:none;">
+    <div id="viewChats" class="app-view" style="display:none;">
       <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;" data-i18n="messages">Messages</h2>
       <div id="chatList" style="padding:0 1rem;"></div>
     </div>
 
-    <div id="viewProfile" style="display:none;">
+    <div id="viewProfile" class="app-view" style="display:none;">
       <div class="teacher-card glass" style="text-align:center;align-items:center; margin: 0 1rem 1rem 1rem;">
         <div class="avatar avatar-lg" id="profileAvatar" style="margin:0 auto 1rem;">U</div>
         <h2 id="profileName" style="margin-bottom:0.2rem;">User</h2>
@@ -297,7 +363,6 @@
           <button class="btn btn-glass" onclick="openEditProfile()" data-i18n="editprofile">Edit Profile</button>
           <button class="btn btn-glass" id="adminPanelBtn" onclick="openAdminPanel()" style="display:none;background:var(--primary);color:white;">Admin Panel</button>
           <button class="btn btn-glass" onclick="toggleTheme()" style="display:flex;align-items:center;gap:5px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Theme</button>
-          <button class="btn btn-glass" onclick="toggleLang()" style="display:flex;align-items:center;gap:5px;"><span style="font-size:1.2rem;">🌐</span> <span id="curLangMobile">MM</span></button>
           <button class="btn btn-glass" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:5px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
         </div>
       </div>
@@ -305,7 +370,7 @@
       <div id="myPostsList" style="padding:0 1rem;"></div>
     </div>
 
-    <div id="viewShop" style="display:none;">
+    <div id="viewShop" class="app-view" style="display:none;">
       <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;" data-i18n="shop">Coin Shop</h2>
       <div id="shopList" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:0 1rem;"></div>
     </div>
@@ -318,49 +383,6 @@
     <div class="nav-item" id="navTeachMobile" style="display:none;" onclick="switchView('teach')"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create</div>
     <div class="nav-item" onclick="switchView('chats')"><svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span data-i18n="messages">Chats</span></div>
     <div class="nav-item" onclick="switchView('profile')"><svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span data-i18n="profile">Profile</span></div>
-  </div>
-</div>
-
-<!-- TEACHER PROFILE REDESIGNED MODAL -->
-<div class="modal" id="teacherProfileModal">
-  <div class="modal-content">
-    <div style="position:absolute; top:10px; right:10px; z-index:10; background:rgba(0,0,0,0.3); border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="closeModal('teacherProfileModal')">
-      <svg class="icon" viewBox="0 0 24 24" style="color:white;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </div>
-    <div class="tp-hero">
-      <img id="tpImg" class="tp-image" src="" />
-      <div class="tp-details">
-        <h2 id="tpName" class="tp-name">Teacher Name</h2>
-        <p id="tpSpecialty" class="tp-specialty">Specialty</p>
-        <div class="tp-rating">
-          <svg class="icon icon-sm" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <span id="tpRating">4.8</span> <span style="color:var(--text-muted);font-size:0.8rem;font-weight:normal;">(120 Reviews)</span>
-        </div>
-      </div>
-    </div>
-    <div class="tp-stats">
-      <div class="tp-stat"><b id="tpExp">5 Yrs</b><span>Experience</span></div>
-      <div class="tp-stat"><b id="tpStudents">100+</b><span>Students</span></div>
-      <div class="tp-stat"><b id="tpCourses">12</b><span>Courses</span></div>
-    </div>
-    <div class="tp-body">
-      <div style="display:flex;gap:10px;margin-bottom:1rem;">
-        <button class="btn" onclick="openChatWithFromProfile()" style="flex:1;border-radius:30px;">Message</button>
-        <button class="btn btn-glass" onclick="showRatingStars()" style="flex:1;border-radius:30px;">Rate</button>
-      </div>
-      <div id="ratingArea" style="display:none;text-align:center;margin-bottom:1rem;">
-        <p style="font-size:0.9rem;font-weight:700;margin-bottom:5px;">ဆရာ့ကို Rating ပေးပါ</p>
-        <div class="star-rating" id="starRating">
-          <svg onclick="submitRating(1)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg onclick="submitRating(2)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg onclick="submitRating(3)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg onclick="submitRating(4)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg onclick="submitRating(5)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-      </div>
-      <h4 style="margin-top:1rem;margin-bottom:0.5rem;font-weight:800;">Courses</h4>
-      <div id="tpCourseList" style="display:flex;flex-direction:column;gap:10px;"></div>
-    </div>
   </div>
 </div>
 
@@ -474,6 +496,10 @@
     <div class="input-group"><label>Display Name</label><input id="epName" /></div>
     <div class="input-group"><label>Bio</label><textarea id="epBio" rows="2"></textarea></div>
     <div class="input-group"><label>Inbox / Specialty (e.g. Math, English)</label><input id="epSpecialty" placeholder="သင်ကြားသော ဘာသာရပ်..." /></div>
+    <div style="display:flex;gap:10px;">
+      <div class="input-group" style="flex:1;"><label>Experience (e.g. 5 Yrs)</label><input id="epExp" placeholder="5 Yrs" /></div>
+      <div class="input-group" style="flex:1;"><label>Students (e.g. 100+)</label><input id="epStudents" placeholder="100+" /></div>
+    </div>
     <button class="btn" style="width:100%;" onclick="saveProfile()">Save Changes</button>
   </div>
 </div>
@@ -515,9 +541,14 @@
         else el.innerText = i18n[curLang][key];
       }
     });
-    ['curLang', 'curLangDesk', 'curLangMobile'].forEach(id => { if($(id)) $(id).innerText = curLang.toUpperCase(); });
+    document.querySelectorAll('.lang-select').forEach(sel => sel.value = curLang);
   }
-  function toggleLang() { curLang = curLang === 'mm' ? 'en' : curLang === 'en' ? 'jp' : 'mm'; localStorage.setItem('ml_lang', curLang); applyLang(); }
+
+  function changeLang(val) {
+    curLang = val;
+    localStorage.setItem('ml_lang', curLang);
+    applyLang();
+  }
 
   // --- CONFIG & STATE ---
   const API_URL = '/api/index.js';
@@ -643,8 +674,6 @@
     
     if (State.settings.loginBg) {
       $('authScreen').style.backgroundImage = `url(${imgUrl(State.settings.loginBg)})`;
-    } else {
-      $('authScreen').style.backgroundImage = 'none';
     }
     hideLoading();
     
@@ -744,7 +773,7 @@
 
   // ACTIONS
   function switchView(v) {
-    ['home','teachers','teach','chats','profile','shop'].forEach(x => {
+    ['home','teachers','teach','chats','profile','shop','teacherProfile'].forEach(x => {
       const el = $('view' + x.charAt(0).toUpperCase() + x.slice(1));
       if(el) el.style.display = 'none';
     });
@@ -796,7 +825,7 @@
     }
   }
 
-  // TEACHER PROFILE (NEW DESIGN)
+  // TEACHER PROFILE PAGE
   async function openTeacherProfile(username) {
     State.currentTeacher = State.teachers.find(x => x.username === username);
     const t = State.currentTeacher;
@@ -808,6 +837,12 @@
     $('tpName').textContent = t.displayName;
     $('tpSpecialty').textContent = t.specialty || 'Teacher';
     $('tpRating').textContent = (t.rating || 0).toFixed(1);
+    $('tpReviews').textContent = `(${t.ratingCount || 0} Reviews)`;
+    
+    // Dynamic Stats
+    $('tpExp').textContent = t.experience || '-';
+    $('tpStudents').textContent = t.studentsCount || '-';
+    $('tpCourses').textContent = r.courses.length;
     
     $('tpCourseList').innerHTML = r.courses.length ? r.courses.map(c => `
       <div style="border:1px solid var(--border);padding:10px;border-radius:12px;cursor:pointer;display:flex;gap:10px;align-items:center;" onclick="openCourse('${c.id}')">
@@ -819,11 +854,10 @@
       </div>
     `).join('') : '<p style="font-size:0.85rem;color:var(--text-muted);">သင်ခန်းစာ မရှိသေးပါ</p>';
 
-    $('teacherProfileModal').classList.add('open');
+    switchView('teacherProfile');
   }
 
   function openChatWithFromProfile() {
-    closeModal('teacherProfileModal');
     openChatWith(State.currentTeacher.username, State.currentTeacher.displayName);
   }
 
@@ -836,7 +870,7 @@
     hideLoading();
     toast('Rating ပေးပြီးပါပြီ!');
     await loadData();
-    closeModal('teacherProfileModal');
+    openTeacherProfile(State.currentTeacher.username); // Refresh
   }
 
   // COURSE DETAIL
@@ -872,7 +906,6 @@
         <button class="btn" style="width:100%;" onclick="confirmBuyCourse('${c.id}', ${c.price})">Unlock for ${c.price} Coins</button>
       `;
     }
-    closeModal('teacherProfileModal');
     $('courseModal').classList.add('open');
   }
 
@@ -1040,6 +1073,8 @@
     $('epBio').value = State.user.bio || ''; 
     $('epSpecialty').value = State.user.specialty || '';
     $('epImgUrl').value = State.user.profileImage || '';
+    $('epExp').value = State.user.experience || '';
+    $('epStudents').value = State.user.studentsCount || '';
     $('editProfileModal').classList.add('open'); 
   }
   async function saveProfile() {
@@ -1049,6 +1084,8 @@
       displayName: $('epName').value, 
       bio: $('epBio').value, 
       specialty: $('epSpecialty').value,
+      experience: $('epExp').value,
+      studentsCount: $('epStudents').value,
       profileImage: $('epImgUrl').value || State.epImgUrl || State.user.profileImage 
     });
     hideLoading(); 
