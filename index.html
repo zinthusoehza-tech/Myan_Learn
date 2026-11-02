@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Myan Learn</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root {
+    --primary: #4F46E5; --primary-light: #818CF8;
+    --bg: #F8FAFC; --surface: #FFFFFF; --text: #1E293B;
+    --text-muted: #64748B; --border: #E2E8F0;
+    --radius: 16px; --shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  body.dark { --bg: #0F172A; --surface: #1E293B; --text: #F8FAFC; --text-muted: #94A3B8; --border: #334155; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Padauk', sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s; }
+  
+  /* Layout */
+  #app { display: none; padding-bottom: 70px; min-height: 100vh; }
+  .container { padding: 1rem; max-width: 600px; margin: 0 auto; }
+  
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--surface); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 10; }
+  .header h1 { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+  
+  /* Auth */
+  #authScreen { display: flex; flex-direction: column; justify-content: center; min-height: 100vh; padding: 2rem; }
+  .auth-box { background: var(--surface); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; }
+  .input-group { margin-bottom: 1rem; text-align: left; }
+  .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+  .input-group input, .input-group select { width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--text); outline: none; }
+  .btn { width: 100%; padding: 0.9rem; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: 600; font-size: 1rem; cursor: pointer; transition: transform 0.1s; }
+  .btn:active { transform: scale(0.98); }
+  .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+  
+  /* Subject / Course Card (As requested: Long width, short height) */
+  .course-card { display: flex; background: var(--surface); border-radius: var(--radius); padding: 0.8rem; margin-bottom: 1rem; box-shadow: var(--shadow); gap: 1rem; border: 1px solid var(--border); align-items: center; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.2s; }
+  .course-card:active { transform: scale(0.98); }
+  .course-card .teacher-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; background: var(--border); flex-shrink: 0; border: 2px solid var(--primary-light); }
+  .course-card .course-info { flex: 1; min-width: 0; }
+  .course-card .course-info h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .course-card .course-info p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .course-card .badge { font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 600; }
+  .badge.free { background: #DCFCE7; color: #166534; }
+  .badge.paid { background: #FEF9C3; color: #854D0E; }
+  .badge.zoom { background: #E0F2FE; color: #0369A1; display: inline-block; margin-top: 0.3rem; }
+
+  /* Navigation */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); display: flex; justify-content: space-around; padding: 0.8rem 0.5rem; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 10; }
+  .nav-item { text-align: center; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; cursor: pointer; }
+  .nav-item.active { color: var(--primary); }
+  .nav-icon { font-size: 1.3rem; margin-bottom: 0.2rem; }
+  
+  /* Profile */
+  .profile-header { text-align: center; padding: 2rem 0; }
+  .profile-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); box-shadow: var(--shadow); margin-bottom: 1rem; background: var(--primary); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; }
+  .coins { display: inline-block; background: #FEF9C3; color: #854D0E; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; margin-top: 0.5rem; }
+
+  /* Modals */
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  .modal-content { background: var(--surface); width: 90%; max-width: 400px; padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); max-height: 80vh; overflow-y: auto; }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .close { font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+
+  /* Admin Panel */
+  .admin-panel { border: 2px dashed var(--primary); padding: 1rem; border-radius: var(--radius); margin-top: 1rem; }
+  .req-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: var(--bg); border-radius: 8px; margin-bottom: 0.5rem; }
+  .req-btn { padding: 0.4rem 0.8rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; }
+  .btn-approve { background: #DCFCE7; color: #166534; }
+  .btn-reject { background: #FEE2E2; color: #991B1B; }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen">
+  <div class="auth-box">
+    <h1 style="color:var(--primary);margin-bottom:1.5rem;font-size:2rem;">Myan Learn 📚</h1>
+    
+    <div id="loginForm">
+      <div class="input-group"><label>Username</label><input id="loginUser" /></div>
+      <div class="input-group"><label>Password</label><input type="password" id="loginPass" /></div>
+      <button class="btn" id="loginBtn" style="margin-bottom:1rem;">Sign In</button>
+      <p style="font-size:0.9rem;color:var(--text-muted);">No account? <a href="#" onclick="toggleAuth(true)" style="color:var(--primary);">Register</a></p>
+    </div>
+
+    <div id="registerForm" style="display:none;">
+      <div class="input-group"><label>Username</label><input id="regUser" /></div>
+      <div class="input-group"><label>Password</label><input type="password" id="regPass" /></div>
+      <div class="input-group">
+        <label>Role</label>
+        <select id="regRole"><option value="student">Student</option><option value="teacher">Teacher</option></select>
+      </div>
+      <button class="btn" id="regBtn" style="margin-bottom:1rem;">Create Account</button>
+      <p style="font-size:0.9rem;color:var(--text-muted);">Have an account? <a href="#" onclick="toggleAuth(false)" style="color:var(--primary);">Login</a></p>
+    </div>
+
+    <!-- Admin 10 Second Hold -->
+    <div style="margin-top:2rem; text-align:center;">
+      <button id="adminLoginBtn" style="background:transparent;border:none;color:var(--text-muted);font-size:0.8rem;cursor:pointer;user-select:none;">
+        Hold 10s for Admin ⚙️
+      </button>
+      <div id="adminProgress" style="width:0%;height:3px;background:var(--primary);transition:width 0.1s;margin:0 auto;border-radius:3px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="header">
+    <h1>Myan Learn</h1>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <span id="headerCoins" style="font-weight:700;color:#854D0E;background:#FEF9C3;padding:4px 8px;border-radius:12px;font-size:0.85rem;display:none;">🪙 0</span>
+      <span id="themeToggle" style="cursor:pointer;font-size:1.2rem;">🌙</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Home View -->
+    <div id="viewHome">
+      <h2 style="margin-bottom:1rem;font-size:1.2rem;">Explore Subjects</h2>
+      <div id="courseList"></div>
+    </div>
+
+    <!-- Teacher View -->
+    <div id="viewTeacher" style="display:none;">
+      <h2 style="margin-bottom:1rem;font-size:1.2rem;">Create Course</h2>
+      <div class="input-group"><label>Course Title</label><input id="courseTitle" placeholder="e.g. Basic English Grammar" /></div>
+      <div class="input-group"><label>Description</label><input id="courseDesc" placeholder="What will students learn?" /></div>
+      <div class="input-group"><label>Zoom Link (Optional)</label><input id="courseZoom" placeholder="https://zoom.us/j/..." /></div>
+      <div class="input-group"><label>Cover Image URL (Google Drive / ImgBB)</label><input id="courseImg" placeholder="Paste link here" /></div>
+      <div class="input-group" style="display:flex;gap:10px;align-items:center;">
+        <label style="margin:0;">Is Free?</label>
+        <input type="checkbox" id="courseIsFree" style="width:auto;" onchange="document.getElementById('coursePrice').disabled=this.checked" />
+      </div>
+      <div class="input-group"><label>Price (Coins)</label><input id="coursePrice" type="number" placeholder="e.g. 50" /></div>
+      <button class="btn" id="createCourseBtn">Publish Course</button>
+    </div>
+
+    <!-- Profile View -->
+    <div id="viewProfile" style="display:none;">
+      <div class="profile-header">
+        <div class="profile-avatar" id="profileAv">U</div>
+        <h2 id="profileName">User</h2>
+        <p style="color:var(--text-muted);margin-bottom:0.5rem;" id="profileRole">Student</p>
+        <div class="coins" id="profileCoins">🪙 0 Coins</div>
+      </div>
+      
+      <div id="teacherApplyBox" style="display:none;margin-bottom:1rem;">
+        <button class="btn btn-outline" onclick="applyTeacher()">Apply to become Teacher</button>
+      </div>
+
+      <div id="adminPanel" class="admin-panel" style="display:none;">
+        <h3 style="margin-bottom:0.8rem;color:var(--primary);">Admin Dashboard</h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;">Pending Requests:</p>
+        <div id="adminRequestsList"></div>
+      </div>
+
+      <button class="btn btn-outline" style="margin-top:1rem;color:#991B1B;border-color:#991B1B;" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchView('home')"><div class="nav-icon">🏠</div>Home</div>
+    <div class="nav-item" id="navTeacher" style="display:none;" onclick="switchView('teacher')"><div class="nav-icon">➕</div>Teach</div>
+    <div class="nav-item" onclick="switchView('profile')"><div class="nav-icon">👤</div>Profile</div>
+  </div>
+</div>
+
+<!-- MODAL FOR COURSE DETAILS -->
+<div class="modal" id="courseModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalCourseTitle">Course Title</h3>
+      <span class="close" onclick="closeModal('courseModal')">×</span>
+    </div>
+    <img id="modalCourseImg" style="width:100%;border-radius:10px;margin-bottom:1rem;display:none;" />
+    <p id="modalCourseDesc" style="color:var(--text-muted);margin-bottom:1rem;font-size:0.95rem;">Description</p>
+    <div id="modalCourseAction"></div>
+  </div>
+</div>
+
+<script>
+  // CONFIG
+  const API_URL = '/api/index.js';
+  const State = { user: null, courses: [], currentCourse: null };
+
+  // HELPERS
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return s ? String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) : ''; }
+  function imgUrl(u) {
+    if(!u) return '';
+    if(u.includes('drive.google.com/file/d/')) {
+      const id = u.split('/d/')[1].split('/')[0];
+      return `https://lh3.googleusercontent.com/d/${id}=w1000`;
+    }
+    return u;
+  }
+  async function api(action, body = {}) {
+    body.action = action;
+    const res = await fetch(API_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    return await res.json();
+  }
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.style = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1E293B;color:white;padding:10px 20px;border-radius:20px;font-size:0.9rem;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+    t.textContent = msg; document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+  }
+
+  // THEME
+  $('themeToggle').onclick = () => {
+    document.body.classList.toggle('dark');
+    $('themeToggle').textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  };
+
+  // AUTH
+  function toggleAuth(isRegister) {
+    $('loginForm').style.display = isRegister ? 'none' : 'block';
+    $('registerForm').style.display = isRegister ? 'block' : 'none';
+  }
+
+  $('loginBtn').onclick = async () => {
+    const r = await api('login', { username: $('loginUser').value, password: $('loginPass').value });
+    if (r.success) { State.user = r.user; initApp(); } else showToast(r.error);
+  };
+
+  $('regBtn').onclick = async () => {
+    const r = await api('register', { username: $('regUser').value, password: $('regPass').value, role: $('regRole').value });
+    if (r.success) { State.user = r.user; initApp(); } else showToast(r.error);
+  };
+
+  // ADMIN 10s HOLD
+  let holdTimer, holdStart;
+  const adminBtn = $('adminLoginBtn'), adminProg = $('adminProgress');
+  
+  function startHold(e) {
+    if(e.type === 'touchstart') e.preventDefault();
+    holdStart = Date.now();
+    holdTimer = setInterval(() => {
+      const pct = Math.min(100, ((Date.now() - holdStart) / 10000) * 100);
+      adminProg.style.width = pct + '%';
+      if (pct >= 100) {
+        clearInterval(holdTimer);
+        adminProg.style.width = '0%';
+        const pass = prompt("Enter Admin Password:");
+        if (pass) {
+          api('login', { username: 'admin', password: pass }).then(r => {
+            if (r.success && r.user.isAdmin) { State.user = r.user; initApp(); }
+            else showToast('Invalid Admin Password');
+          });
+        }
+      }
+    }, 100);
+  }
+  function cancelHold() { clearInterval(holdTimer); adminProg.style.width = '0%'; }
+  adminBtn.addEventListener('mousedown', startHold);
+  adminBtn.addEventListener('touchstart', startHold, {passive:false});
+  adminBtn.addEventListener('mouseup', cancelHold);
+  adminBtn.addEventListener('mouseleave', cancelHold);
+  adminBtn.addEventListener('touchend', cancelHold);
+
+  // APP INIT
+  async function initApp() {
+    $('authScreen').style.display = 'none';
+    $('app').style.display = 'block';
+    localStorage.setItem('myanlearn_user', JSON.stringify(State.user));
+    await loadData();
+  }
+
+  async function loadData() {
+    const r = await api('bootstrap', { username: State.user.username });
+    State.user = r.user; State.courses = r.courses;
+    
+    // Update UI
+    $('profileName').textContent = State.user.displayName;
+    $('profileAv').textContent = State.user.displayName.charAt(0).toUpperCase();
+    if (State.user.profileImage) $('profileAv').innerHTML = `<img src="${imgUrl(State.user.profileImage)}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"/>`;
+    $('profileRole').textContent = State.user.role.toUpperCase() + (State.user.isVerifiedStudent ? ' (Verified)' : '');
+    $('profileCoins').textContent = `🪙 ${State.user.coins} Coins`;
+    $('headerCoins').textContent = `🪙 ${State.user.coins}`;
+    $('headerCoins').style.display = 'inline-block';
+
+    // Nav restrictions
+    if (State.user.role === 'teacher' || State.user.isAdmin) {
+      $('navTeacher').style.display = 'block';
+    } else {
+      $('navTeacher').style.display = 'none';
+    }
+
+    if (State.user.role === 'student' && !State.user.isVerifiedStudent) {
+      $('teacherApplyBox').style.display = 'block'; // actually apply for verification
+      $('teacherApplyBox').innerHTML = `<button class="btn btn-outline" onclick="applyTeacher()">Apply for Student Verification</button>`;
+    } else {
+      $('teacherApplyBox').style.display = 'none';
+    }
+
+    if (State.user.isAdmin) {
+      $('adminPanel').style.display = 'block';
+      loadAdminRequests();
+    } else {
+      $('adminPanel').style.display = 'none';
+    }
+
+    renderCourses();
+  }
+
+  function renderCourses() {
+    const c = $('courseList');
+    if (!State.courses.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-muted);margin-top:2rem;">No courses available yet.</p>'; return; }
+    
+    c.innerHTML = State.courses.map(course => {
+      const img = course.teacherImage ? imgUrl(course.teacherImage) : '';
+      const badge = course.isFree ? '<span class="badge free">Free</span>' : `<span class="badge paid">🪙 ${course.price}</span>`;
+      const zoom = course.zoomLink ? `<span class="badge zoom">🔗 Zoom Link Available</span>` : '';
+      
+      return `
+        <div class="course-card" onclick="openCourse('${course.id}')">
+          <div class="teacher-img" style="display:flex;justify-content:center;align-items:center;font-size:1.5rem;font-weight:bold;color:var(--primary);">
+            ${img ? `<img src="${img}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"/>` : course.teacherName.charAt(0)}
+          </div>
+          <div class="course-info">
+            <h3>${esc(course.title)}</h3>
+            <p>${esc(course.description)}</p>
+            <div>${badge} ${zoom}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openCourse(id) {
+    const course = State.courses.find(c => c.id === id);
+    if (!course) return;
+    State.currentCourse = course;
+    
+    $('modalCourseTitle').textContent = course.title;
+    $('modalCourseDesc').textContent = course.description;
+    if (course.coverImage) {
+      $('modalCourseImg').src = imgUrl(course.coverImage);
+      $('modalCourseImg').style.display = 'block';
+    } else {
+      $('modalCourseImg').style.display = 'none';
+    }
+
+    const actionBox = $('modalCourseAction');
+    if (course.hasAccess) {
+      actionBox.innerHTML = `
+        ${course.zoomLink ? `<a href="${esc(course.zoomLink)}" target="_blank" class="btn" style="text-decoration:none;display:block;text-align:center;margin-bottom:0.5rem;background:#0369A1;">Join Zoom Meeting 🔗</a>` : ''}
+        <button class="btn btn-outline" onclick="closeModal('courseModal')">Start Learning</button>
+      `;
+    } else {
+      actionBox.innerHTML = `
+        <p style="text-align:center;margin-bottom:1rem;font-size:0.9rem;">You need to unlock this course to join the Zoom meeting and access materials.</p>
+        <button class="btn" onclick="buyCourse('${course.id}')">Unlock for 🪙 ${course.price}</button>
+      `;
+    }
+    $('courseModal').classList.add('open');
+  }
+
+  async function buyCourse(id) {
+    if (!confirm("Are you sure you want to buy this course?")) return;
+    const r = await api('buyCourse', { username: State.user.username, courseId: id });
+    if (r.success) {
+      showToast('Course Unlocked! 🎉');
+      closeModal('courseModal');
+      await loadData(); // refresh data
+      openCourse(id);
+    } else {
+      showToast(r.error);
+    }
+  }
+
+  // TEACHER CREATE COURSE
+  $('createCourseBtn').onclick = async () => {
+    const isFree = $('courseIsFree').checked;
+    const price = isFree ? 0 : Number($('coursePrice').value);
+    const r = await api('createCourse', {
+      username: State.user.username,
+      title: $('courseTitle').value,
+      description: $('courseDesc').value,
+      zoomLink: $('courseZoom').value,
+      coverImage: $('courseImg').value,
+      isFree: isFree,
+      price: price
+    });
+    if (r.success) {
+      showToast('Course Created!');
+      $('courseTitle').value = ''; $('courseDesc').value = ''; $('courseZoom').value = ''; $('courseImg').value = '';
+      switchView('home');
+      loadData();
+    } else showToast(r.error);
+  };
+
+  // APPLY TEACHER
+  async function applyTeacher() {
+    const type = State.user.role === 'student' ? 'student' : 'teacher';
+    const r = await api('applyTeacher', { username: State.user.username, type });
+    if (r.success) showToast('Request sent to Admin!');
+  }
+
+  // ADMIN DASHBOARD
+  async function loadAdminRequests() {
+    const r = await api('adminGetRequests', { username: State.user.username });
+    const c = $('adminRequestsList');
+    if (!r.requests.length) { c.innerHTML = '<p style="font-size:0.85rem;">No pending requests.</p>'; return; }
+    
+    c.innerHTML = r.requests.map(req => `
+      <div class="req-item">
+        <div>
+          <b>@${esc(req.username)}</b><br/>
+          <span style="font-size:0.75rem;color:var(--text-muted)">Wants to be: ${req.type.toUpperCase()}</span>
+        </div>
+        <div>
+          <button class="req-btn btn-approve" onclick="handleReq('${req.id}', true)">✓</button>
+          <button class="req-btn btn-reject" onclick="handleReq('${req.id}', false)">×</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function handleReq(id, approve) {
+    await api('adminApproveRequest', { username: State.user.username, requestId: id, approve });
+    loadAdminRequests();
+    showToast(approve ? 'Approved' : 'Rejected');
+  }
+
+  // VIEWS
+  function switchView(view) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    $('viewHome').style.display = view === 'home' ? 'block' : 'none';
+    $('viewTeacher').style.display = view === 'teacher' ? 'block' : 'none';
+    $('viewProfile').style.display = view === 'profile' ? 'block' : 'none';
+    
+    if (view === 'profile') loadData(); // refresh profile
+  }
+
+  function closeModal(id) { $(id).classList.remove('open'); }
+  function logout() { localStorage.removeItem('myanlearn_user'); location.reload(); }
+
+  // AUTO LOGIN
+  const saved = localStorage.getItem('myanlearn_user');
+  if (saved) { State.user = JSON.parse(saved); initApp(); }
+
+</script>
+</body>
+</html>
