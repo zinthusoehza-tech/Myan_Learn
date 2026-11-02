@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
       return send(res, { success: true });
     }
 
-    // ---------------- AUTH ----------------
+    // ---------------- AUTH & PROFILE ----------------
     if (action === 'register') {
       const { username, password, role } = body;
       const existing = await usersCol.findOne({ username: username.toLowerCase() });
@@ -58,7 +58,7 @@ module.exports = async (req, res) => {
       const newUser = {
         username: username.toLowerCase(), passwordHash: hashPassword(password), displayName: username,
         role: role === 'teacher' ? 'student' : role, isVerifiedStudent: false, isApprovedTeacher: false, isAdmin: false,
-        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', bio: '', rating: 0, ratingCount: 0, createdAt: nowIso()
+        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', bio: '', specialty: '', rating: 0, ratingCount: 0, createdAt: nowIso()
       };
       await usersCol.insertOne(newUser);
       if (role === 'teacher') await requestsCol.insertOne({ username: newUser.username, type: 'teacher', status: 'pending', createdAt: nowIso() });
@@ -75,6 +75,24 @@ module.exports = async (req, res) => {
       
       const { passwordHash, _id, ...safeUser } = user;
       return send(res, { success: true, user: { id: _id.toString(), ...safeUser }, token: generateToken(safeUser.username) });
+    }
+
+    if (action === 'updateProfile') {
+      const { username, displayName, bio, profileImage, specialty } = body;
+      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, specialty } });
+      const updatedUser = await usersCol.findOne({ username: username.toLowerCase() });
+      const { passwordHash, _id, ...safeUser } = updatedUser;
+      return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
+    }
+
+    if (action === 'rateTeacher') {
+      const { teacherUsername, rating } = body;
+      const teacher = await usersCol.findOne({ username: teacherUsername });
+      if (!teacher) return send(res, { success: false, error: 'Teacher not found' });
+      const newCount = (teacher.ratingCount || 0) + 1;
+      const newRating = (((teacher.rating || 0) * (teacher.ratingCount || 0)) + rating) / newCount;
+      await usersCol.updateOne({ username: teacherUsername }, { $set: { rating: newRating, ratingCount: newCount } });
+      return send(res, { success: true, rating: newRating, count: newCount });
     }
 
     // ---------------- POSTS ----------------
@@ -127,8 +145,8 @@ module.exports = async (req, res) => {
 
     // ---------------- CHAT ----------------
     if (action === 'sendMessage') {
-      const { from, to, text, imageUrl } = body;
-      await chatsCol.insertOne({ from, to, text, imageUrl, createdAt: nowIso() });
+      const { from, to, text } = body;
+      await chatsCol.insertOne({ from, to, text, createdAt: nowIso() });
       return send(res, { success: true });
     }
     if (action === 'getChatList') {
@@ -139,7 +157,7 @@ module.exports = async (req, res) => {
         const other = m.from === username ? m.to : m.from;
         if (!convMap.has(other)) {
           const u = await usersCol.findOne({ username: other });
-          convMap.set(other, { username: other, displayName: u?.displayName || other, profileImage: u?.profileImage || '', lastMsg: m.text || '📷 Photo', time: m.createdAt });
+          convMap.set(other, { username: other, displayName: u?.displayName || other, profileImage: u?.profileImage || '', lastMsg: m.text, time: m.createdAt });
         }
       }
       return send(res, { success: true, chats: Array.from(convMap.values()) });
@@ -148,8 +166,11 @@ module.exports = async (req, res) => {
       const msgs = await chatsCol.find({ $or: [{ from: body.user1, to: body.user2 }, { from: body.user2, to: body.user1 }] }).sort({ createdAt: 1 }).toArray();
       return send(res, { success: true, messages: normalizeDocs(msgs) });
     }
-    if (action === 'deleteMessage') {
-      await chatsCol.deleteOne({ _id: toObjectId(body.messageId) });
+    if (action === 'deleteMessages') {
+      const { ids } = body; // Array of message IDs
+      for(const id of ids) {
+        await chatsCol.deleteOne({ _id: toObjectId(id) });
+      }
       return send(res, { success: true });
     }
 
@@ -198,6 +219,10 @@ module.exports = async (req, res) => {
     }
     if (action === 'adminToggleBan') {
       await usersCol.updateOne({ username: body.username }, { $set: { isBanned: body.isBanned } });
+      return send(res, { success: true });
+    }
+    if (action === 'adminDeleteUser') {
+      await usersCol.deleteOne({ username: body.username });
       return send(res, { success: true });
     }
     if (action === 'adminGetRequests') {
