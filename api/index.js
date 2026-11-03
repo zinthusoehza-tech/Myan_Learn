@@ -30,7 +30,6 @@ module.exports = async (req, res) => {
   try {
     const usersCol = await getCollection('users');
     const coursesCol = await getCollection('courses');
-    const videosCol = await getCollection('videos');
     const requestsCol = await getCollection('requests');
 
     // ---------------- AUTH ----------------
@@ -42,7 +41,7 @@ module.exports = async (req, res) => {
       const newUser = {
         username: username.toLowerCase(), passwordHash: hashPassword(password), displayName: username,
         role: role === 'teacher' ? 'student' : role, isVerifiedStudent: false, isApprovedTeacher: false, isAdmin: false,
-        isBanned: false, coins: 100, xp: 0, purchasedCourses: [], completedLessons: [], profileImage: '', bio: '', specialty: '', experience: '', studentsCount: '', rating: 0, ratingCount: 0, createdAt: nowIso()
+        isBanned: false, coins: 500, xp: 0, purchasedCourses: [], completedLessons: [], profileImage: '', bio: '', specialty: '', experience: '', studentsCount: '', rating: 0, ratingCount: 0, createdAt: nowIso()
       };
       await usersCol.insertOne(newUser);
       if (role === 'teacher') await requestsCol.insertOne({ username: newUser.username, type: 'teacher', status: 'pending', createdAt: nowIso() });
@@ -69,7 +68,7 @@ module.exports = async (req, res) => {
       return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
     }
 
-    // ---------------- COURSES & LESSONS ----------------
+    // ---------------- COURSES ----------------
     if (action === 'createCourse') {
       const { username, title, description, coverImage, isFree, price, modules } = body;
       const teacher = await usersCol.findOne({ username: username.toLowerCase() });
@@ -80,56 +79,27 @@ module.exports = async (req, res) => {
       return send(res, { success: true });
     }
 
-    if (action === 'getTeacherCourses') {
-      const courses = await coursesCol.find({ teacherId: body.teacherId }).sort({ createdAt: -1 }).toArray();
+    if (action === 'getAllCourses') {
+      const courses = await coursesCol.find({}).sort({ createdAt: -1 }).toArray();
       return send(res, { success: true, courses: normalizeDocs(courses) });
     }
 
     if (action === 'getCourseDetails') {
       const course = await coursesCol.findOne({ _id: toObjectId(body.courseId) });
       if(!course) return send(res, { success: false, error: 'Course not found' });
-      
-      const user = await usersCol.findOne({ username: body.username });
-      const hasAccess = user.isAdmin || user.isVerifiedStudent || course.isFree || (user.purchasedCourses || []).includes(course._id.toString());
-      
-      return send(res, { success: true, course: normalizeDoc(course), hasAccess, completedLessons: user.completedLessons || [] });
+      return send(res, { success: true, course: normalizeDoc(course) });
     }
 
     if (action === 'completeLesson') {
       const { username, lessonId, xpAmount } = body;
       const user = await usersCol.findOne({ username });
-      if(!user.completedLessons.includes(lessonId)) {
+      if(user.completedLessons && !user.completedLessons.includes(lessonId)) {
         await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId }, $inc: { xp: (xpAmount || 20) } });
       }
       return send(res, { success: true });
     }
 
-    if (action === 'getAllCourses') {
-      const courses = await coursesCol.find({}).limit(10).toArray();
-      return send(res, { success: true, courses: normalizeDocs(courses) });
-    }
-
-    // ---------------- VIDEOS ----------------
-    if (action === 'getVideos') {
-      const videos = await videosCol.find({}).toArray();
-      // If empty, seed some mock videos
-      if(videos.length === 0) {
-        const mockVideos = [
-          { title: "The power of the maid!", category: "Anime", level: "Easy", duration: "00:19", views: "293k", thumbnail: "https://i.ibb.co/3W9Xy0Z/maid.jpg", isPremium: false },
-          { title: "Ordering at a Restaurant", category: "Music", level: "Easy", duration: "01:20", views: "99k", thumbnail: "https://i.ibb.co/6P9Qx7b/restaurant.jpg", isPremium: true }
-        ];
-        await videosCol.insertMany(mockVideos);
-        return send(res, { success: true, videos: mockVideos });
-      }
-      return send(res, { success: true, videos: normalizeDocs(videos) });
-    }
-
     // ---------------- ADMIN ----------------
-    if (action === 'getTeachers') {
-      const teachers = await usersCol.find({ isApprovedTeacher: true }).project({ passwordHash: 0 }).toArray();
-      return send(res, { success: true, teachers: normalizeDocs(teachers) });
-    }
-    
     if (action === 'adminGetRequests') {
       const reqs = await requestsCol.find({ status: 'pending' }).toArray();
       return send(res, { success: true, requests: normalizeDocs(reqs) });
