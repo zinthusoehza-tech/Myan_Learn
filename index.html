@@ -8,11 +8,11 @@
   @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
   
   :root {
-    /* Soft Colors */
-    --primary: #58CC02; --primary-hover: #46A302; --primary-light: #E5F8D4;
-    --blue: #1CB0F6; --blue-light: #DDF4FF;
+    /* Soft Colors Matching Screenshots */
+    --primary: #7CD84E; --primary-hover: #5BB12E; --primary-light: #EAF9E2;
+    --blue: #4EC6F0; --blue-light: #E3F6FC;
     --purple: #CE82FF; --purple-light: #F3E5F5;
-    --red: #FF4B4B; --red-light: #FFDFE0;
+    --red: #FF6B6B; --red-light: #FFEBEB;
     --yellow: #FFC800; --yellow-light: #FFF4CC;
     
     --bg: #FFFFFF; --surface: #F7F7F7; --text: #3C3C3C; --text-muted: #AFAFAF;
@@ -34,8 +34,8 @@
   .btn-outline:active { transform: none; background: var(--surface); }
 
   /* Header */
-  .top-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: fixed; top: 0; left: 0; right: 0; background: var(--bg); z-index: 40; border-bottom: 2px solid var(--border); max-width: 600px; margin: 0 auto; }
-  .header-pill { display: flex; align-items: center; gap: 6px; background: var(--surface); padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; border: 2px solid var(--border); cursor: pointer; }
+  .top-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: fixed; top: 0; left: 0; right: 0; background: var(--bg); z-index: 40; max-width: 600px; margin: 0 auto; }
+  .header-pill { display: flex; align-items: center; gap: 6px; background: var(--surface); padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer; }
   
   /* Main Layout */
   #app { display: none; flex-direction: column; max-width: 600px; margin: 60px auto 0; min-height: 100vh; }
@@ -43,7 +43,7 @@
   @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
   /* --- VIEW 1: LEARNING (PATH) --- */
-  .path-banner { background: var(--red-light); border-radius: 16px; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border: 2px solid #F5B8B8; }
+  .path-banner { background: var(--red-light); border-radius: 16px; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
   .path-banner h2 { color: #C53030; font-weight: 800; font-size: 1.2rem; }
   .path-banner p { color: #E53E3E; font-size: 0.9rem; font-weight: 700; }
   
@@ -61,7 +61,9 @@
   .path-label { margin-top: 12px; font-weight: 800; color: var(--text-muted); font-size: 0.95rem; }
   .path-node.active + .path-label { color: var(--text); }
   
-  .path-connector { width: 4px; height: 30px; background: var(--border); border-radius: 2px; margin: -5px 0; z-index: 1; border-left: 4px dashed var(--border); background: transparent; }
+  .path-connector { width: 4px; height: 30px; border-left: 4px dashed var(--border); background: transparent; margin: -5px 0; z-index: 1; }
+  
+  /* Zigzag positions */
   .row-0 { transform: translateX(0); } .row-1 { transform: translateX(-60px); } .row-2 { transform: translateX(0); } .row-3 { transform: translateX(60px); }
 
   /* --- VIEW 2: ALPHABET (EXPLORE) --- */
@@ -91,18 +93,18 @@
   .dub-btn { background: white; color: var(--text); width: 100%; border-radius: 12px; padding: 12px; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 800; }
 
   /* --- VIEW 5: ME (PROFILE) --- */
-  .profile-header-card { background: var(--primary); border-radius: 24px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; color: white; box-shadow: 0 6px 0 var(--primary-hover); margin-bottom: 2rem; position: relative; }
+  .profile-header-card { background: #7CD84E; border-radius: 24px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; color: white; margin-bottom: 2rem; position: relative; }
   .profile-av { width: 80px; height: 80px; border-radius: 50%; background: white; border: 4px solid rgba(255,255,255,0.3); display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: 800; color: var(--primary); overflow: hidden; flex-shrink: 0; }
   .profile-av img { width: 100%; height: 100%; object-fit: cover; }
-  .profile-info h2 { font-weight: 800; font-size: 1.4rem; margin-bottom: 4px; }
-  .profile-info p { font-size: 0.9rem; font-weight: 600; opacity: 0.9; }
+  .profile-info h2 { font-weight: 800; font-size: 1.4rem; margin-bottom: 4px; color: #E5F8D4; }
+  .profile-info p { font-size: 0.9rem; font-weight: 600; color: white; }
   
   .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
   .stat-item { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
   .stat-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border); display: flex; justify-content: center; align-items: center; margin-bottom: 8px; }
   .stat-item span { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
   
-  .chart-card { background: var(--primary); border-radius: 24px; padding: 1.5rem; color: white; margin-bottom: 1.5rem; box-shadow: 0 6px 0 var(--primary-hover); }
+  .chart-card { background: #7CD84E; border-radius: 24px; padding: 1.5rem; color: white; margin-bottom: 1.5rem; }
   .chart-bars { display: flex; justify-content: space-between; align-items: flex-end; height: 100px; margin-top: 1rem; }
   .chart-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .chart-bar { width: 8px; height: 60px; background: rgba(255,255,255,0.3); border-radius: 4px; position: relative; overflow: hidden; }
@@ -540,7 +542,10 @@
     hideLoading();
     
     // Header UI
-    const avHtml = State.user.profileImage ? `<img src="${imgUrl(State.user.profileImage)}" />` : State.user.displayName.charAt(0).toUpperCase();
+    // STRICT FALLBACK FOR PROFILE IMAGE
+    const avatarFallback = `https://ui-avatars.com/api/?name=${State.user.displayName.charAt(0)}&background=7CD84E&color=fff&size=128`;
+    const avHtml = State.user.profileImage ? `<img src="${imgUrl(State.user.profileImage)}" onerror="this.src='${avatarFallback}'" />` : `<img src="${avatarFallback}" />`;
+    
     $('profileAvatar').innerHTML = avHtml;
     $('profileName').innerText = State.user.displayName;
     $('coinValue').innerText = State.user.coins;
@@ -603,7 +608,7 @@
     }
     $('exploreList').innerHTML = State.courses.map(c => `
       <div class="course-card" onclick="selectCourse('${c.id}')">
-        <img src="${imgUrl(c.coverImage)}" class="course-img" onerror="this.src='https://via.placeholder.com/80/58CC02/FFFFFF?text=C'" />
+        <img src="${imgUrl(c.coverImage) || 'https://ui-avatars.com/api/?name='+c.title.charAt(0)+'&background=7CD84E&color=fff&size=128'}" class="course-img" />
         <div style="flex:1;">
           <h4 style="font-weight:800;font-size:1.1rem;">${esc(c.title)}</h4>
           <p style="font-size:0.85rem;color:var(--text-muted);margin-top:2px;">By ${esc(c.teacherName)}</p>
@@ -792,6 +797,7 @@
       const r = await api('uploadImage', { base64: e.target.result });
       hideLoading();
       if (r.success) { State.epImgUrl = r.url; $('epAvatar').innerHTML = `<img src="${r.url}" />`; toast('Image uploaded'); }
+      else toast('Upload failed');
     };
     reader.readAsDataURL(input.files[0]);
   }
