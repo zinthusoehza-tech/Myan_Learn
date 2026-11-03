@@ -30,8 +30,7 @@ module.exports = async (req, res) => {
   try {
     const usersCol = await getCollection('users');
     const coursesCol = await getCollection('courses');
-    const packagesCol = await getCollection('coin_packages');
-    const purchasesCol = await getCollection('purchases');
+    const videosCol = await getCollection('videos');
     const requestsCol = await getCollection('requests');
 
     // ---------------- AUTH ----------------
@@ -41,26 +40,9 @@ module.exports = async (req, res) => {
       if (existing) return send(res, { success: false, error: 'Username တူနေပါတယ်' });
       
       const newUser = {
-        username: username.toLowerCase(), 
-        passwordHash: hashPassword(password), 
-        displayName: username,
-        role: role === 'teacher' ? 'student' : role,
-        isVerifiedStudent: false, 
-        isApprovedTeacher: false, 
-        isAdmin: false,
-        isBanned: false, 
-        coins: 100, 
-        xp: 0,
-        purchasedCourses: [], 
-        completedLessons: [],
-        profileImage: '', 
-        bio: '', 
-        specialty: '', 
-        experience: '', 
-        studentsCount: '', 
-        rating: 0, 
-        ratingCount: 0, 
-        createdAt: nowIso()
+        username: username.toLowerCase(), passwordHash: hashPassword(password), displayName: username,
+        role: role === 'teacher' ? 'student' : role, isVerifiedStudent: false, isApprovedTeacher: false, isAdmin: false,
+        isBanned: false, coins: 100, xp: 0, purchasedCourses: [], completedLessons: [], profileImage: '', bio: '', specialty: '', experience: '', studentsCount: '', rating: 0, ratingCount: 0, createdAt: nowIso()
       };
       await usersCol.insertOne(newUser);
       if (role === 'teacher') await requestsCol.insertOne({ username: newUser.username, type: 'teacher', status: 'pending', createdAt: nowIso() });
@@ -91,21 +73,10 @@ module.exports = async (req, res) => {
     if (action === 'createCourse') {
       const { username, title, description, coverImage, isFree, price, modules } = body;
       const teacher = await usersCol.findOne({ username: username.toLowerCase() });
-      
-      const newCourse = {
-        teacherId: teacher.username, 
-        teacherName: teacher.displayName, 
-        teacherImage: teacher.profileImage,
-        title: title || 'Untitled Course',
-        description: description || '',
-        coverImage: coverImage || '',
-        isFree: !!isFree, 
-        price: Number(price) || 0, 
-        modules: modules || [],
-        createdAt: nowIso()
-      };
-      
-      await coursesCol.insertOne(newCourse);
+      await coursesCol.insertOne({
+        teacherId: teacher.username, teacherName: teacher.displayName, teacherImage: teacher.profileImage,
+        title, description, coverImage, isFree, price: Number(price) || 0, modules: modules || [], createdAt: nowIso()
+      });
       return send(res, { success: true });
     }
 
@@ -124,30 +95,36 @@ module.exports = async (req, res) => {
       return send(res, { success: true, course: normalizeDoc(course), hasAccess, completedLessons: user.completedLessons || [] });
     }
 
-    if (action === 'buyCourse') {
-      const { username, courseId } = body;
-      const user = await usersCol.findOne({ username: username.toLowerCase() });
-      const course = await coursesCol.findOne({ _id: toObjectId(courseId) });
-      
-      if(!course) return send(res, { success: false, error: 'Course not found' });
-      if (user.coins < course.price) return send(res, { success: false, error: 'Coins မလုံလောက်ပါ' });
-      
-      await usersCol.updateOne({ username: user.username }, { $inc: { coins: -course.price }, $push: { purchasedCourses: courseId } });
-      await usersCol.updateOne({ username: course.teacherId }, { $inc: { coins: course.price } });
-      return send(res, { success: true });
-    }
-
     if (action === 'completeLesson') {
-      const { username, lessonId } = body;
+      const { username, lessonId, xpAmount } = body;
       const user = await usersCol.findOne({ username });
-      if(user.completedLessons && user.completedLessons.includes(lessonId)) {
-        return send(res, { success: true });
+      if(!user.completedLessons.includes(lessonId)) {
+        await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId }, $inc: { xp: (xpAmount || 20) } });
       }
-      await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId }, $inc: { xp: 20 } });
       return send(res, { success: true });
     }
 
-    // ---------------- ADMIN & TEACHERS ----------------
+    if (action === 'getAllCourses') {
+      const courses = await coursesCol.find({}).limit(10).toArray();
+      return send(res, { success: true, courses: normalizeDocs(courses) });
+    }
+
+    // ---------------- VIDEOS ----------------
+    if (action === 'getVideos') {
+      const videos = await videosCol.find({}).toArray();
+      // If empty, seed some mock videos
+      if(videos.length === 0) {
+        const mockVideos = [
+          { title: "The power of the maid!", category: "Anime", level: "Easy", duration: "00:19", views: "293k", thumbnail: "https://i.ibb.co/3W9Xy0Z/maid.jpg", isPremium: false },
+          { title: "Ordering at a Restaurant", category: "Music", level: "Easy", duration: "01:20", views: "99k", thumbnail: "https://i.ibb.co/6P9Qx7b/restaurant.jpg", isPremium: true }
+        ];
+        await videosCol.insertMany(mockVideos);
+        return send(res, { success: true, videos: mockVideos });
+      }
+      return send(res, { success: true, videos: normalizeDocs(videos) });
+    }
+
+    // ---------------- ADMIN ----------------
     if (action === 'getTeachers') {
       const teachers = await usersCol.find({ isApprovedTeacher: true }).project({ passwordHash: 0 }).toArray();
       return send(res, { success: true, teachers: normalizeDocs(teachers) });
@@ -161,7 +138,6 @@ module.exports = async (req, res) => {
     if (action === 'adminApproveRequest') {
       const req = await requestsCol.findOne({ _id: toObjectId(body.requestId) });
       if (!req) return send(res, { success: false, error: 'Request not found' });
-      
       if (body.approve) {
         await usersCol.updateOne({ username: req.username }, { $set: { role: 'teacher', isApprovedTeacher: true } });
         await requestsCol.updateOne({ _id: req._id }, { $set: { status: 'approved' } });
