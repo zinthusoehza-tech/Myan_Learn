@@ -31,8 +31,6 @@ module.exports = async (req, res) => {
     const usersCol = await getCollection('users');
     const coursesCol = await getCollection('courses');
     const postsCol = await getCollection('posts');
-    const commentsCol = await getCollection('comments');
-    const likesCol = await getCollection('likes');
     const chatsCol = await getCollection('chat_messages');
     const packagesCol = await getCollection('coin_packages');
     const purchasesCol = await getCollection('purchases');
@@ -41,9 +39,7 @@ module.exports = async (req, res) => {
 
     // ---------------- SETTINGS ----------------
     if (action === 'getSettings') {
-      const settings = await settingsCol.findOne({ key: 'globalSettings' }) || { 
-        kpayPhone: '', kpayQr: '', wavePhone: '', waveQr: '', loginBg: '' 
-      };
+      const settings = await settingsCol.findOne({ key: 'globalSettings' }) || { kpayPhone: '', kpayQr: '', wavePhone: '', waveQr: '' };
       return send(res, { success: true, settings });
     }
     if (action === 'adminSaveSettings') {
@@ -51,7 +47,7 @@ module.exports = async (req, res) => {
       return send(res, { success: true });
     }
 
-    // ---------------- AUTH & PROFILE ----------------
+    // ---------------- AUTH ----------------
     if (action === 'register') {
       const { username, password, role } = body;
       const existing = await usersCol.findOne({ username: username.toLowerCase() });
@@ -60,8 +56,8 @@ module.exports = async (req, res) => {
       const newUser = {
         username: username.toLowerCase(), passwordHash: hashPassword(password), displayName: username,
         role: role === 'teacher' ? 'student' : role, isVerifiedStudent: false, isApprovedTeacher: false, isAdmin: false,
-        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', coverImage: '', bio: '', specialty: '', 
-        experience: '', studentsCount: '', rating: 0, ratingCount: 0, createdAt: nowIso()
+        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', bio: '', specialty: '', 
+        experience: '', studentsCount: '', rating: 0, ratingCount: 0, completedLessons: [], createdAt: nowIso()
       };
       await usersCol.insertOne(newUser);
       if (role === 'teacher') await requestsCol.insertOne({ username: newUser.username, type: 'teacher', status: 'pending', createdAt: nowIso() });
@@ -88,53 +84,29 @@ module.exports = async (req, res) => {
       return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
     }
 
-    if (action === 'rateTeacher') {
-      const { teacherUsername, rating } = body;
-      const teacher = await usersCol.findOne({ username: teacherUsername });
-      if (!teacher) return send(res, { success: false, error: 'Teacher not found' });
-      const newCount = (teacher.ratingCount || 0) + 1;
-      const newRating = (((teacher.rating || 0) * (teacher.ratingCount || 0)) + rating) / newCount;
-      await usersCol.updateOne({ username: teacherUsername }, { $set: { rating: newRating, ratingCount: newCount } });
-      return send(res, { success: true, rating: newRating, count: newCount });
-    }
-
-    // ---------------- POSTS ----------------
-    if (action === 'createPost') {
-      await postsCol.insertOne({ author: body.username.toLowerCase(), content: body.content, imageUrl: body.imageUrl, likeCount: 0, commentCount: 0, createdAt: nowIso() });
-      return send(res, { success: true });
-    }
-    if (action === 'deletePost') {
-      await postsCol.deleteOne({ _id: toObjectId(body.postId) });
-      return send(res, { success: true });
-    }
-    if (action === 'toggleLike') {
-      const { postId, username } = body;
-      const existing = await likesCol.findOne({ postId, username });
-      if (existing) {
-        await likesCol.deleteOne({ _id: existing._id });
-        await postsCol.updateOne({ _id: toObjectId(postId) }, { $inc: { likeCount: -1 } });
-        return send(res, { success: true, liked: false });
-      } else {
-        await likesCol.insertOne({ postId, username });
-        await postsCol.updateOne({ _id: toObjectId(postId) }, { $inc: { likeCount: 1 } });
-        return send(res, { success: true, liked: true });
-      }
-    }
-
-    // ---------------- COURSES ----------------
+    // ---------------- COURSES (Modules System) ----------------
     if (action === 'createCourse') {
-      const { username, title, description, lockedDescription, zoomLink, pdfLink, coverImage, isFree, price } = body;
+      const { username, title, description, coverImage, isFree, price, modules } = body;
       const teacher = await usersCol.findOne({ username: username.toLowerCase() });
       await coursesCol.insertOne({
         teacherId: teacher.username, teacherName: teacher.displayName, teacherImage: teacher.profileImage,
-        title, description, lockedDescription, zoomLink, pdfLink, coverImage, isFree, price: Number(price) || 0, createdAt: nowIso()
+        title, description, coverImage, isFree, price: Number(price) || 0, 
+        modules: modules || [],
+        createdAt: nowIso()
       });
       return send(res, { success: true });
     }
-    if (action === 'getTeacherCourses') {
-      const courses = await coursesCol.find({ teacherId: body.teacherId }).sort({ createdAt: -1 }).toArray();
-      return send(res, { success: true, courses: normalizeDocs(courses) });
+
+    if (action === 'getCourseDetails') {
+      const course = await coursesCol.findOne({ _id: toObjectId(body.courseId) });
+      if(!course) return send(res, { success: false, error: 'Course not found' });
+      
+      const user = await usersCol.findOne({ username: body.username });
+      const hasAccess = user.isAdmin || user.isVerifiedStudent || course.isFree || (user.purchasedCourses || []).includes(course._id.toString());
+      
+      return send(res, { success: true, course: normalizeDoc(course), hasAccess, completedLessons: user.completedLessons || [] });
     }
+
     if (action === 'buyCourse') {
       const { username, courseId } = body;
       const user = await usersCol.findOne({ username: username.toLowerCase() });
@@ -146,45 +118,21 @@ module.exports = async (req, res) => {
       return send(res, { success: true });
     }
 
-    // ---------------- CHAT ----------------
-    if (action === 'sendMessage') {
-      const { from, to, text } = body;
-      await chatsCol.insertOne({ from, to, text, createdAt: nowIso() });
-      return send(res, { success: true });
-    }
-    if (action === 'getChatList') {
-      const { username } = body;
-      const msgs = await chatsCol.find({ $or: [{ from: username }, { to: username }] }).sort({ createdAt: -1 }).toArray();
-      const convMap = new Map();
-      for (const m of msgs) {
-        const other = m.from === username ? m.to : m.from;
-        if (!convMap.has(other)) {
-          const u = await usersCol.findOne({ username: other });
-          convMap.set(other, { username: other, displayName: u?.displayName || other, profileImage: u?.profileImage || '', lastMsg: m.text, time: m.createdAt });
-        }
-      }
-      return send(res, { success: true, chats: Array.from(convMap.values()) });
-    }
-    if (action === 'getMessages') {
-      const msgs = await chatsCol.find({ $or: [{ from: body.user1, to: body.user2 }, { from: body.user2, to: body.user1 }] }).sort({ createdAt: 1 }).toArray();
-      return send(res, { success: true, messages: normalizeDocs(msgs) });
-    }
-    if (action === 'deleteMessages') {
-      const { ids } = body;
-      for(const id of ids) {
-        await chatsCol.deleteOne({ _id: toObjectId(id) });
-      }
+    if (action === 'completeLesson') {
+      const { username, lessonId } = body;
+      await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId } });
       return send(res, { success: true });
     }
 
-    // ---------------- COINS & PAYMENT ----------------
+    if (action === 'getTeacherCourses') {
+      const courses = await coursesCol.find({ teacherId: body.teacherId }).sort({ createdAt: -1 }).toArray();
+      return send(res, { success: true, courses: normalizeDocs(courses) });
+    }
+
+    // ---------------- COINS & ADMIN ----------------
     if (action === 'getPackages') {
       const pkgs = await packagesCol.find({}).toArray();
       return send(res, { success: true, packages: normalizeDocs(pkgs) });
-    }
-    if (action === 'adminSavePackage') {
-      await packagesCol.insertOne({ name: body.name, coins: Number(body.coins), price: Number(body.price), imageUrl: body.imageUrl });
-      return send(res, { success: true });
     }
     if (action === 'submitPurchase') {
       await purchasesCol.insertOne({ username: body.username, packageId: body.packageId, proofImage: body.proofImage, status: 'pending', createdAt: nowIso() });
@@ -211,22 +159,9 @@ module.exports = async (req, res) => {
       return send(res, { success: true });
     }
 
-    // ---------------- ADMIN & USERS ----------------
     if (action === 'getTeachers') {
       const teachers = await usersCol.find({ isApprovedTeacher: true }).project({ passwordHash: 0 }).toArray();
       return send(res, { success: true, teachers: normalizeDocs(teachers) });
-    }
-    if (action === 'adminGetUsers') {
-      const users = await usersCol.find({}).project({ passwordHash: 0 }).toArray();
-      return send(res, { success: true, users: normalizeDocs(users) });
-    }
-    if (action === 'adminToggleBan') {
-      await usersCol.updateOne({ username: body.username }, { $set: { isBanned: body.isBanned } });
-      return send(res, { success: true });
-    }
-    if (action === 'adminDeleteUser') {
-      await usersCol.deleteOne({ username: body.username });
-      return send(res, { success: true });
     }
     if (action === 'adminGetRequests') {
       const reqs = await requestsCol.find({ status: 'pending' }).toArray();
@@ -258,8 +193,7 @@ module.exports = async (req, res) => {
       const feed = [];
       for (const p of posts) {
         const author = await usersCol.findOne({ username: p.author });
-        const hasLiked = user ? !!(await likesCol.findOne({ postId: p._id.toString(), username: user.username })) : false;
-        feed.push({ ...normalizeDoc(p), authorData: author ? { displayName: author.displayName, profileImage: author.profileImage, role: author.role } : { displayName: p.author }, hasLiked });
+        feed.push({ ...normalizeDoc(p), authorData: author ? { displayName: author.displayName, profileImage: author.profileImage, role: author.role } : { displayName: p.author } });
       }
       const { passwordHash, _id, ...safeUser } = user || {};
       return send(res, { success: true, user: user ? { id: _id.toString(), ...safeUser } : null, feed });
