@@ -30,8 +30,6 @@ module.exports = async (req, res) => {
   try {
     const usersCol = await getCollection('users');
     const coursesCol = await getCollection('courses');
-    const postsCol = await getCollection('posts');
-    const chatsCol = await getCollection('chat_messages');
     const packagesCol = await getCollection('coin_packages');
     const purchasesCol = await getCollection('purchases');
     const settingsCol = await getCollection('settings');
@@ -54,10 +52,26 @@ module.exports = async (req, res) => {
       if (existing) return send(res, { success: false, error: 'Username တူနေပါတယ်' });
       
       const newUser = {
-        username: username.toLowerCase(), passwordHash: hashPassword(password), displayName: username,
-        role: role === 'teacher' ? 'student' : role, isVerifiedStudent: false, isApprovedTeacher: false, isAdmin: false,
-        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', bio: '', specialty: '', 
-        experience: '', studentsCount: '', rating: 0, ratingCount: 0, completedLessons: [], createdAt: nowIso()
+        username: username.toLowerCase(), 
+        passwordHash: hashPassword(password), 
+        displayName: username,
+        role: role === 'teacher' ? 'student' : role, // Teacher requires approval
+        isVerifiedStudent: false, 
+        isApprovedTeacher: false, 
+        isAdmin: false,
+        isBanned: false, 
+        coins: 100, 
+        xp: 0,
+        purchasedCourses: [], 
+        completedLessons: [],
+        profileImage: '', 
+        bio: '', 
+        specialty: '', 
+        experience: '', 
+        studentsCount: '', 
+        rating: 0, 
+        ratingCount: 0, 
+        createdAt: nowIso()
       };
       await usersCol.insertOne(newUser);
       if (role === 'teacher') await requestsCol.insertOne({ username: newUser.username, type: 'teacher', status: 'pending', createdAt: nowIso() });
@@ -77,24 +91,33 @@ module.exports = async (req, res) => {
     }
 
     if (action === 'updateProfile') {
-      const { username, displayName, bio, profileImage, coverImage, specialty, experience, studentsCount } = body;
-      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, coverImage, specialty, experience, studentsCount } });
+      const { username, displayName, bio, profileImage, specialty, experience, studentsCount } = body;
+      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, specialty, experience, studentsCount } });
       const updatedUser = await usersCol.findOne({ username: username.toLowerCase() });
       const { passwordHash, _id, ...safeUser } = updatedUser;
       return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
     }
 
-    // ---------------- COURSES (Modules System) ----------------
+    // ---------------- COURSES & LESSONS ----------------
     if (action === 'createCourse') {
       const { username, title, description, coverImage, isFree, price, modules } = body;
       const teacher = await usersCol.findOne({ username: username.toLowerCase() });
       await coursesCol.insertOne({
-        teacherId: teacher.username, teacherName: teacher.displayName, teacherImage: teacher.profileImage,
-        title, description, coverImage, isFree, price: Number(price) || 0, 
+        teacherId: teacher.username, 
+        teacherName: teacher.displayName, 
+        teacherImage: teacher.profileImage,
+        title, description, coverImage, 
+        isFree, 
+        price: Number(price) || 0, 
         modules: modules || [],
         createdAt: nowIso()
       });
       return send(res, { success: true });
+    }
+
+    if (action === 'getTeacherCourses') {
+      const courses = await coursesCol.find({ teacherId: body.teacherId }).sort({ createdAt: -1 }).toArray();
+      return send(res, { success: true, courses: normalizeDocs(courses) });
     }
 
     if (action === 'getCourseDetails') {
@@ -120,13 +143,11 @@ module.exports = async (req, res) => {
 
     if (action === 'completeLesson') {
       const { username, lessonId } = body;
-      await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId } });
+      const user = await usersCol.findOne({ username });
+      if(!user.completedLessons.includes(lessonId)) {
+        await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId }, $inc: { xp: 20 } });
+      }
       return send(res, { success: true });
-    }
-
-    if (action === 'getTeacherCourses') {
-      const courses = await coursesCol.find({ teacherId: body.teacherId }).sort({ createdAt: -1 }).toArray();
-      return send(res, { success: true, courses: normalizeDocs(courses) });
     }
 
     // ---------------- COINS & ADMIN ----------------
@@ -163,6 +184,19 @@ module.exports = async (req, res) => {
       const teachers = await usersCol.find({ isApprovedTeacher: true }).project({ passwordHash: 0 }).toArray();
       return send(res, { success: true, teachers: normalizeDocs(teachers) });
     }
+    
+    if (action === 'adminGetUsers') {
+      const users = await usersCol.find({}).project({ passwordHash: 0 }).toArray();
+      return send(res, { success: true, users: normalizeDocs(users) });
+    }
+    if (action === 'adminToggleBan') {
+      await usersCol.updateOne({ username: body.username }, { $set: { isBanned: body.isBanned } });
+      return send(res, { success: true });
+    }
+    if (action === 'adminDeleteUser') {
+      await usersCol.deleteOne({ username: body.username });
+      return send(res, { success: true });
+    }
     if (action === 'adminGetRequests') {
       const reqs = await requestsCol.find({ status: 'pending' }).toArray();
       return send(res, { success: true, requests: normalizeDocs(reqs) });
@@ -177,6 +211,10 @@ module.exports = async (req, res) => {
       }
       return send(res, { success: true });
     }
+    if (action === 'adminSavePackage') {
+      await packagesCol.insertOne({ name: body.name, coins: Number(body.coins), price: Number(body.price), imageUrl: body.imageUrl });
+      return send(res, { success: true });
+    }
 
     // ---------------- IMAGE UPLOAD ----------------
     if (action === 'uploadImage') {
@@ -189,14 +227,8 @@ module.exports = async (req, res) => {
     // ---------------- BOOTSTRAP ----------------
     if (action === 'bootstrap') {
       const user = await usersCol.findOne({ username: body.username });
-      const posts = await postsCol.find({}).sort({ createdAt: -1 }).limit(30).toArray();
-      const feed = [];
-      for (const p of posts) {
-        const author = await usersCol.findOne({ username: p.author });
-        feed.push({ ...normalizeDoc(p), authorData: author ? { displayName: author.displayName, profileImage: author.profileImage, role: author.role } : { displayName: p.author } });
-      }
       const { passwordHash, _id, ...safeUser } = user || {};
-      return send(res, { success: true, user: user ? { id: _id.toString(), ...safeUser } : null, feed });
+      return send(res, { success: true, user: user ? { id: _id.toString(), ...safeUser } : null });
     }
 
     return send(res, { success: false, error: 'Unknown action' }, 400);
