@@ -32,18 +32,7 @@ module.exports = async (req, res) => {
     const coursesCol = await getCollection('courses');
     const packagesCol = await getCollection('coin_packages');
     const purchasesCol = await getCollection('purchases');
-    const settingsCol = await getCollection('settings');
     const requestsCol = await getCollection('requests');
-
-    // ---------------- SETTINGS ----------------
-    if (action === 'getSettings') {
-      const settings = await settingsCol.findOne({ key: 'globalSettings' }) || { kpayPhone: '', kpayQr: '', wavePhone: '', waveQr: '' };
-      return send(res, { success: true, settings });
-    }
-    if (action === 'adminSaveSettings') {
-      await settingsCol.updateOne({ key: 'globalSettings' }, { $set: body.settings }, { upsert: true });
-      return send(res, { success: true });
-    }
 
     // ---------------- AUTH ----------------
     if (action === 'register') {
@@ -55,7 +44,7 @@ module.exports = async (req, res) => {
         username: username.toLowerCase(), 
         passwordHash: hashPassword(password), 
         displayName: username,
-        role: role === 'teacher' ? 'student' : role, // Teacher requires approval
+        role: role === 'teacher' ? 'student' : role,
         isVerifiedStudent: false, 
         isApprovedTeacher: false, 
         isAdmin: false,
@@ -102,16 +91,21 @@ module.exports = async (req, res) => {
     if (action === 'createCourse') {
       const { username, title, description, coverImage, isFree, price, modules } = body;
       const teacher = await usersCol.findOne({ username: username.toLowerCase() });
-      await coursesCol.insertOne({
+      
+      const newCourse = {
         teacherId: teacher.username, 
         teacherName: teacher.displayName, 
         teacherImage: teacher.profileImage,
-        title, description, coverImage, 
-        isFree, 
+        title: title || 'Untitled Course',
+        description: description || '',
+        coverImage: coverImage || '',
+        isFree: !!isFree, 
         price: Number(price) || 0, 
         modules: modules || [],
         createdAt: nowIso()
-      });
+      };
+      
+      await coursesCol.insertOne(newCourse);
       return send(res, { success: true });
     }
 
@@ -134,6 +128,8 @@ module.exports = async (req, res) => {
       const { username, courseId } = body;
       const user = await usersCol.findOne({ username: username.toLowerCase() });
       const course = await coursesCol.findOne({ _id: toObjectId(courseId) });
+      
+      if(!course) return send(res, { success: false, error: 'Course not found' });
       if (user.coins < course.price) return send(res, { success: false, error: 'Coins မလုံလောက်ပါ' });
       
       await usersCol.updateOne({ username: user.username }, { $inc: { coins: -course.price }, $push: { purchasedCourses: courseId } });
@@ -144,75 +140,34 @@ module.exports = async (req, res) => {
     if (action === 'completeLesson') {
       const { username, lessonId } = body;
       const user = await usersCol.findOne({ username });
-      if(!user.completedLessons.includes(lessonId)) {
-        await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId }, $inc: { xp: 20 } });
+      if(user.completedLessons && user.completedLessons.includes(lessonId)) {
+        return send(res, { success: true });
       }
+      await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId }, $inc: { xp: 20 } });
       return send(res, { success: true });
     }
 
-    // ---------------- COINS & ADMIN ----------------
-    if (action === 'getPackages') {
-      const pkgs = await packagesCol.find({}).toArray();
-      return send(res, { success: true, packages: normalizeDocs(pkgs) });
-    }
-    if (action === 'submitPurchase') {
-      await purchasesCol.insertOne({ username: body.username, packageId: body.packageId, proofImage: body.proofImage, status: 'pending', createdAt: nowIso() });
-      return send(res, { success: true });
-    }
-    if (action === 'adminGetPurchases') {
-      const list = await purchasesCol.find({ status: 'pending' }).toArray();
-      const detailed = [];
-      for (const p of list) {
-        const pkg = await packagesCol.findOne({ _id: toObjectId(p.packageId) });
-        detailed.push({ ...normalizeDoc(p), packageData: normalizeDoc(pkg) });
-      }
-      return send(res, { success: true, purchases: detailed });
-    }
-    if (action === 'adminApprovePurchase') {
-      const purchase = await purchasesCol.findOne({ _id: toObjectId(body.purchaseId) });
-      const pkg = await packagesCol.findOne({ _id: toObjectId(purchase.packageId) });
-      if (body.approve) {
-        await usersCol.updateOne({ username: purchase.username }, { $inc: { coins: pkg.coins } });
-        await purchasesCol.updateOne({ _id: purchase._id }, { $set: { status: 'approved' } });
-      } else {
-        await purchasesCol.updateOne({ _id: purchase._id }, { $set: { status: 'rejected' } });
-      }
-      return send(res, { success: true });
-    }
-
+    // ---------------- ADMIN & TEACHERS ----------------
     if (action === 'getTeachers') {
       const teachers = await usersCol.find({ isApprovedTeacher: true }).project({ passwordHash: 0 }).toArray();
       return send(res, { success: true, teachers: normalizeDocs(teachers) });
     }
     
-    if (action === 'adminGetUsers') {
-      const users = await usersCol.find({}).project({ passwordHash: 0 }).toArray();
-      return send(res, { success: true, users: normalizeDocs(users) });
-    }
-    if (action === 'adminToggleBan') {
-      await usersCol.updateOne({ username: body.username }, { $set: { isBanned: body.isBanned } });
-      return send(res, { success: true });
-    }
-    if (action === 'adminDeleteUser') {
-      await usersCol.deleteOne({ username: body.username });
-      return send(res, { success: true });
-    }
     if (action === 'adminGetRequests') {
       const reqs = await requestsCol.find({ status: 'pending' }).toArray();
       return send(res, { success: true, requests: normalizeDocs(reqs) });
     }
+    
     if (action === 'adminApproveRequest') {
       const req = await requestsCol.findOne({ _id: toObjectId(body.requestId) });
+      if (!req) return send(res, { success: false, error: 'Request not found' });
+      
       if (body.approve) {
         await usersCol.updateOne({ username: req.username }, { $set: { role: 'teacher', isApprovedTeacher: true } });
         await requestsCol.updateOne({ _id: req._id }, { $set: { status: 'approved' } });
       } else {
         await requestsCol.updateOne({ _id: req._id }, { $set: { status: 'rejected' } });
       }
-      return send(res, { success: true });
-    }
-    if (action === 'adminSavePackage') {
-      await packagesCol.insertOne({ name: body.name, coins: Number(body.coins), price: Number(body.price), imageUrl: body.imageUrl });
       return send(res, { success: true });
     }
 
@@ -227,12 +182,14 @@ module.exports = async (req, res) => {
     // ---------------- BOOTSTRAP ----------------
     if (action === 'bootstrap') {
       const user = await usersCol.findOne({ username: body.username });
-      const { passwordHash, _id, ...safeUser } = user || {};
-      return send(res, { success: true, user: user ? { id: _id.toString(), ...safeUser } : null });
+      if(!user) return send(res, { success: false, error: 'User not found' });
+      const { passwordHash, _id, ...safeUser } = user;
+      return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
     }
 
     return send(res, { success: false, error: 'Unknown action' }, 400);
   } catch (err) {
+    console.error(err);
     return send(res, { success: false, error: err.message }, 500);
   }
 };
