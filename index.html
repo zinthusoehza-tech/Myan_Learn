@@ -8,35 +8,46 @@
   @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
   
   :root {
-    --primary: #58CC02; --primary-hover: #46A302; --primary-light: #89E219;
+    --primary: #58CC02; --primary-hover: #46A302; --primary-light: #D7FFB8;
+    --blue: #1CB0F6; --blue-light: #DDF4FF;
+    --purple: #CE82FF; --purple-light: #F3E5F5;
+    --red: #FF4B4B; --red-light: #FFDFE0;
+    --yellow: #FFC800; --yellow-light: #FFF4CC;
+    
     --bg: #FFFFFF; --surface: #F7F7F7; --text: #3C3C3C; --text-muted: #AFAFAF;
-    --border: #E5E5E5; --radius: 16px;
-    --shadow: 0 2px 0 #E5E5E5;
+    --border: #E5E5E5; --border-hover: #D1D1D1;
+    --radius: 16px;
+    --shadow: 0 4px 0 var(--border);
   }
   body.dark {
     --bg: #131F24; --surface: #202F36; --text: #F1F7FB; --text-muted: #8A9CA6;
-    --border: #37464F; --shadow: 0 2px 0 #0F171A;
+    --border: #37464F; --border-hover: #4B5F6A;
+    --shadow: 0 4px 0 #0F171A;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Padauk', 'Noto Sans JP', sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); min-height: 100vh; font-weight: 600; }
+  body { background: var(--bg); color: var(--text); min-height: 100vh; font-weight: 600; overflow-x: hidden; }
   
   .icon { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: inline-block; vertical-align: middle; }
   .icon-sm { width: 18px; height: 18px; }
-  .btn { padding: 12px 20px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.2s; display: inline-flex; justify-content: center; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .btn:active { transform: translateY(2px); box-shadow: none; }
-  .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text-muted); }
-  .btn-glass { background: var(--surface); color: var(--text); border: 2px solid var(--border); box-shadow: var(--shadow); }
+  .icon-lg { width: 32px; height: 32px; }
+  
+  .btn { padding: 14px 20px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.1s; display: inline-flex; justify-content: center; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 0 var(--primary-hover); }
+  .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary-hover); }
+  .btn-blue { background: var(--blue); box-shadow: 0 4px 0 #1899D6; }
+  .btn-blue:active { box-shadow: 0 0 0 #1899D6; }
+  .btn-gray { background: var(--border); color: var(--text-muted); box-shadow: 0 4px 0 var(--border-hover); }
+  .btn-gray:active { box-shadow: 0 0 0 var(--border-hover); }
   
   /* Forms */
   .input-group { margin-bottom: 1rem; }
-  .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
-  .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 0.9rem; border: 2px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); outline: none; font-size: 0.95rem; font-weight: 500; transition: 0.2s; }
-  .input-group input:focus { border-color: var(--primary); }
+  .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 1rem; border: 2px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); outline: none; font-size: 1rem; font-weight: 500; transition: 0.2s; }
+  .input-group input:focus { border-color: var(--blue); }
 
   /* Loading */
-  #loadingOverlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(4px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: 0.3s; }
-  body.dark #loadingOverlay { background: rgba(19, 31, 36, 0.8); }
+  #loadingOverlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: 0.3s; }
+  body.dark #loadingOverlay { background: rgba(19, 31, 36, 0.9); }
   #loadingOverlay.show { display: flex; opacity: 1; }
   .loader-bar-container { width: 200px; height: 12px; background: var(--border); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
   .loader-fill { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s ease; border-radius: 10px; }
@@ -46,65 +57,99 @@
   .auth-box { width: 100%; max-width: 400px; padding: 2.5rem 2rem; border-radius: 24px; text-align: center; background: var(--bg); border: 2px solid var(--border); box-shadow: var(--shadow); }
   
   /* Main Layout */
-  #app { display: none; flex-direction: column; max-width: 800px; margin: 0 auto; padding-bottom: 80px; min-height: 100vh; }
-  .header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: sticky; top: 0; background: var(--bg); z-index: 40; border-bottom: 2px solid var(--border); }
-  .app-view { padding: 1rem; animation: fadeIn 0.3s; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  #app { display: none; flex-direction: column; max-width: 600px; margin: 0 auto; padding-bottom: 90px; min-height: 100vh; }
+  
+  /* Header */
+  .top-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: sticky; top: 0; background: var(--bg); z-index: 40; border-bottom: 2px solid var(--border); }
+  .coin-pill { display: flex; align-items: center; gap: 6px; background: var(--yellow-light); color: #B48A00; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer; border: 2px solid var(--yellow); }
+  
+  /* Views */
+  .app-view { padding: 1rem; display: none; animation: fadeIn 0.2s; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
-  /* Path UI */
-  .path-container { display: flex; flex-direction: column; align-items: center; padding: 2rem 0; position: relative; }
-  .path-node { width: 70px; height: 70px; border-radius: 50%; background: var(--surface); border: 4px solid var(--border); display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; z-index: 2; transition: 0.2s; margin: 1.5rem 0; box-shadow: 0 4px 0 var(--border); }
-  .path-node.active { background: var(--primary); border-color: var(--primary-hover); box-shadow: 0 4px 0 var(--primary-hover); color: white; }
-  .path-node.locked { opacity: 0.6; cursor: not-allowed; }
+  /* --- PATH UI (Duolingo Style) --- */
+  .path-banner { background: var(--primary-light); border-radius: 16px; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border: 2px solid #A5ED6E; }
+  .path-banner h2 { color: #2B7000; font-weight: 800; font-size: 1.2rem; }
+  .path-banner p { color: #4B9E1F; font-size: 0.9rem; font-weight: 700; }
+  
+  .path-container { display: flex; flex-direction: column; align-items: center; padding-bottom: 3rem; position: relative; }
+  .path-node-wrap { display: flex; flex-direction: column; align-items: center; margin: 1rem 0; position: relative; cursor: pointer; }
+  
+  .path-node { width: 70px; height: 70px; border-radius: 50%; background: var(--border); display: flex; justify-content: center; align-items: center; position: relative; z-index: 2; transition: 0.2s; box-shadow: 0 6px 0 var(--border-hover); }
+  .path-node.active { background: var(--primary); box-shadow: 0 6px 0 var(--primary-hover); }
   .path-node.diamond { border-radius: 16px; transform: rotate(45deg); }
-  .path-node.diamond svg { transform: rotate(-45deg); }
-  .path-node .node-label { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); font-weight: 800; color: var(--text-muted); font-size: 0.9rem; white-space: nowrap; }
-  .path-node.active .node-label { color: var(--text); }
-  .path-line { width: 4px; height: 40px; background: var(--border); margin: -0.5rem 0; z-index: 1; }
+  .path-node.diamond .icon { transform: rotate(-45deg); }
+  .path-node.active .icon { stroke: white; fill: white; }
+  .path-node .icon { stroke: #AFAFAF; width: 32px; height: 32px; }
   
-  /* Tree Layout */
-  .path-row { display: flex; width: 100%; justify-content: center; gap: 40px; }
-  .path-row:nth-child(even) { transform: translateX(-40px); }
-  .path-row:nth-child(odd) { transform: translateX(40px); }
+  .path-label { margin-top: 12px; font-weight: 800; color: var(--text-muted); font-size: 0.95rem; }
+  .path-node.active + .path-label { color: var(--text); }
+  
+  .path-connector { width: 4px; height: 30px; background: var(--border); border-radius: 2px; margin: -5px 0; z-index: 1; }
+  
+  /* Zigzag positioning */
+  .row-0 { transform: translateX(0); }
+  .row-1 { transform: translateX(-60px); }
+  .row-2 { transform: translateX(0); }
+  .row-3 { transform: translateX(60px); }
+  .row-4 { transform: translateX(0); }
 
-  /* Theory/Flashcard UI */
-  .theory-container { max-width: 600px; margin: 0 auto; }
-  .flashcard { background: var(--surface); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; border: 2px solid var(--border); box-shadow: 0 2px 0 var(--border); }
-  .fc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
-  .fc-word { font-size: 1.4rem; font-weight: 800; }
-  .fc-romaji { font-size: 1rem; color: var(--text-muted); font-weight: 500; margin-left: 8px; }
-  .fc-meaning { font-size: 1.1rem; margin-top: 0.5rem; }
-  .fc-actions { display: flex; gap: 10px; color: var(--text-muted); }
-  .fc-note { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border); display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.9rem; cursor: pointer; }
+  /* --- PROFILE DASHBOARD (Screenshot 2 Style) --- */
+  .profile-header-card { background: var(--primary); border-radius: 24px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; color: white; box-shadow: 0 6px 0 var(--primary-hover); margin-bottom: 2rem; position: relative; }
+  .profile-av { width: 80px; height: 80px; border-radius: 50%; background: white; border: 4px solid rgba(255,255,255,0.3); display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: 800; color: var(--primary); overflow: hidden; }
+  .profile-av img { width: 100%; height: 100%; object-fit: cover; }
+  .profile-info h2 { font-weight: 800; font-size: 1.4rem; margin-bottom: 4px; }
+  .profile-info p { font-size: 0.9rem; font-weight: 600; opacity: 0.9; }
   
-  /* Intro (Article) UI */
-  .intro-card { background: var(--surface); border-radius: 16px; padding: 2rem; border: 2px solid var(--border); box-shadow: 0 4px 0 var(--border); }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .stat-item { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
+  .stat-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border); display: flex; justify-content: center; align-items: center; margin-bottom: 8px; }
+  .stat-item span { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+  
+  .chart-card { background: var(--primary); border-radius: 24px; padding: 1.5rem; color: white; margin-bottom: 1.5rem; box-shadow: 0 6px 0 var(--primary-hover); }
+  .chart-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
+  .chart-bars { display: flex; justify-content: space-between; align-items: flex-end; height: 100px; }
+  .chart-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .chart-bar { width: 8px; height: 60px; background: rgba(255,255,255,0.3); border-radius: 4px; position: relative; overflow: hidden; }
+  .chart-bar-fill { position: absolute; bottom: 0; left: 0; width: 100%; background: white; border-radius: 4px; transition: height 0.3s; }
+  .chart-bar-wrap span { font-size: 0.75rem; font-weight: 700; }
+
+  /* --- LESSON (Theory) --- */
+  .theory-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+  .flashcard { background: var(--surface); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; border: 2px solid var(--border); box-shadow: 0 4px 0 var(--border); }
+  .fc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+  .fc-word { font-size: 1.4rem; font-weight: 800; }
+  .fc-romaji { font-size: 1rem; color: var(--text-muted); font-weight: 600; margin-left: 8px; }
+  .fc-meaning { font-size: 1.1rem; margin-top: 0.5rem; color: var(--text); }
+  .fc-actions { display: flex; gap: 15px; color: var(--blue); cursor: pointer; }
+  .fc-note { margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid var(--border); display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.9rem; cursor: pointer; }
+
+  /* --- INTRO (Article) --- */
+  .intro-card { background: var(--bg); border-radius: 16px; padding: 2rem; border: 2px solid var(--border); box-shadow: 0 4px 0 var(--border); margin-bottom: 2rem; }
   .intro-title { font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 1rem; }
-  .intro-example { text-align: center; font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
   .intro-img { width: 100%; max-height: 250px; object-fit: contain; margin-bottom: 1.5rem; border-radius: 12px; }
-  .intro-text { font-size: 1rem; line-height: 1.6; color: var(--text); margin-bottom: 1rem; }
-  .intro-list { margin-left: 1.5rem; margin-bottom: 1rem; line-height: 1.6; }
+  .intro-text { font-size: 1.05rem; line-height: 1.7; color: var(--text); }
+  .intro-text p { margin-bottom: 1rem; }
 
   /* Modals */
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.2s; }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.2s; padding: 1rem; }
   .modal.open { opacity: 1; pointer-events: auto; }
-  .modal-content { background: var(--bg); width: 90%; max-width: 500px; padding: 1.5rem; border-radius: 24px; max-height: 90vh; overflow-y: auto; border: 2px solid var(--border); box-shadow: 0 4px 0 var(--border); }
+  .modal-content { background: var(--bg); width: 100%; max-width: 500px; padding: 1.5rem; border-radius: 24px; max-height: 90vh; overflow-y: auto; border: 2px solid var(--border); box-shadow: 0 8px 0 var(--border); }
   #confirmModal { z-index: 10000; }
 
   /* Navigation */
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0.8rem; background: var(--bg); border-top: 2px solid var(--border); z-index: 50; }
-  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); cursor: pointer; text-transform: uppercase; }
   .nav-item.active { color: var(--primary); }
-  
-  /* Custom UI elements */
-  .course-card { display: flex; gap: 1rem; padding: 1rem; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 1rem; cursor: pointer; transition: 0.2s; background: var(--bg); box-shadow: 0 2px 0 var(--border); }
-  .course-card:active { transform: translateY(2px); box-shadow: none; }
-  .course-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
-  .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; background: var(--primary); color: white; }
-  .tag.free { background: #FFC800; color: #4B4B4B; }
-  .tag.gray { background: var(--border); color: var(--text-muted); }
+  .nav-item .icon { width: 28px; height: 28px; }
 
-  .coin-pill { display: flex; align-items: center; gap: 6px; background: #FFD900; color: #4B4B4B; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer; }
+  /* Utility */
+  .course-card { display: flex; gap: 1rem; padding: 1rem; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 1rem; cursor: pointer; transition: 0.1s; background: var(--bg); box-shadow: 0 4px 0 var(--border); align-items: center; }
+  .course-card:active { transform: translateY(4px); box-shadow: 0 0 0 var(--border); }
+  .course-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: var(--surface); }
+  .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; background: var(--primary); color: white; }
+  .tag.free { background: var(--yellow); color: #3C3C3C; }
+  .tag.gray { background: var(--border); color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -124,11 +169,9 @@
     </h1>
     <div id="loginForm">
       <div class="input-group"><input id="loginUser" placeholder="Username" /></div>
-      <div class="input-group">
-        <input type="password" id="loginPass" placeholder="Password" />
-      </div>
+      <div class="input-group"><input type="password" id="loginPass" placeholder="Password" /></div>
       <button class="btn" id="loginBtn" style="width:100%;margin-bottom:1rem;">SIGN IN</button>
-      <p style="font-size:0.9rem;color:var(--text-muted);">No account? <a href="#" onclick="toggleAuth(true)" style="color:var(--primary);font-weight:800;">REGISTER</a></p>
+      <p style="font-size:0.9rem;color:var(--text-muted);font-weight:600;">No account? <a href="#" onclick="toggleAuth(true)" style="color:var(--primary);font-weight:800;">REGISTER</a></p>
     </div>
     <div id="registerForm" style="display:none;">
       <div class="input-group"><input id="regUser" placeholder="Username" /></div>
@@ -137,78 +180,119 @@
         <select id="regRole"><option value="student">Student</option><option value="teacher">Teacher</option></select>
       </div>
       <button class="btn" id="regBtn" style="width:100%;margin-bottom:1rem;">CREATE ACCOUNT</button>
-      <p style="font-size:0.9rem;color:var(--text-muted);">Have an account? <a href="#" onclick="toggleAuth(false)" style="color:var(--primary);font-weight:800;">LOGIN</a></p>
+      <p style="font-size:0.9rem;color:var(--text-muted);font-weight:600;">Have an account? <a href="#" onclick="toggleAuth(false)" style="color:var(--primary);font-weight:800;">LOGIN</a></p>
     </div>
   </div>
 </div>
 
 <!-- MAIN APP -->
 <div id="app">
-  <div class="header">
-    <h2 style="font-size:1.2rem;font-weight:800;color:var(--primary);">Myan Learn</h2>
+  <div class="top-header">
+    <h2 style="font-size:1.4rem;font-weight:800;color:var(--primary);">Myan Learn</h2>
     <div style="display:flex;gap:12px;align-items:center;">
       <div class="coin-pill" onclick="switchView('shop')">
         <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5"/></svg>
         <span id="coinValue">0</span>
       </div>
-      <div style="width:36px;height:36px;border-radius:50%;background:var(--border);display:flex;justify-content:center;align-items:center;cursor:pointer;" onclick="switchView('profile')">
-        <span id="headerAvatar" style="font-weight:800;color:var(--text-muted);">U</span>
-      </div>
     </div>
   </div>
 
-  <!-- Views -->
-  <div id="viewHome" class="app-view" style="display:none;">
-    <h3 style="margin-bottom:1rem;font-weight:800;">My Courses</h3>
-    <div id="myCourseList"></div>
-  </div>
-
-  <div id="viewTeachers" class="app-view" style="display:none;">
+  <!-- HOME VIEW (Explore Teachers) -->
+  <div id="viewHome" class="app-view">
+    <h3 style="font-weight:800;margin-bottom:1rem;font-size:1.2rem;">Explore Courses</h3>
     <div id="teacherList"></div>
   </div>
 
   <!-- COURSE PATH VIEW -->
-  <div id="viewPath" class="app-view" style="display:none; background:var(--surface);">
+  <div id="viewPath" class="app-view" style="background:var(--surface);">
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem; background:var(--bg); padding:10px; border-radius:12px; border:2px solid var(--border);">
-      <button onclick="switchView('teachers')" style="background:none;border:none;cursor:pointer;color:var(--text);">
+      <button onclick="switchView('home')" style="background:none;border:none;cursor:pointer;color:var(--text);">
         <svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
       <h3 id="pathTitle" style="font-weight:800;font-size:1.1rem;">Course Title</h3>
     </div>
+    <div class="path-banner">
+      <div>
+        <h2>Basic 1</h2>
+        <p id="pathProgressText">0/0 lessons</p>
+      </div>
+      <div style="width:50px;height:50px;background:white;border-radius:50%;display:flex;justify-content:center;align-items:center;color:var(--red);">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      </div>
+    </div>
     <div class="path-container" id="pathNodes"></div>
   </div>
 
-  <!-- LESSON VIEWS -->
-  <div id="viewLesson" class="app-view" style="display:none;">
-    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1.5rem;">
-      <button onclick="closeLesson()" style="background:none;border:none;cursor:pointer;color:var(--text);">
+  <!-- LESSON VIEW -->
+  <div id="viewLesson" class="app-view">
+    <div class="theory-header">
+      <button onclick="switchView('path')" style="background:none;border:none;cursor:pointer;color:var(--text);">
         <svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
       <h3 id="lessonTitle" style="font-weight:800;font-size:1.2rem;flex:1;text-align:center;">Theory</h3>
       <div style="width:24px;"></div>
     </div>
-    
-    <!-- Progress -->
-    <div style="width:100%;height:8px;background:var(--border);border-radius:4px;margin-bottom:1.5rem;">
-      <div id="lessonProgress" style="width:50%;height:100%;background:var(--primary);border-radius:4px;"></div>
-    </div>
-
     <div id="lessonContent"></div>
-
     <button class="btn" style="width:100%;margin-top:2rem;" onclick="completeCurrentLesson()">COMPLETE LESSON</button>
   </div>
 
-  <div id="viewProfile" class="app-view" style="display:none;">
-    <div style="text-align:center; padding:2rem 0;">
-      <div style="width:100px;height:100px;border-radius:50%;background:var(--primary);color:white;display:flex;justify-content:center;align-items:center;font-size:2.5rem;font-weight:800;margin:0 auto 1rem;" id="profileAvatar">U</div>
-      <h2 id="profileName" style="font-size:1.5rem;font-weight:800;">User</h2>
-      <p style="color:var(--text-muted);" id="profileUsername">@user</p>
-      <p id="profileSpecialty" style="color:var(--primary);font-weight:700;margin-top:0.5rem;"></p>
-      
-      <div style="display:flex;justify-content:center;gap:10px;margin-top:1.5rem;flex-wrap:wrap;">
-        <button class="btn btn-glass" onclick="openEditProfile()">EDIT PROFILE</button>
-        <button class="btn btn-glass" id="adminPanelBtn" onclick="openAdminPanel()" style="display:none;background:var(--primary);color:white;border-color:var(--primary-hover);">ADMIN PANEL</button>
-        <button class="btn btn-glass" onclick="logout()" style="color:#FF4B4B;border-color:#FF4B4B;">LOGOUT</button>
+  <!-- PROFILE DASHBOARD -->
+  <div id="viewProfile" class="app-view">
+    <div class="profile-header-card">
+      <div class="profile-av" id="profileAvatar">U</div>
+      <div class="profile-info">
+        <h2 id="profileName">User</h2>
+        <p>Practice score: <span id="profileXP">0</span> xp</p>
+        <p>Login points: <span id="profileCoins">0</span> 🌟</p>
+      </div>
+      <button onclick="openEditProfile()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:white;cursor:pointer;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      </button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon" style="background:var(--purple-light); border-color:var(--purple); color:var(--purple);">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 20v-6M12 14l-4-4M12 14l4-4M12 4v4"/></svg>
+        </div>
+        <span>Progress</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon" style="background:var(--yellow-light); border-color:var(--yellow); color:var(--yellow);">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span>Trophies</span>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon" style="background:var(--blue-light); border-color:var(--blue); color:var(--blue);">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </div>
+        <span>Tips</span>
+      </div>
+      <div class="stat-item" id="adminPanelBtn" style="display:none;" onclick="openAdminPanel()">
+        <div class="stat-icon" style="background:var(--red-light); border-color:var(--red); color:var(--red);">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <span>Admin</span>
+      </div>
+      <div class="stat-item" onclick="logout()">
+        <div class="stat-icon" style="background:var(--surface); border-color:var(--border); color:var(--text-muted);">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </div>
+        <span>Logout</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h4 style="font-weight:800;font-size:1.1rem;">Weekly practice process</h4>
+          <p style="font-size:0.85rem;opacity:0.9;margin-top:4px;">Today, <span id="todayDate"></span></p>
+          <h2 style="font-size:2rem;font-weight:800;margin-top:8px;" id="weeklyXP">0 xp</h2>
+        </div>
+      </div>
+      <div class="chart-bars" id="chartBars">
+        <!-- Generated by JS -->
       </div>
     </div>
   </div>
@@ -216,12 +300,8 @@
   <!-- Bottom Nav -->
   <div class="bottom-nav">
     <div class="nav-item active" onclick="switchView('home')">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       Learn
-    </div>
-    <div class="nav-item" onclick="switchView('teachers')">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Teachers
     </div>
     <div class="nav-item" id="navTeachMobile" style="display:none;" onclick="switchView('teach')">
       <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -234,7 +314,7 @@
   </div>
 </div>
 
-<!-- TEACHER CREATE COURSE (Modal) -->
+<!-- TEACHER CREATE COURSE -->
 <div class="modal" id="createCourseModal">
   <div class="modal-content">
     <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
@@ -243,10 +323,7 @@
     </div>
     <div class="input-group"><label>Title</label><input id="cTitle" /></div>
     <div class="input-group"><label>Description</label><textarea id="cDesc" rows="2"></textarea></div>
-    <div class="input-group">
-      <label>Cover Image URL</label>
-      <input id="cCoverImg" placeholder="Drive Link / Image URL" />
-    </div>
+    <div class="input-group"><label>Cover Image URL</label><input id="cCoverImg" placeholder="Drive Link / Image URL" /></div>
     <div style="display:flex;gap:10px;align-items:center;margin-bottom:1rem;">
       <input type="checkbox" id="cIsFree" onchange="document.getElementById('cPrice').disabled=this.checked" />
       <label for="cIsFree" style="font-weight:600;">Make it Free</label>
@@ -255,20 +332,20 @@
     
     <h4 style="margin:1rem 0 0.5rem;font-weight:800;">Modules (Lessons)</h4>
     <div id="modulesContainer"></div>
-    <button class="btn btn-glass" style="width:100%;margin-bottom:1rem;font-size:0.8rem;" onclick="addModuleInput()">+ Add Module</button>
+    <button class="btn btn-gray" style="width:100%;margin-bottom:1rem;font-size:0.9rem;" onclick="openModal('moduleModal')">+ Add Module</button>
     
     <button class="btn" style="width:100%;" onclick="publishCourse()">PUBLISH COURSE</button>
   </div>
 </div>
 
-<!-- MODULE MODAL -->
+<!-- MODULE CREATION MODAL -->
 <div class="modal" id="moduleModal">
   <div class="modal-content">
     <h3 style="font-weight:800;margin-bottom:1rem;">Add Module</h3>
     <div class="input-group"><label>Module Title</label><input id="mTitle" placeholder="e.g. Introduction, Theory, Practice" /></div>
     <div class="input-group">
       <label>Module Type</label>
-      <select id="mType">
+      <select id="mType" onchange="handleModuleTypeChange(this.value)">
         <option value="intro">Introduction (Article & Image)</option>
         <option value="theory">Theory (Vocabulary Flashcards)</option>
         <option value="practice">Practice</option>
@@ -289,7 +366,39 @@
     <div class="input-group"><label>Zoom Link (Optional)</label><input id="mZoom" placeholder="https://zoom.us/j/..." /></div>
 
     <button class="btn" style="width:100%;" onclick="saveModule()">ADD MODULE</button>
-    <button class="btn btn-outline" style="width:100%;margin-top:0.5rem;" onclick="closeModal('moduleModal')">Cancel</button>
+    <button class="btn btn-gray" style="width:100%;margin-top:0.5rem;" onclick="closeModal('moduleModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div class="modal" id="editProfileModal">
+  <div class="modal-content">
+    <h3 style="font-weight:800;margin-bottom:1rem;">Edit Profile</h3>
+    <div class="input-group"><label>Display Name</label><input id="epName" /></div>
+    <div class="input-group"><label>Bio</label><textarea id="epBio" rows="2"></textarea></div>
+    <div class="input-group"><label>Specialty (e.g. Math, English)</label><input id="epSpecialty" /></div>
+    <div style="display:flex;gap:10px;">
+      <div class="input-group" style="flex:1;"><label>Experience</label><input id="epExp" placeholder="5 Yrs" /></div>
+      <div class="input-group" style="flex:1;"><label>Students</label><input id="epStudents" placeholder="100+" /></div>
+    </div>
+    <button class="btn" style="width:100%;" onclick="saveProfile()">SAVE</button>
+    <button class="btn btn-gray" style="width:100%;margin-top:0.5rem;" onclick="closeModal('editProfileModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="modal" id="adminModal">
+  <div class="modal-content">
+    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
+      <h3 style="font-weight:800;color:var(--primary);">Admin Panel</h3>
+      <button onclick="closeModal('adminModal')" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);">×</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:1rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;overflow-x:auto;">
+      <button class="btn btn-gray" onclick="loadAdminReqs()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Requests</button>
+      <button class="btn btn-gray" onclick="loadAdminPurchases()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Purchases</button>
+      <button class="btn btn-gray" onclick="loadAdminUsers()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Users</button>
+    </div>
+    <div id="adminContentArea"></div>
   </div>
 </div>
 
@@ -297,10 +406,8 @@
   // --- CONFIG & STATE ---
   const API_URL = '/api/index.js';
   const State = { 
-    user: null, teachers: [], myCourses: [], packages: [], settings: {},
-    currentCourse: null, currentModule: null, hasAccess: false,
-    pendingModules: [], // For teacher creation
-    postImgUrl: '', proofImgUrl: '', selectedPkg: null
+    user: null, teachers: [], currentCourse: null, currentModule: null, hasAccess: false,
+    pendingModules: []
   };
 
   function $(id) { return document.getElementById(id); }
@@ -319,7 +426,7 @@
   
   function toast(msg) {
     const t = document.createElement('div');
-    t.style = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--primary);color:white;padding:12px 24px;border-radius:12px;font-size:0.9rem;z-index:9999;font-weight:800;box-shadow:0 4px 0 var(--primary-hover);';
+    t.style = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:12px;font-size:0.9rem;z-index:9999;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
     t.textContent = msg; document.body.appendChild(t);
     setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
   }
@@ -372,33 +479,39 @@
     const tr = await api('getTeachers'); State.teachers = tr.teachers;
     hideLoading();
     
-    $('headerAvatar').innerText = State.user.displayName.charAt(0).toUpperCase();
+    // Profile UI update
     $('profileAvatar').innerText = State.user.displayName.charAt(0).toUpperCase();
-    $('coinValue').innerText = State.user.coins;
     $('profileName').innerText = State.user.displayName;
-    $('profileUsername').innerText = '@' + State.user.username;
-    $('profileSpecialty').innerText = State.user.specialty || '';
+    $('coinValue').innerText = State.user.coins;
+    $('profileCoins').innerText = State.user.coins;
+    $('profileXP').innerText = State.user.xp || 0;
+    $('weeklyXP').innerText = (State.user.xp || 0) + ' xp';
     
+    const today = new Date();
+    $('todayDate').innerText = `${today.getDate().toString().padStart(2,'0')}/${(today.getMonth()+1).toString().padStart(2,'0')}`;
+    
+    // Chart mock
+    const days = ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'];
+    $('chartBars').innerHTML = days.map((d, i) => {
+      const h = Math.random() * 80 + 20;
+      return `<div class="chart-bar-wrap"><div class="chart-bar"><div class="chart-bar-fill" style="height:${h}%"></div></div><span>${d}</span></div>`;
+    }).join('');
+
     if (State.user.isAdmin) {
-      $('adminPanelBtn').style.display = 'inline-flex';
+      $('adminPanelBtn').style.display = 'flex';
       $('navTeachMobile').style.display = 'flex';
     } else if (State.user.role === 'teacher') {
       $('navTeachMobile').style.display = 'flex';
     }
-
-    // Render My Courses
-    const allCourses = await api('getTeacherCourses', { teacherId: 'all' }); // simplified for now
-    // In a real app, you'd fetch courses the user bought. We'll show teachers for now.
   }
 
   // VIEWS
   function switchView(v) {
-    ['home','teachers','path','lesson','profile','teach'].forEach(x => {
+    ['home','path','lesson','profile','teach'].forEach(x => {
       const el = $('view' + x.charAt(0).toUpperCase() + x.slice(1));
       if(el) el.style.display = 'none';
     });
     if(v === 'home') { $('viewHome').style.display = 'block'; renderHome(); }
-    if(v === 'teachers') { $('viewTeachers').style.display = 'block'; renderTeachers(); }
     if(v === 'profile') { $('viewProfile').style.display = 'block'; }
     if(v === 'teach') { openModal('createCourseModal'); }
     
@@ -409,27 +522,13 @@
   function closeModal(id) { $(id).classList.remove('open'); }
   function openModal(id) { $(id).classList.add('open'); }
 
-  // RENDER HOME & TEACHERS
+  // RENDER HOME
   function renderHome() {
-    $('myCourseList').innerHTML = `
-      <div class="course-card" onclick="switchView('teachers')">
-        <div style="width:80px;height:80px;background:var(--primary-light);border-radius:12px;display:flex;justify-content:center;align-items:center;color:white;">
-          <svg class="icon" viewBox="0 0 24 24" style="width:40px;height:40px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </div>
-        <div>
-          <h4 style="font-weight:800;font-size:1.1rem;">Explore Teachers</h4>
-          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px;">Find courses and start learning today.</p>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderTeachers() {
     const c = $('teacherList');
-    if (!State.teachers.length) { c.innerHTML = '<p style="text-align:center;margin-top:2rem;color:var(--text-muted);">No teachers yet.</p>'; return; }
+    if (!State.teachers.length) { c.innerHTML = '<p style="text-align:center;margin-top:2rem;color:var(--text-muted);">No teachers available.</p>'; return; }
     c.innerHTML = State.teachers.map(t => `
       <div class="course-card" onclick="openTeacherProfile('${t.username}')">
-        <img src="${imgUrl(t.profileImage) || 'https://via.placeholder.com/80'}" class="course-img" />
+        <img src="${imgUrl(t.profileImage) || 'https://via.placeholder.com/80/58CC02/FFFFFF?text=T'}" class="course-img" />
         <div style="flex:1;">
           <h4 style="font-weight:800;font-size:1.1rem;">${esc(t.displayName)}</h4>
           <p style="font-size:0.85rem;color:var(--text-muted);margin-top:2px;">${esc(t.specialty || 'Teacher')}</p>
@@ -447,8 +546,6 @@
     hideLoading();
     
     if(r.courses.length === 0) return toast('ဒီဆရာ့ဆီမှာ သင်ခန်းစာ မရှိသေးပါ');
-    
-    // Open first course directly
     openCoursePath(r.courses[0].id);
   }
 
@@ -466,32 +563,40 @@
     
     if(!State.hasAccess) {
       $('pathNodes').innerHTML = `
-        <div style="text-align:center;padding:2rem;">
-          <svg class="icon" viewBox="0 0 24 24" style="width:60px;height:60px;color:#FF4B4B;margin-bottom:1rem;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div style="text-align:center;padding:2rem;background:var(--bg);border-radius:24px;border:2px solid var(--border);margin-top:2rem;">
+          <svg class="icon" viewBox="0 0 24 24" style="width:60px;height:60px;color:var(--red);margin-bottom:1rem;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <h3 style="font-weight:800;">Unlock this course</h3>
-          <p style="color:var(--text-muted);margin-bottom:1rem;">Coins ${r.course.price} လိုအပ်ပါသည်။</p>
+          <p style="color:var(--text-muted);margin-bottom:1.5rem;">Coins ${r.course.price} လိုအပ်ပါသည်။</p>
           <button class="btn" onclick="buyCourse('${r.course.id}')">UNLOCK FOR ${r.course.price} COINS</button>
         </div>
       `;
+      $('pathProgressText').innerText = `0/${r.course.modules.length} lessons`;
       switchView('path');
       return;
     }
 
+    let completedCount = 0;
     let html = '';
     r.course.modules.forEach((m, i) => {
       const isCompleted = State.user.completedLessons.includes(m.id);
-      const typeClass = (m.type === 'intro' || m.type === 'theory') ? 'active' : 'diamond';
+      if(isCompleted) completedCount++;
+      
+      const rowClass = `row-${i % 5}`;
+      const typeClass = (m.type === 'intro' || m.type === 'theory') ? '' : 'diamond';
       const icon = m.type === 'intro' ? '📖' : (m.type === 'theory' ? '📝' : '🎤');
       
       html += `
-        <div class="path-node ${typeClass}" onclick="openLesson('${m.id}')">
-          <span style="font-size:1.5rem;">${icon}</span>
-          <div class="node-label">${esc(m.title)}</div>
+        <div class="path-node-wrap ${rowClass}" onclick="openLesson('${m.id}')">
+          <div class="path-node active ${typeClass}">
+            <span style="font-size:1.5rem;">${icon}</span>
+          </div>
+          <div class="path-label">${esc(m.title)}</div>
         </div>
-        ${i < r.course.modules.length - 1 ? '<div class="path-line"></div>' : ''}
+        ${i < r.course.modules.length - 1 ? `<div class="path-connector ${rowClass}"></div>` : ''}
       `;
     });
     $('pathNodes').innerHTML = html;
+    $('pathProgressText').innerText = `${completedCount}/${r.course.modules.length} lessons`;
     switchView('path');
   }
 
@@ -511,7 +616,6 @@
     State.currentModule = m;
     
     $('lessonTitle').innerText = m.title;
-    $('lessonProgress').style.width = '100%';
     
     let contentHtml = '';
     if (m.type === 'intro') {
@@ -525,10 +629,12 @@
     } else if (m.type === 'theory') {
       contentHtml = `
         <div class="theory-container">
-          <h3 style="font-weight:800;margin-bottom:1rem;color:var(--text-muted);">👉 Vocabulary you'll learn</h3>
+          <h3 style="font-weight:800;margin-bottom:1rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">👉</span> Vocabulary you'll learn
+          </h3>
           ${m.vocab.map(v => `
             <div class="flashcard">
-              <div class="fc-header">
+              <div class="fc-top">
                 <div>
                   <span class="fc-word">${esc(v.word)}</span>
                   <span class="fc-romaji">(${esc(v.romaji)})</span>
@@ -549,30 +655,39 @@
       `;
     }
 
-    // Append PDF & Zoom Links if exist
     if (m.pdfUrl || m.zoomUrl) {
       contentHtml += `<div style="margin-top:2rem; display:flex; flex-direction:column; gap:10px;">`;
-      if (m.pdfUrl) contentHtml += `<a href="${m.pdfUrl}" target="_blank" class="btn btn-glass" style="color:#FF9600; border-color:#FF9600;">📄 DOWNLOAD PDF NOTES</a>`;
-      if (m.zoomUrl) contentHtml += `<a href="${m.zoomUrl}" target="_blank" class="btn btn-glass" style="color:#1CB0F6; border-color:#1CB0F6;">🎥 JOIN ZOOM MEETING</a>`;
+      if (m.pdfUrl) contentHtml += `<a href="${m.pdfUrl}" target="_blank" class="btn btn-gray" style="color:var(--yellow); border:2px solid var(--yellow);">📄 DOWNLOAD PDF NOTES</a>`;
+      if (m.zoomUrl) contentHtml += `<a href="${m.zoomUrl}" target="_blank" class="btn btn-blue">🎥 JOIN ZOOM MEETING</a>`;
       contentHtml += `</div>`;
     }
 
     $('lessonContent').innerHTML = contentHtml;
     switchView('lesson');
   }
-
-  function closeLesson() { switchView('path'); }
   
   async function completeCurrentLesson() {
     showLoading();
     await api('completeLesson', { username: State.user.username, lessonId: State.currentModule.id });
     hideLoading();
-    toast('Lesson Completed! 🎉');
-    openCoursePath(State.currentCourse.id); // reload path
+    toast('Lesson Completed! +20 XP 🎉');
+    await loadData();
+    openCoursePath(State.currentCourse.id); 
   }
 
   // --- TEACHER COURSE CREATION ---
-  function addModuleInput() { openModal('moduleModal'); }
+  function handleModuleTypeChange(val) {
+    if(val === 'intro') {
+      $('mIntroFields').style.display = 'block';
+      $('mTheoryFields').style.display = 'none';
+    } else if(val === 'theory') {
+      $('mIntroFields').style.display = 'none';
+      $('mTheoryFields').style.display = 'block';
+    } else {
+      $('mIntroFields').style.display = 'none';
+      $('mTheoryFields').style.display = 'none';
+    }
+  }
 
   function saveModule() {
     const type = $('mType').value;
@@ -599,32 +714,17 @@
     renderPendingModules();
     closeModal('moduleModal');
     
-    // clear inputs
     $('mTitle').value = ''; $('mImgUrl').value = ''; $('mText').value = ''; $('mVocab').value = ''; $('mPdf').value = ''; $('mZoom').value = '';
   }
 
   function renderPendingModules() {
     $('modulesContainer').innerHTML = State.pendingModules.map((m, i) => `
-      <div style="padding:10px;border:2px solid var(--border);border-radius:8px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+      <div style="padding:10px;border:2px solid var(--border);border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
         <div><b>${i+1}. ${esc(m.title)}</b> <span class="tag gray" style="font-size:0.6rem;">${m.type}</span></div>
-        <button onclick="State.pendingModules.splice(${i},1); renderPendingModules();" style="background:none;border:none;color:#FF4B4B;cursor:pointer;">✕</button>
+        <button onclick="State.pendingModules.splice(${i},1); renderPendingModules();" style="background:none;border:none;color:var(--red);cursor:pointer;font-weight:bold;">✕</button>
       </div>
     `).join('');
   }
-
-  // Update module modal fields based on type
-  $('mType').onchange = (e) => {
-    if(e.target.value === 'intro') {
-      $('mIntroFields').style.display = 'block';
-      $('mTheoryFields').style.display = 'none';
-    } else if(e.target.value === 'theory') {
-      $('mIntroFields').style.display = 'none';
-      $('mTheoryFields').style.display = 'block';
-    } else {
-      $('mIntroFields').style.display = 'none';
-      $('mTheoryFields').style.display = 'none';
-    }
-  };
 
   async function publishCourse() {
     const isFree = $('cIsFree').checked;
@@ -645,6 +745,85 @@
     closeModal('createCourseModal');
     State.pendingModules = []; $('modulesContainer').innerHTML = '';
     switchView('home');
+  }
+
+  // EDIT PROFILE
+  function openEditProfile() {
+    $('epName').value = State.user.displayName;
+    $('epBio').value = State.user.bio || '';
+    $('epSpecialty').value = State.user.specialty || '';
+    $('epExp').value = State.user.experience || '';
+    $('epStudents').value = State.user.studentsCount || '';
+    openModal('editProfileModal');
+  }
+
+  async function saveProfile() {
+    showLoading();
+    const r = await api('updateProfile', { 
+      username: State.user.username, 
+      displayName: $('epName').value, 
+      bio: $('epBio').value, 
+      specialty: $('epSpecialty').value,
+      experience: $('epExp').value,
+      studentsCount: $('epStudents').value,
+      profileImage: State.user.profileImage 
+    });
+    hideLoading(); 
+    closeModal('editProfileModal'); 
+    if(r.success) { State.user = r.user; await loadData(); toast('Saved!'); }
+  }
+
+  // ADMIN
+  function openAdminPanel() { openModal('adminModal'); loadAdminReqs(); }
+
+  async function loadAdminReqs() {
+    showLoading(); const r = await api('adminGetRequests'); hideLoading();
+    $('adminContentArea').innerHTML = r.requests.map(req => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;border:2px solid var(--border);border-radius:12px;margin-bottom:0.5rem;">
+        <div><b>@${esc(req.username)}</b><br/><span style="font-size:0.8rem;color:var(--text-muted)">Teacher Request</span></div>
+        <div>
+          <button class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="handleReq('${req.id}', true)">Approve</button>
+          <button class="btn btn-gray" style="padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="handleReq('${req.id}', false)">Reject</button>
+        </div>
+      </div>
+    `).join('') || '<p>No requests.</p>';
+  }
+  async function handleReq(id, approve) { showLoading(); await api('adminApproveRequest', { requestId: id, approve }); hideLoading(); loadAdminReqs(); }
+
+  async function loadAdminPurchases() {
+    showLoading(); const r = await api('adminGetPurchases'); hideLoading();
+    $('adminContentArea').innerHTML = r.purchases.map(p => `
+      <div style="border:2px solid var(--border);border-radius:12px;padding:10px;margin-bottom:10px;display:flex;gap:10px;">
+        <img src="${p.proofImage}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;" onclick="window.open('${p.proofImage}','_blank')" />
+        <div style="flex:1;">
+          <b>@${esc(p.username)}</b><br/>
+          <span style="font-size:0.8rem;color:var(--text-muted)">${p.packageData.coins} Coins</span>
+          <div style="margin-top:5px;">
+            <button class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;" onclick="handlePurchase('${p.id}', true)">Approve</button>
+            <button class="btn btn-gray" style="padding:0.3rem 0.6rem;font-size:0.75rem;" onclick="handlePurchase('${p.id}', false)">Reject</button>
+          </div>
+        </div>
+      </div>
+    `).join('') || '<p>No pending purchases.</p>';
+  }
+  async function handlePurchase(id, approve) { showLoading(); await api('adminApprovePurchase', { purchaseId: id, approve }); hideLoading(); loadAdminPurchases(); }
+
+  async function loadAdminUsers() {
+    showLoading(); const r = await api('adminGetUsers'); hideLoading();
+    $('adminContentArea').innerHTML = r.users.map(u => `
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border);padding:10px 0;">
+        <div><b>@${esc(u.username)}</b><br/><span style="font-size:0.75rem;color:var(--text-muted)">${u.role}</span></div>
+        <div>
+          <button class="btn ${u.isBanned ? 'btn-gray' : ''}" style="padding:0.3rem 0.6rem;font-size:0.75rem;" onclick="banUser('${u.username}', ${!u.isBanned})">${u.isBanned ? 'Unban' : 'Ban'}</button>
+          <button class="btn btn-gray" style="padding:0.3rem 0.6rem;font-size:0.75rem;color:var(--red);" onclick="deleteUser('${u.username}')">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  async function banUser(username, isBanned) { showLoading(); await api('adminToggleBan', { username, isBanned }); hideLoading(); loadAdminUsers(); }
+  async function deleteUser(username) {
+    if(!confirm(`@${username} ကို ဖျက်မှာ သေချာလား?`)) return;
+    showLoading(); await api('adminDeleteUser', { username }); hideLoading(); loadAdminUsers();
   }
 
   function logout() { localStorage.removeItem('ml_user'); location.reload(); }
