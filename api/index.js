@@ -80,7 +80,21 @@ module.exports = async (req, res) => {
     }
 
     if (action === 'getAllCourses') {
-      const courses = await coursesCol.find({}).sort({ createdAt: -1 }).toArray();
+      let courses = await coursesCol.find({}).sort({ createdAt: -1 }).toArray();
+      // Auto seed if empty for better user experience
+      if(courses.length === 0) {
+        const seedCourse = {
+          teacherId: 'admin', teacherName: 'System Admin', teacherImage: '',
+          title: 'Japanese Basic 1', description: 'Learn Japanese from scratch.', coverImage: '', isFree: true, price: 0,
+          modules: [
+            { id: 'm1', type: 'theory', title: 'Theory', vocab: [{word: 'こんにちは', romaji: 'konnichiwa', meaning: 'Hello'}, {word: 'さようなら', romaji: 'sayounara', meaning: 'Goodbye'}] },
+            { id: 'm2', type: 'intro', title: 'Introduction', imageUrl: '', text: 'Welcome to Japanese! Let us learn together.' }
+          ],
+          createdAt: nowIso()
+        };
+        await coursesCol.insertOne(seedCourse);
+        courses = [seedCourse];
+      }
       return send(res, { success: true, courses: normalizeDocs(courses) });
     }
 
