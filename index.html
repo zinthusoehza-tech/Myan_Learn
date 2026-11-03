@@ -63,10 +63,10 @@
   .path-connector { width: 4px; height: 30px; background: var(--border); border-radius: 2px; margin: -5px 0; z-index: 1; }
   .row-0 { transform: translateX(0); } .row-1 { transform: translateX(-60px); } .row-2 { transform: translateX(0); } .row-3 { transform: translateX(60px); }
 
-  /* --- VIEW 2: ALPHABET (TEACHERS) --- */
-  .teacher-card { display: flex; gap: 1rem; padding: 1rem; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 1rem; cursor: pointer; transition: 0.1s; background: var(--bg); box-shadow: 0 4px 0 var(--border); align-items: center; }
-  .teacher-card:active { transform: translateY(4px); box-shadow: 0 0 0 var(--border); }
-  .teacher-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; background: var(--surface); }
+  /* --- VIEW 2: ALPHABET (EXPLORE) --- */
+  .course-card { display: flex; gap: 1rem; padding: 1rem; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 1rem; cursor: pointer; transition: 0.1s; background: var(--bg); box-shadow: 0 4px 0 var(--border); align-items: center; }
+  .course-card:active { transform: translateY(4px); box-shadow: 0 0 0 var(--border); }
+  .course-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: var(--surface); }
   .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; background: var(--primary); color: white; }
 
   /* --- VIEW 3: LESSON+ (CURATED) --- */
@@ -183,16 +183,13 @@
 <!-- MAIN APP -->
 <div id="app">
   <div class="top-header">
-    <div class="header-pill" id="headerCourseTitle" onclick="switchTab('learning')">
-      <span>Basic - Lv2</span> <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="header-pill" onclick="switchTab('learning')">
+      <span id="headerCourseTitle">Select Course</span>
+      <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div style="display:flex;gap:10px;">
-      <div class="header-pill">
-        <span style="color:var(--red);">🌸</span> <span id="headerStreak">1</span>
-      </div>
-      <div class="header-pill">
-        <span style="color:var(--blue);">💧</span> <span>70</span>
-      </div>
+      <div class="header-pill"><span style="color:var(--red);">🌸</span> <span>1</span></div>
+      <div class="header-pill"><span style="color:var(--blue);">💧</span> <span>70</span></div>
       <div class="header-pill">
         <svg class="icon" viewBox="0 0 24 24" style="width:18px;height:18px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5"/></svg>
         <span id="coinValue">0</span>
@@ -200,16 +197,22 @@
     </div>
   </div>
 
-  <!-- VIEW 1: LEARNING (HOME) -->
+  <!-- VIEW 1: LEARNING (PATH) -->
   <div id="viewLearning" class="app-view">
-    <div class="path-banner">
+    <div class="path-banner" id="learningBanner" style="display:none;">
       <div>
-        <h2>Basic 1</h2>
+        <h2 id="pathCourseTitle">Basic 1</h2>
         <p id="pathProgressText">0/0 lessons</p>
       </div>
       <div style="width:50px;height:50px;background:white;border-radius:50%;display:flex;justify-content:center;align-items:center;color:var(--red);">
         <svg class="icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
       </div>
+    </div>
+    <div id="emptyLearning" style="text-align:center; padding-top:3rem; display:none;">
+      <svg class="icon" viewBox="0 0 24 24" style="width:80px;height:80px;color:var(--border);margin-bottom:1rem;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <h2 style="font-weight:800; color:var(--text-muted);">No Course Selected</h2>
+      <p style="font-size:0.9rem; margin-top:10px;">Go to Explore to pick a course.</p>
+      <button class="btn" style="margin-top:1rem;" onclick="switchTab('alphabet')">Explore Courses</button>
     </div>
     <div class="path-container" id="pathNodes"></div>
   </div>
@@ -226,7 +229,7 @@
       <h2 style="font-weight:800; font-size:1.5rem; margin-bottom:10px;">Hello <span id="curatedUserName">User</span>, what do you want to learn today?</h2>
       <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">Let Shibi know your preferences and get personalized lessons</p>
       <input type="text" placeholder="Enter a topic" style="width:100%; padding:12px; border:2px solid var(--primary); border-radius:12px; outline:none; margin-bottom:1rem;" />
-      <button class="btn" style="width:100%;">✨ Create lesson</button>
+      <button class="btn" style="width:100%;" onclick="toast('Personalized lessons coming soon!')">✨ Create lesson</button>
     </div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
       <h3 style="font-weight:800; font-size:1.2rem;">Curated lessons</h3>
@@ -262,14 +265,14 @@
       <div class="video-tab">🎵 Music</div>
     </div>
     
-    <div class="video-card">
+    <div class="video-card" onclick="toast('Video starting soon!')">
       <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&q=80" />
       <div class="overlay">
         <div class="top-tag">RECOMMENDED FOR YOU</div>
         <div class="bottom-info">
           <h3>The power of the maid!</h3>
           <p><span style="background:var(--primary); padding:2px 8px; border-radius:4px; margin-right:10px;">Easy</span> 00:19 👁️ 293k</p>
-          <div class="dub-btn" onclick="toast('Microphone recording started!')">
+          <div class="dub-btn">
             <svg class="icon" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
             Start dubbing
           </div>
@@ -305,19 +308,19 @@
     </div>
 
     <div class="stats-grid">
-      <div class="stat-item" onclick="toast('Progress page loading...')">
+      <div class="stat-item" onclick="toast('Progress page coming soon!')">
         <div class="stat-icon" style="background:var(--purple-light); border-color:var(--purple); color:var(--purple);">
           <svg class="icon" viewBox="0 0 24 24"><path d="M12 20v-6M12 14l-4-4M12 14l4-4M12 4v4"/></svg>
         </div>
         <span>Progress</span>
       </div>
-      <div class="stat-item" onclick="toast('Trophies loading...')">
+      <div class="stat-item" onclick="toast('Trophies coming soon!')">
         <div class="stat-icon" style="background:var(--yellow-light); border-color:var(--yellow); color:var(--yellow);">
           <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </div>
         <span>Trophies</span>
       </div>
-      <div class="stat-item" onclick="toast('Tips loading...')">
+      <div class="stat-item" onclick="toast('Tips coming soon!')">
         <div class="stat-icon" style="background:var(--blue-light); border-color:var(--blue); color:var(--blue);">
           <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
         </div>
@@ -356,7 +359,7 @@
   <!-- LESSON VIEW (FULL SCREEN) -->
   <div id="viewLessonView" class="app-view" style="position:fixed; inset:0; background:var(--bg); z-index:100; padding:1rem; overflow-y:auto;">
     <div class="theory-header">
-      <button onclick="switchTab('learning')" style="background:none;border:none;cursor:pointer;color:var(--text);">
+      <button onclick="closeLessonView()" style="background:none;border:none;cursor:pointer;color:var(--text);">
         <svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
       <div class="progress-bar"><div class="progress-fill" style="width:50%;"></div></div>
@@ -468,12 +471,12 @@
   const API_URL = '/api/index.js';
   const State = { 
     user: null, teachers: [], courses: [], currentCourse: null, currentModule: null, 
-    hasAccess: false, pendingModules: [], epImgUrl: null
+    hasAccess: true, pendingModules: [], epImgUrl: null
   };
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return s ? String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) : ''; }
-  function imgUrl(u) { return u ? u : 'https://via.placeholder.com/100'; }
+  function imgUrl(u) { return u ? u : ''; }
   
   async function api(action, body = {}) {
     body.action = action;
@@ -531,26 +534,8 @@
     const r = await api('bootstrap', { username: State.user.username });
     State.user = r.user;
     
-    // Auto-seed a course for testing if none exists
-    const tr = await api('getTeachers'); State.teachers = tr.teachers;
     const cr = await api('getAllCourses'); 
-    if(cr.courses.length === 0) {
-      // Seed one course
-      await api('createCourse', {
-        username: State.user.username, 
-        title: 'Japanese Basic 1', 
-        description: 'Learn the basics', 
-        coverImage: '', isFree: true, price: 0,
-        modules: [
-          { id: 'm1', type: 'theory', title: 'Theory', vocab: [{word: 'こんにちは', romaji: 'konnichiwa', meaning: 'Hello'}, {word: 'さようなら', romaji: 'sayounara', meaning: 'Goodbye'}] },
-          { id: 'm2', type: 'intro', title: 'Introduction', imageUrl: '', text: 'Welcome to Japanese!' }
-        ]
-      });
-      const cr2 = await api('getAllCourses'); State.courses = cr2.courses;
-    } else {
-      State.courses = cr.courses;
-    }
-
+    State.courses = cr.courses;
     hideLoading();
     
     // Header UI
@@ -579,7 +564,13 @@
       $('teacherPanelBtn').style.display = 'flex';
     }
 
-    loadPath();
+    renderExplore();
+    if(State.courses.length > 0) {
+      selectCourse(State.courses[0].id);
+    } else {
+      $('learningBanner').style.display = 'none';
+      $('emptyLearning').style.display = 'block';
+    }
   }
 
   // TABS
@@ -588,8 +579,8 @@
       const el = $('view' + t.charAt(0).toUpperCase() + t.slice(1));
       if(el) el.style.display = 'none';
     });
-    if(tab === 'learning') { $('viewLearning').style.display = 'block'; loadPath(); }
-    if(tab === 'alphabet') { $('viewAlphabet').style.display = 'block'; renderExplore(); }
+    if(tab === 'learning') { $('viewLearning').style.display = 'block'; }
+    if(tab === 'alphabet') { $('viewAlphabet').style.display = 'block'; }
     if(tab === 'lessonPlus') { $('viewLessonPlus').style.display = 'block'; }
     if(tab === 'video') { $('viewVideo').style.display = 'block'; }
     if(tab === 'me') { $('viewMe').style.display = 'block'; }
@@ -603,28 +594,43 @@
   function closeModal(id) { $(id).classList.remove('open'); }
   function openModal(id) { $(id).classList.add('open'); }
 
-  // LOAD PATH
-  async function loadPath() {
-    if(State.courses.length === 0) {
-      $('pathNodes').innerHTML = '<p style="text-align:center;margin-top:2rem;">No courses available.</p>';
+  // EXPLORE
+  function renderExplore() {
+    if (State.courses.length === 0) {
+      $('exploreList').innerHTML = '<p style="text-align:center;margin-top:2rem;color:var(--text-muted);">No courses available.</p>';
       return;
     }
-    const course = State.courses[0];
-    State.currentCourse = course;
-    $('headerCourseTitle').querySelector('span').innerText = course.title;
+    $('exploreList').innerHTML = State.courses.map(c => `
+      <div class="course-card" onclick="selectCourse('${c.id}')">
+        <img src="${imgUrl(c.coverImage)}" class="course-img" onerror="this.src='https://via.placeholder.com/80/58CC02/FFFFFF?text=C'" />
+        <div style="flex:1;">
+          <h4 style="font-weight:800;font-size:1.1rem;">${esc(c.title)}</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:2px;">By ${esc(c.teacherName)}</p>
+          <div style="margin-top:6px;"><span class="tag">${c.isFree ? 'Free' : c.price + ' Coins'}</span></div>
+        </div>
+      </div>
+    `).join('');
+  }
 
+  // SELECT COURSE AND LOAD PATH
+  async function selectCourse(courseId) {
     showLoading();
-    const r = await api('getCourseDetails', { courseId: course.id, username: State.user.username });
+    const r = await api('getCourseDetails', { courseId });
     hideLoading();
+    if(!r.success) return toast('Error loading course');
     
-    State.hasAccess = r.hasAccess;
-    State.user.completedLessons = r.completedLessons;
+    State.currentCourse = r.course;
+    $('emptyLearning').style.display = 'none';
+    $('learningBanner').style.display = 'flex';
+    $('headerCourseTitle').innerText = r.course.title;
+    $('pathCourseTitle').innerText = r.course.title;
+    
     const modules = r.course.modules || [];
-    
     let completedCount = 0;
     let html = '';
+    
     modules.forEach((m, i) => {
-      const isCompleted = State.user.completedLessons.includes(m.id);
+      const isCompleted = (State.user.completedLessons || []).includes(m.id);
       if(isCompleted) completedCount++;
       
       const rowClass = `row-${i % 4}`;
@@ -641,22 +647,15 @@
         ${i < modules.length - 1 ? `<div class="path-connector ${rowClass}"></div>` : ''}
       `;
     });
-    $('pathNodes').innerHTML = html || '<p style="text-align:center;">No modules in this course.</p>';
+    
+    if(modules.length === 0) {
+       $('pathNodes').innerHTML = '<p style="text-align:center;color:var(--text-muted);">No modules in this course.</p>';
+    } else {
+       $('pathNodes').innerHTML = html;
+    }
+    
     $('pathProgressText').innerText = `${completedCount}/${modules.length} lessons`;
-  }
-
-  // EXPLORE
-  function renderExplore() {
-    $('exploreList').innerHTML = State.courses.map(c => `
-      <div class="teacher-card" onclick="toast('Opening course...')">
-        <img src="${imgUrl(c.coverImage)}" class="teacher-img" onerror="this.src='https://via.placeholder.com/80/58CC02/FFFFFF?text=C'" />
-        <div style="flex:1;">
-          <h4 style="font-weight:800;font-size:1.1rem;">${esc(c.title)}</h4>
-          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:2px;">By ${esc(c.teacherName)}</p>
-          <div style="margin-top:6px;"><span class="tag">${c.isFree ? 'Free' : c.price + ' Coins'}</span></div>
-        </div>
-      </div>
-    `).join('');
+    switchTab('learning');
   }
 
   // LESSON VIEWER
@@ -710,12 +709,14 @@
     $('viewLessonView').style.display = 'block';
   }
   
+  function closeLessonView() { $('viewLessonView').style.display = 'none'; }
+
   async function completeCurrentLesson() {
     showLoading();
     await api('completeLesson', { username: State.user.username, lessonId: State.currentModule.id, xpAmount: 20 });
     hideLoading();
     toast('Lesson Completed! +20 XP 🎉');
-    $('viewLessonView').style.display = 'none';
+    closeLessonView();
     await loadData();
   }
 
