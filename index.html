@@ -67,19 +67,21 @@
   .app-view { padding: 1rem; display: none; animation: fadeIn 0.2s; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
-  /* --- PATH UI (Duolingo Style) --- */
+  /* --- PATH UI --- */
   .path-banner { background: var(--primary-light); border-radius: 16px; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border: 2px solid #A5ED6E; }
   .path-banner h2 { color: #2B7000; font-weight: 800; font-size: 1.2rem; }
   .path-banner p { color: #4B9E1F; font-size: 0.9rem; font-weight: 700; }
   
   .path-container { display: flex; flex-direction: column; align-items: center; padding-bottom: 3rem; position: relative; }
-  .path-node-wrap { display: flex; flex-direction: column; align-items: center; margin: 1rem 0; position: relative; cursor: pointer; }
+  .path-node-wrap { display: flex; flex-direction: column; align-items: center; margin: 1rem 0; position: relative; cursor: pointer; z-index: 2; }
   
-  .path-node { width: 70px; height: 70px; border-radius: 50%; background: var(--border); display: flex; justify-content: center; align-items: center; position: relative; z-index: 2; transition: 0.2s; box-shadow: 0 6px 0 var(--border-hover); }
+  .path-node { width: 70px; height: 70px; border-radius: 50%; background: var(--border); display: flex; justify-content: center; align-items: center; position: relative; transition: 0.2s; box-shadow: 0 6px 0 var(--border-hover); }
   .path-node.active { background: var(--primary); box-shadow: 0 6px 0 var(--primary-hover); }
+  .path-node.completed { background: var(--yellow); box-shadow: 0 6px 0 #D1A500; }
   .path-node.diamond { border-radius: 16px; transform: rotate(45deg); }
   .path-node.diamond .icon { transform: rotate(-45deg); }
   .path-node.active .icon { stroke: white; fill: white; }
+  .path-node.completed .icon { stroke: white; fill: white; }
   .path-node .icon { stroke: #AFAFAF; width: 32px; height: 32px; }
   
   .path-label { margin-top: 12px; font-weight: 800; color: var(--text-muted); font-size: 0.95rem; }
@@ -87,14 +89,14 @@
   
   .path-connector { width: 4px; height: 30px; background: var(--border); border-radius: 2px; margin: -5px 0; z-index: 1; }
   
-  /* Zigzag positioning */
+  /* Zigzag */
   .row-0 { transform: translateX(0); }
   .row-1 { transform: translateX(-60px); }
   .row-2 { transform: translateX(0); }
   .row-3 { transform: translateX(60px); }
   .row-4 { transform: translateX(0); }
 
-  /* --- PROFILE DASHBOARD (Screenshot 2 Style) --- */
+  /* --- PROFILE DASHBOARD --- */
   .profile-header-card { background: var(--primary); border-radius: 24px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; color: white; box-shadow: 0 6px 0 var(--primary-hover); margin-bottom: 2rem; position: relative; }
   .profile-av { width: 80px; height: 80px; border-radius: 50%; background: white; border: 4px solid rgba(255,255,255,0.3); display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: 800; color: var(--primary); overflow: hidden; }
   .profile-av img { width: 100%; height: 100%; object-fit: cover; }
@@ -114,7 +116,7 @@
   .chart-bar-fill { position: absolute; bottom: 0; left: 0; width: 100%; background: white; border-radius: 4px; transition: height 0.3s; }
   .chart-bar-wrap span { font-size: 0.75rem; font-weight: 700; }
 
-  /* --- LESSON (Theory) --- */
+  /* --- LESSON --- */
   .theory-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
   .flashcard { background: var(--surface); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; border: 2px solid var(--border); box-shadow: 0 4px 0 var(--border); }
   .fc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
@@ -124,7 +126,7 @@
   .fc-actions { display: flex; gap: 15px; color: var(--blue); cursor: pointer; }
   .fc-note { margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid var(--border); display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.9rem; cursor: pointer; }
 
-  /* --- INTRO (Article) --- */
+  /* --- INTRO --- */
   .intro-card { background: var(--bg); border-radius: 16px; padding: 2rem; border: 2px solid var(--border); box-shadow: 0 4px 0 var(--border); margin-bottom: 2rem; }
   .intro-title { font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 1rem; }
   .intro-img { width: 100%; max-height: 250px; object-fit: contain; margin-bottom: 1.5rem; border-radius: 12px; }
@@ -135,21 +137,18 @@
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.2s; padding: 1rem; }
   .modal.open { opacity: 1; pointer-events: auto; }
   .modal-content { background: var(--bg); width: 100%; max-width: 500px; padding: 1.5rem; border-radius: 24px; max-height: 90vh; overflow-y: auto; border: 2px solid var(--border); box-shadow: 0 8px 0 var(--border); }
-  #confirmModal { z-index: 10000; }
-
+  
   /* Navigation */
   .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0.8rem; background: var(--bg); border-top: 2px solid var(--border); z-index: 50; }
   .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); cursor: pointer; text-transform: uppercase; }
   .nav-item.active { color: var(--primary); }
   .nav-item .icon { width: 28px; height: 28px; }
 
-  /* Utility */
   .course-card { display: flex; gap: 1rem; padding: 1rem; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 1rem; cursor: pointer; transition: 0.1s; background: var(--bg); box-shadow: 0 4px 0 var(--border); align-items: center; }
   .course-card:active { transform: translateY(4px); box-shadow: 0 0 0 var(--border); }
   .course-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: var(--surface); }
   .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; background: var(--primary); color: white; }
   .tag.free { background: var(--yellow); color: #3C3C3C; }
-  .tag.gray { background: var(--border); color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -157,7 +156,6 @@
 <div id="loadingOverlay">
   <div class="spinner" style="width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;"></div>
   <div class="loader-bar-container"><div class="loader-fill" id="loaderFill"></div></div>
-  <p style="margin-top:1rem;font-weight:800;color:var(--text);" id="loaderText">ခဏလေးပါနော်...</p>
 </div>
 
 <!-- AUTH SCREEN -->
@@ -190,14 +188,14 @@
   <div class="top-header">
     <h2 style="font-size:1.4rem;font-weight:800;color:var(--primary);">Myan Learn</h2>
     <div style="display:flex;gap:12px;align-items:center;">
-      <div class="coin-pill" onclick="switchView('shop')">
+      <div class="coin-pill" onclick="toast('Coins Shop Coming Soon!')">
         <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5"/></svg>
         <span id="coinValue">0</span>
       </div>
     </div>
   </div>
 
-  <!-- HOME VIEW (Explore Teachers) -->
+  <!-- HOME VIEW -->
   <div id="viewHome" class="app-view">
     <h3 style="font-weight:800;margin-bottom:1rem;font-size:1.2rem;">Explore Courses</h3>
     <div id="teacherList"></div>
@@ -251,23 +249,17 @@
     </div>
 
     <div class="stats-grid">
-      <div class="stat-item">
+      <div class="stat-item" onclick="toast('Progress feature coming soon!')">
         <div class="stat-icon" style="background:var(--purple-light); border-color:var(--purple); color:var(--purple);">
           <svg class="icon" viewBox="0 0 24 24"><path d="M12 20v-6M12 14l-4-4M12 14l4-4M12 4v4"/></svg>
         </div>
         <span>Progress</span>
       </div>
-      <div class="stat-item">
+      <div class="stat-item" onclick="toast('Trophies feature coming soon!')">
         <div class="stat-icon" style="background:var(--yellow-light); border-color:var(--yellow); color:var(--yellow);">
           <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </div>
         <span>Trophies</span>
-      </div>
-      <div class="stat-item">
-        <div class="stat-icon" style="background:var(--blue-light); border-color:var(--blue); color:var(--blue);">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
-        <span>Tips</span>
       </div>
       <div class="stat-item" id="adminPanelBtn" style="display:none;" onclick="openAdminPanel()">
         <div class="stat-icon" style="background:var(--red-light); border-color:var(--red); color:var(--red);">
@@ -291,9 +283,7 @@
           <h2 style="font-size:2rem;font-weight:800;margin-top:8px;" id="weeklyXP">0 xp</h2>
         </div>
       </div>
-      <div class="chart-bars" id="chartBars">
-        <!-- Generated by JS -->
-      </div>
+      <div class="chart-bars" id="chartBars"></div>
     </div>
   </div>
 
@@ -314,7 +304,7 @@
   </div>
 </div>
 
-<!-- TEACHER CREATE COURSE -->
+<!-- CREATE COURSE MODAL -->
 <div class="modal" id="createCourseModal">
   <div class="modal-content">
     <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
@@ -342,19 +332,18 @@
 <div class="modal" id="moduleModal">
   <div class="modal-content">
     <h3 style="font-weight:800;margin-bottom:1rem;">Add Module</h3>
-    <div class="input-group"><label>Module Title</label><input id="mTitle" placeholder="e.g. Introduction, Theory, Practice" /></div>
+    <div class="input-group"><label>Module Title</label><input id="mTitle" placeholder="e.g. Introduction, Theory" /></div>
     <div class="input-group">
       <label>Module Type</label>
       <select id="mType" onchange="handleModuleTypeChange(this.value)">
         <option value="intro">Introduction (Article & Image)</option>
         <option value="theory">Theory (Vocabulary Flashcards)</option>
-        <option value="practice">Practice</option>
       </select>
     </div>
     
     <div id="mIntroFields">
       <div class="input-group"><label>Article Image URL</label><input id="mImgUrl" placeholder="Google Drive Link" /></div>
-      <div class="input-group"><label>Article Content (Text)</label><textarea id="mText" rows="4" placeholder="Write your explanation here..."></textarea></div>
+      <div class="input-group"><label>Article Content</label><textarea id="mText" rows="4"></textarea></div>
     </div>
     
     <div id="mTheoryFields" style="display:none;">
@@ -374,13 +363,18 @@
 <div class="modal" id="editProfileModal">
   <div class="modal-content">
     <h3 style="font-weight:800;margin-bottom:1rem;">Edit Profile</h3>
+    
+    <div style="text-align:center; margin-bottom:1rem;">
+      <label for="epImgInput" style="cursor:pointer; display:inline-block;">
+        <div class="profile-av" id="epAvatar" style="width:100px; height:100px; margin:0 auto; background:var(--primary); color:white;">U</div>
+        <div style="font-size:0.8rem;color:var(--primary);margin-top:0.5rem;font-weight:800;">Change Photo</div>
+      </label>
+      <input type="file" id="epImgInput" accept="image/*" style="display:none;" onchange="handleProfileImageUpload(this)" />
+    </div>
+
     <div class="input-group"><label>Display Name</label><input id="epName" /></div>
     <div class="input-group"><label>Bio</label><textarea id="epBio" rows="2"></textarea></div>
-    <div class="input-group"><label>Specialty (e.g. Math, English)</label><input id="epSpecialty" /></div>
-    <div style="display:flex;gap:10px;">
-      <div class="input-group" style="flex:1;"><label>Experience</label><input id="epExp" placeholder="5 Yrs" /></div>
-      <div class="input-group" style="flex:1;"><label>Students</label><input id="epStudents" placeholder="100+" /></div>
-    </div>
+    <div class="input-group"><label>Specialty</label><input id="epSpecialty" placeholder="e.g. Math, English" /></div>
     <button class="btn" style="width:100%;" onclick="saveProfile()">SAVE</button>
     <button class="btn btn-gray" style="width:100%;margin-top:0.5rem;" onclick="closeModal('editProfileModal')">Cancel</button>
   </div>
@@ -393,10 +387,8 @@
       <h3 style="font-weight:800;color:var(--primary);">Admin Panel</h3>
       <button onclick="closeModal('adminModal')" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);">×</button>
     </div>
-    <div style="display:flex;gap:10px;margin-bottom:1rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;overflow-x:auto;">
-      <button class="btn btn-gray" onclick="loadAdminReqs()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Requests</button>
-      <button class="btn btn-gray" onclick="loadAdminPurchases()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Purchases</button>
-      <button class="btn btn-gray" onclick="loadAdminUsers()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Users</button>
+    <div style="display:flex;gap:10px;margin-bottom:1rem;border-bottom:2px solid var(--border);padding-bottom:0.5rem;">
+      <button class="btn btn-gray" onclick="loadAdminReqs()" style="padding:0.4rem 0.8rem;font-size:0.8rem;">Requests</button>
     </div>
     <div id="adminContentArea"></div>
   </div>
@@ -407,7 +399,7 @@
   const API_URL = '/api/index.js';
   const State = { 
     user: null, teachers: [], currentCourse: null, currentModule: null, hasAccess: false,
-    pendingModules: []
+    pendingModules: [], epImgUrl: null
   };
 
   function $(id) { return document.getElementById(id); }
@@ -480,7 +472,8 @@
     hideLoading();
     
     // Profile UI update
-    $('profileAvatar').innerText = State.user.displayName.charAt(0).toUpperCase();
+    const avHtml = State.user.profileImage ? `<img src="${imgUrl(State.user.profileImage)}" />` : State.user.displayName.charAt(0).toUpperCase();
+    $('profileAvatar').innerHTML = avHtml;
     $('profileName').innerText = State.user.displayName;
     $('coinValue').innerText = State.user.coins;
     $('profileCoins').innerText = State.user.coins;
@@ -490,7 +483,6 @@
     const today = new Date();
     $('todayDate').innerText = `${today.getDate().toString().padStart(2,'0')}/${(today.getMonth()+1).toString().padStart(2,'0')}`;
     
-    // Chart mock
     const days = ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'];
     $('chartBars').innerHTML = days.map((d, i) => {
       const h = Math.random() * 80 + 20;
@@ -545,7 +537,7 @@
     const r = await api('getTeacherCourses', { teacherId: username });
     hideLoading();
     
-    if(r.courses.length === 0) return toast('ဒီဆရာ့ဆီမှာ သင်ခန်းစာ မရှိသေးပါ');
+    if(!r.courses || r.courses.length === 0) return toast('ဒီဆရာ့ဆီမှာ သင်ခန်းစာ မရှိသေးပါ');
     openCoursePath(r.courses[0].id);
   }
 
@@ -570,33 +562,40 @@
           <button class="btn" onclick="buyCourse('${r.course.id}')">UNLOCK FOR ${r.course.price} COINS</button>
         </div>
       `;
-      $('pathProgressText').innerText = `0/${r.course.modules.length} lessons`;
+      $('pathProgressText').innerText = `0/${(r.course.modules || []).length} lessons`;
       switchView('path');
       return;
     }
 
     let completedCount = 0;
     let html = '';
-    r.course.modules.forEach((m, i) => {
-      const isCompleted = State.user.completedLessons.includes(m.id);
-      if(isCompleted) completedCount++;
-      
-      const rowClass = `row-${i % 5}`;
-      const typeClass = (m.type === 'intro' || m.type === 'theory') ? '' : 'diamond';
-      const icon = m.type === 'intro' ? '📖' : (m.type === 'theory' ? '📝' : '🎤');
-      
-      html += `
-        <div class="path-node-wrap ${rowClass}" onclick="openLesson('${m.id}')">
-          <div class="path-node active ${typeClass}">
-            <span style="font-size:1.5rem;">${icon}</span>
+    const modules = r.course.modules || [];
+    
+    if(modules.length === 0) {
+       html = '<p style="text-align:center;color:var(--text-muted);margin-top:2rem;">ဒီသင်ခန်းစာမှာ Module တွေ မရှိသေးပါဘူး။</p>';
+    } else {
+      modules.forEach((m, i) => {
+        const isCompleted = State.user.completedLessons.includes(m.id);
+        if(isCompleted) completedCount++;
+        
+        const rowClass = `row-${i % 5}`;
+        const typeClass = m.type === 'intro' ? '' : 'diamond';
+        const icon = m.type === 'intro' ? '📖' : '📝';
+        
+        html += `
+          <div class="path-node-wrap ${rowClass}" onclick="openLesson('${m.id}')">
+            <div class="path-node ${isCompleted ? 'completed' : 'active'} ${typeClass}">
+              <span style="font-size:1.5rem;">${icon}</span>
+            </div>
+            <div class="path-label">${esc(m.title)}</div>
           </div>
-          <div class="path-label">${esc(m.title)}</div>
-        </div>
-        ${i < r.course.modules.length - 1 ? `<div class="path-connector ${rowClass}"></div>` : ''}
-      `;
-    });
+          ${i < modules.length - 1 ? `<div class="path-connector ${rowClass}"></div>` : ''}
+        `;
+      });
+    }
+    
     $('pathNodes').innerHTML = html;
-    $('pathProgressText').innerText = `${completedCount}/${r.course.modules.length} lessons`;
+    $('pathProgressText').innerText = `${completedCount}/${modules.length} lessons`;
     switchView('path');
   }
 
@@ -632,7 +631,7 @@
           <h3 style="font-weight:800;margin-bottom:1rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;">
             <span style="font-size:1.2rem;">👉</span> Vocabulary you'll learn
           </h3>
-          ${m.vocab.map(v => `
+          ${(m.vocab || []).map(v => `
             <div class="flashcard">
               <div class="fc-top">
                 <div>
@@ -641,14 +640,9 @@
                 </div>
                 <div class="fc-actions">
                   <svg class="icon" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                  <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                 </div>
               </div>
               <div class="fc-meaning">${esc(v.meaning)}</div>
-              <div class="fc-note">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                Add note
-              </div>
             </div>
           `).join('')}
         </div>
@@ -683,9 +677,6 @@
     } else if(val === 'theory') {
       $('mIntroFields').style.display = 'none';
       $('mTheoryFields').style.display = 'block';
-    } else {
-      $('mIntroFields').style.display = 'none';
-      $('mTheoryFields').style.display = 'none';
     }
   }
 
@@ -720,7 +711,7 @@
   function renderPendingModules() {
     $('modulesContainer').innerHTML = State.pendingModules.map((m, i) => `
       <div style="padding:10px;border:2px solid var(--border);border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-        <div><b>${i+1}. ${esc(m.title)}</b> <span class="tag gray" style="font-size:0.6rem;">${m.type}</span></div>
+        <div><b>${i+1}. ${esc(m.title)}</b></div>
         <button onclick="State.pendingModules.splice(${i},1); renderPendingModules();" style="background:none;border:none;color:var(--red);cursor:pointer;font-weight:bold;">✕</button>
       </div>
     `).join('');
@@ -752,9 +743,27 @@
     $('epName').value = State.user.displayName;
     $('epBio').value = State.user.bio || '';
     $('epSpecialty').value = State.user.specialty || '';
-    $('epExp').value = State.user.experience || '';
-    $('epStudents').value = State.user.studentsCount || '';
+    $('epAvatar').innerHTML = State.user.profileImage ? `<img src="${imgUrl(State.user.profileImage)}" />` : State.user.displayName.charAt(0).toUpperCase();
+    State.epImgUrl = null; // reset
     openModal('editProfileModal');
+  }
+
+  function handleProfileImageUpload(input) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      showLoading();
+      const r = await api('uploadImage', { base64: e.target.result });
+      hideLoading();
+      if (r.success) { 
+        State.epImgUrl = r.url; 
+        $('epAvatar').innerHTML = `<img src="${r.url}" style="width:100%;height:100%;object-fit:cover;" />`; 
+        toast('ပုံတင်ပြီးပါပြီ');
+      } else {
+        toast('ပုံတင်မရပါ: ' + r.error);
+      }
+    };
+    reader.readAsDataURL(input.files[0]);
   }
 
   async function saveProfile() {
@@ -764,13 +773,17 @@
       displayName: $('epName').value, 
       bio: $('epBio').value, 
       specialty: $('epSpecialty').value,
-      experience: $('epExp').value,
-      studentsCount: $('epStudents').value,
-      profileImage: State.user.profileImage 
+      profileImage: State.epImgUrl || State.user.profileImage 
     });
     hideLoading(); 
     closeModal('editProfileModal'); 
-    if(r.success) { State.user = r.user; await loadData(); toast('Saved!'); }
+    if(r.success) { 
+      State.user = r.user; 
+      await loadData(); 
+      toast('Saved!'); 
+    } else {
+      toast(r.error);
+    }
   }
 
   // ADMIN
@@ -786,44 +799,15 @@
           <button class="btn btn-gray" style="padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="handleReq('${req.id}', false)">Reject</button>
         </div>
       </div>
-    `).join('') || '<p>No requests.</p>';
+    `).join('') || '<p style="text-align:center;color:var(--text-muted);">No pending requests.</p>';
   }
-  async function handleReq(id, approve) { showLoading(); await api('adminApproveRequest', { requestId: id, approve }); hideLoading(); loadAdminReqs(); }
-
-  async function loadAdminPurchases() {
-    showLoading(); const r = await api('adminGetPurchases'); hideLoading();
-    $('adminContentArea').innerHTML = r.purchases.map(p => `
-      <div style="border:2px solid var(--border);border-radius:12px;padding:10px;margin-bottom:10px;display:flex;gap:10px;">
-        <img src="${p.proofImage}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;" onclick="window.open('${p.proofImage}','_blank')" />
-        <div style="flex:1;">
-          <b>@${esc(p.username)}</b><br/>
-          <span style="font-size:0.8rem;color:var(--text-muted)">${p.packageData.coins} Coins</span>
-          <div style="margin-top:5px;">
-            <button class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;" onclick="handlePurchase('${p.id}', true)">Approve</button>
-            <button class="btn btn-gray" style="padding:0.3rem 0.6rem;font-size:0.75rem;" onclick="handlePurchase('${p.id}', false)">Reject</button>
-          </div>
-        </div>
-      </div>
-    `).join('') || '<p>No pending purchases.</p>';
-  }
-  async function handlePurchase(id, approve) { showLoading(); await api('adminApprovePurchase', { purchaseId: id, approve }); hideLoading(); loadAdminPurchases(); }
-
-  async function loadAdminUsers() {
-    showLoading(); const r = await api('adminGetUsers'); hideLoading();
-    $('adminContentArea').innerHTML = r.users.map(u => `
-      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border);padding:10px 0;">
-        <div><b>@${esc(u.username)}</b><br/><span style="font-size:0.75rem;color:var(--text-muted)">${u.role}</span></div>
-        <div>
-          <button class="btn ${u.isBanned ? 'btn-gray' : ''}" style="padding:0.3rem 0.6rem;font-size:0.75rem;" onclick="banUser('${u.username}', ${!u.isBanned})">${u.isBanned ? 'Unban' : 'Ban'}</button>
-          <button class="btn btn-gray" style="padding:0.3rem 0.6rem;font-size:0.75rem;color:var(--red);" onclick="deleteUser('${u.username}')">Delete</button>
-        </div>
-      </div>
-    `).join('');
-  }
-  async function banUser(username, isBanned) { showLoading(); await api('adminToggleBan', { username, isBanned }); hideLoading(); loadAdminUsers(); }
-  async function deleteUser(username) {
-    if(!confirm(`@${username} ကို ဖျက်မှာ သေချာလား?`)) return;
-    showLoading(); await api('adminDeleteUser', { username }); hideLoading(); loadAdminUsers();
+  
+  async function handleReq(id, approve) { 
+    showLoading(); 
+    await api('adminApproveRequest', { requestId: id, approve }); 
+    hideLoading(); 
+    loadAdminReqs(); 
+    toast(approve ? 'Approved!' : 'Rejected');
   }
 
   function logout() { localStorage.removeItem('ml_user'); location.reload(); }
