@@ -1,1290 +1,261 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Myan Learn</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6aaa2a">
+<link rel="manifest" href="/manifest.json">
+<title>Nihongo Class</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
-  
-  :root {
-    --primary: #4F9CF9; --primary-hover: #3B82F6;
-    --bg: #F0F4F8; --surface: rgba(255, 255, 255, 0.85); --surface-solid: #FFFFFF;
-    --text: #1E293B; --text-muted: #64748B; --border: rgba(255, 255, 255, 0.8);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-    --radius: 24px;
-  }
-  body.dark {
-    --bg: #0F172A; --surface: rgba(30, 41, 59, 0.85); --surface-solid: #1E293B;
-    --text: #F8FAFC; --text-muted: #94A3B8; --border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Padauk', 'Noto Sans JP', sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); transition: all 0.3s; min-height: 100vh; overflow-x: hidden; }
-  
-  /* Animated Background */
-  .animated-bg {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab, #4F9CF9);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-  }
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .glass { background: var(--surface); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); box-shadow: var(--glass-shadow); }
-  .icon { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: inline-block; vertical-align: middle; }
-  .icon-sm { width: 16px; height: 16px; }
-  .icon-lg { width: 28px; height: 28px; }
-  .btn { padding: 0.8rem 1.5rem; border-radius: 16px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-size: 0.95rem; }
-  .btn:active { transform: scale(0.97); }
-  .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
-  .btn-glass { background: rgba(255,255,255,0.3); color: var(--text); border: 1px solid var(--border); backdrop-filter: blur(4px); }
-  .input-group { margin-bottom: 1rem; position: relative; }
-  .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 600; }
-  .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 0.9rem; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-solid); color: var(--text); outline: none; font-size: 0.95rem; transition: 0.2s; }
-  .eye-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
-  .eye-icon svg { width: 20px; height: 20px; }
-
-  /* Loading */
-  #loadingOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: 0.3s; }
-  #loadingOverlay.show { display: flex; opacity: 1; }
-  .loader-bar-container { width: 250px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
-  .loader-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #4F9CF9, #A78BFA); background-size: 300% 100%; animation: gradientMove 2s linear infinite; transition: width 0.3s ease; border-radius: 10px; }
-  @keyframes gradientMove { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
-
-  /* Layout */
-  #authScreen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; z-index: 10; position: relative; }
-  .auth-box { width: 100%; max-width: 400px; padding: 2.5rem 2rem; border-radius: 32px; text-align: center; background: rgba(255,255,255,0.95); box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; }
-  body.dark .auth-box { background: rgba(30,41,59,0.95); }
-  
-  #app { display: none; flex-direction: column; max-width: 1100px; margin: 0 auto; padding-bottom: 80px; position: relative; }
-  @media (min-width: 768px) { #app { flex-direction: row; padding-bottom: 0; gap: 24px; padding-top: 24px; } .main-content { flex: 1; max-width: 700px; } .side-nav { width: 260px; height: calc(100vh - 48px); position: sticky; top: 24px; border-radius: var(--radius); padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; } }
-
-  .side-nav { display: none; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0.8rem; z-index: 50; border-radius: 24px 24px 0 0; border-bottom: none; background: var(--surface-solid); box-shadow: 0 -4px 20px rgba(0,0,0,0.1); }
-  @media (min-width: 768px) { .bottom-nav { display: none; } .side-nav { display: flex; } }
-  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); cursor: pointer; padding: 0.5rem; border-radius: 12px; transition: 0.2s; }
-  .nav-item.active { color: var(--primary); background: rgba(79, 156, 249, 0.1); }
-  @media (min-width: 768px) { .nav-item { flex-direction: row; justify-content: flex-start; padding: 0.8rem 1rem; font-size: 1rem; gap: 12px; } }
-
-  /* Cards */
-  .header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; position: sticky; top: 0; z-index: 40; margin: 1rem; border-radius: var(--radius); background: var(--surface); backdrop-filter: blur(10px); }
-  @media (min-width: 768px) { .header { margin: 0 0 1rem 0; } }
-  
-  .teacher-card { padding: 1.5rem; border-radius: 32px; margin: 0 1rem 1.5rem 1rem; position: relative; overflow: hidden; transition: transform 0.2s; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--glass-shadow); }
-  .teacher-card:hover { transform: translateY(-4px); }
-  
-  .avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; flex-shrink: 0; overflow: hidden; border: 2px solid var(--border); }
-  .avatar-lg { width: 100px; height: 100px; font-size: 2.5rem; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
-  .post-card { padding: 1.2rem; border-radius: 24px; margin-bottom: 1rem; margin: 0 1rem 1rem 1rem; background: var(--surface); border: 1px solid var(--border); }
-  .post-image-169 { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 20px; margin-bottom: 1rem; display: block; }
-  .preview-box { position: relative; display: inline-block; margin-top: 10px; }
-  .preview-box img { height: 80px; border-radius: 12px; object-fit: cover; }
-  .remove-preview { position: absolute; top: -8px; right: -8px; background: #EF4444; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; border: 2px solid var(--surface-solid); }
-
-  /* Coins Display */
-  .coin-pill { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #FDE68A, #F59E0B); color: #78350F; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); border: 1px solid #FCD34D; transition: 0.2s; }
-  .coin-pill:active { transform: scale(0.95); }
-
-  /* Modals */
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s; }
-  .modal.open { opacity: 1; pointer-events: auto; }
-  .modal-content { background: var(--surface-solid); width: 90%; max-width: 450px; padding: 1.5rem; border-radius: 28px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: 0.3s; }
-  .modal.open .modal-content { transform: translateY(0); }
-  
-  /* Confirm Dialog Highest Z-Index */
-  #confirmModal { z-index: 10000; }
-  #confirmModal .modal-content { max-width: 340px; text-align: center; }
-
-  /* Teacher Profile Page Custom Design */
-  #viewTeacherProfile { padding: 1rem; }
-  .tp-hero { display: flex; height: 300px; background: #E0F2FE; position: relative; border-radius: 24px; overflow: hidden; margin-bottom: 1rem; }
-  body.dark .tp-hero { background: #1E3A8A; }
-  .tp-image { width: 50%; height: 100%; object-fit: cover; object-position: top center; }
-  .tp-details { width: 50%; padding: 1.5rem; display: flex; flex-direction: column; justify-content: flex-end; }
-  .tp-name { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.2rem; line-height: 1.1; }
-  .tp-specialty { font-size: 1rem; color: var(--primary); font-weight: 700; margin-bottom: 0.5rem; }
-  .tp-rating { display: flex; align-items: center; gap: 4px; font-weight: 700; color: #F59E0B; font-size: 1rem; }
-  .tp-stats { display: flex; justify-content: space-around; padding: 1rem; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); margin-bottom: 1rem; }
-  .tp-stat { text-align: center; }
-  .tp-stat b { display: block; font-size: 1.2rem; }
-  .tp-stat span { font-size: 0.8rem; color: var(--text-muted); }
-  
-  /* Read More */
-  .desc-text { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; transition: 0.3s; }
-  .desc-text.expanded { -webkit-line-clamp: unset; }
-  .read-more-btn { color: var(--primary); font-weight: 700; font-size: 0.85rem; cursor: pointer; margin-top: 5px; display: inline-block; }
-
-  /* Chat */
-  .chat-box { display: flex; flex-direction: column; height: 400px; overflow-y: auto; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 20px; margin-bottom: 1rem; }
-  .chat-msg { max-width: 80%; padding: 0.8rem 1rem; border-radius: 20px; margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.4; position: relative; word-break: break-word; cursor: pointer; transition: 0.2s; user-select: none; }
-  .chat-msg.mine { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 4px; }
-  .chat-msg.theirs { align-self: flex-start; background: var(--surface-solid); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-  .chat-msg.selected { opacity: 0.7; border: 2px solid #EF4444; }
-  .msg-progress { position: absolute; bottom: 0; left: 0; height: 3px; background: rgba(255,255,255,0.8); border-radius: 0 0 20px 20px; width: 0%; transition: width 0.3s; }
-  .chat-msg.mine .msg-progress { background: #fff; }
-
-  /* Like Animation */
-  .like-btn { cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
-  .spinner { width: 16px; height: 16px; border: 2px solid rgba(239,68,68,0.3); border-top-color: #EF4444; border-radius: 50%; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Role Selector */
-  .role-selector { display: flex; background: rgba(0,0,0,0.05); border-radius: 16px; padding: 4px; position: relative; margin-bottom: 1.5rem; }
-  .role-slider { position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); background: var(--surface-solid); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
-  .role-selector input { display: none; }
-  .role-selector label { flex: 1; text-align: center; padding: 10px 0; font-weight: 700; font-size: 0.9rem; z-index: 1; cursor: pointer; color: var(--text-muted); transition: color 0.3s; }
-  .role-selector input:checked + label { color: var(--primary); }
-  #roleStudent:checked ~ .role-slider { transform: translateX(0); }
-  #roleTeacher:checked ~ .role-slider { transform: translateX(100%); }
-  
-  /* Rating Stars */
-  .star-rating { display: flex; gap: 5px; justify-content: center; margin: 10px 0; }
-  .star-rating svg { width: 30px; height: 30px; cursor: pointer; fill: #E2E8F0; stroke: #CBD5E1; transition: 0.2s; }
-  .star-rating svg.active { fill: #F59E0B; stroke: #F59E0B; }
-
-  /* Language Select */
-  .lang-select { background: transparent; border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; color: var(--text); font-weight: 600; outline: none; cursor: pointer; }
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Noto+Sans+JP:wght@500;700&family=Padauk:wght@400;700&display=swap');
+:root{--g:#6aaa2a;--gd:#5a9622;--gl:#e9f5dc;--bg:#f3f3f5;--c:#fff;--ink:#2c3140;--mu:#9aa0ae;--pk:#fde9e9;--red:#e0626b;--gold:#f5b942;--ln:#0000000f}
+@media(prefers-color-scheme:dark){:root{--bg:#1b1d24;--c:#262932;--ink:#eceef3;--mu:#8b91a1;--pk:#3a2427;--gl:#2a3a1e;--ln:#ffffff14}}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Nunito,'Noto Sans JP',Padauk,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:17px}
+button,input,select,textarea{font:inherit;color:inherit}button{border:0;background:none;cursor:pointer}
+:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+#app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;padding-bottom:96px}
+.hide{display:none!important}
+.auth{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:28px;max-width:480px;margin:0 auto}
+.auth .logo{font-size:84px;text-align:center}.auth h1{text-align:center;font-size:32px;margin:4px 0 6px}.auth p.s{text-align:center;color:var(--mu);margin-bottom:28px}
+.fg{margin-bottom:14px}.fg label{display:block;font-weight:800;font-size:14px;color:var(--mu);margin-bottom:6px;white-space:pre-line}
+.fg input,.fg select,.fg textarea{width:100%;padding:14px 16px;border:2px solid var(--ln);border-radius:16px;background:var(--c);font-size:17px}
+.fg textarea{font-family:'Noto Sans JP',Padauk,Nunito,sans-serif;line-height:1.5}
+.cta{display:block;width:100%;background:linear-gradient(#78bb30,#69a928);color:#fff;font-weight:800;font-size:20px;padding:16px;border-radius:40px;border:4px solid #b4d98a;box-shadow:0 5px 0 #4d8a1d33}
+.cta:active{transform:translateY(2px)}.cta.sec{background:var(--c);color:var(--g);border-color:var(--ln);box-shadow:none}
+.cta.red{background:var(--red);border-color:#f1a3a8}
+.sw{text-align:center;margin-top:18px;color:var(--mu)}.sw a{color:var(--g);font-weight:800;cursor:pointer}
+.top{display:flex;align-items:center;gap:10px;padding:16px 16px 6px}.top h1{font-size:28px;flex:1}
+.chip{background:var(--c);border-radius:20px;padding:8px 14px;font-weight:800;box-shadow:0 1px 4px var(--ln)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--c);border-radius:24px 24px 0 0;display:flex;justify-content:space-around;padding:10px 4px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 20px #0001;z-index:10}
+nav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:800;color:var(--mu);padding:4px 8px}nav b{font-size:26px;filter:grayscale(1) opacity(.5)}
+nav button.on{color:var(--g)}nav button.on b{filter:none}
+.empty{margin:30px 20px;padding:30px 20px;background:var(--c);border-radius:24px;text-align:center;color:var(--mu);line-height:1.6}
+.unit{margin:18px 16px 4px;background:var(--pk);border-radius:22px;padding:16px 20px}.unit h2{font-size:23px}.unit small{color:var(--mu);font-weight:700}
+.path{padding:6px 0 10px}
+.nd{display:flex;flex-direction:column;align-items:center;gap:6px;width:130px;margin:14px 0;font-weight:800;text-align:center;line-height:1.2}
+.nd .b{width:96px;height:96px;border-radius:50%;background:var(--g);border:5px solid #a8d072;display:grid;place-items:center;font-size:40px;position:relative}
+.nd.lock{color:var(--mu)}.nd.lock .b{background:#e5e6eb;border-color:transparent;filter:grayscale(1) opacity(.6)}
+.nd.done .b::after{content:"✓";position:absolute;right:-4px;top:-4px;background:var(--gold);color:#fff;width:30px;height:30px;border-radius:50%;font-size:17px;display:grid;place-items:center}
+.nd:active .b{transform:scale(.94)}
+.card{background:var(--c);border-radius:20px;padding:16px 18px;margin:12px 16px}
+.row{display:flex;align-items:center;gap:12px}.row .grow{flex:1;min-width:0}
+.row h3{font-size:19px;overflow:hidden;text-overflow:ellipsis}.row small{color:var(--mu);font-weight:700;display:block}
+.sm{padding:9px 16px;border-radius:20px;background:var(--g);color:#fff;font-weight:800;font-size:15px}.sm.o{background:var(--gl);color:var(--g)}.sm.r{background:var(--pk);color:var(--red)}
+.tabs{display:flex;gap:8px;padding:14px 16px;overflow-x:auto}.tabs button{padding:10px 18px;border-radius:20px;background:var(--c);font-weight:800;color:var(--mu);white-space:nowrap}.tabs button.on{background:var(--g);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;padding:0 16px}
+.kc{background:var(--c);border-radius:14px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;font-weight:800;font-family:'Noto Sans JP',sans-serif}.kc small{font-size:12px;color:var(--mu);font-family:Nunito}.kc.e{background:none}
+.search{width:calc(100% - 32px);margin:0 16px 8px;padding:13px 18px;border-radius:26px;border:0;background:var(--c);font-size:17px}
+.vid .th{height:190px;border-radius:18px;background:#222 center/cover;position:relative;margin-bottom:10px}.vid .th::after{content:"▶";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:44px;text-shadow:0 2px 12px #000a}
+.lv{display:inline-block;background:var(--gl);color:var(--g);padding:3px 12px;border-radius:12px;font-weight:800;font-size:14px}
+.prof{margin:16px;background:#7aab4e;border-radius:26px;padding:22px;color:#fff;display:flex;gap:16px;align-items:center}
+.av{width:84px;height:84px;border-radius:50%;background:#9cc3a8;border:4px solid #6f9b8b;display:grid;place-items:center;font-size:46px;flex:none}
+.prof h2{color:#fbe69a;font-size:24px}.prof p{font-size:17px}
+.wk{margin:12px 16px;background:#7aab4e;border-radius:26px;padding:20px;color:#fff}.wk h3{margin-bottom:14px}
+.bars{display:flex;justify-content:space-between;align-items:flex-end;gap:8px}.bars div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;flex:1}
+.bars i{display:block;width:16px;height:130px;border-radius:8px;background:#fff;position:relative;overflow:hidden}.bars i b{position:absolute;bottom:0;left:0;right:0;background:var(--gold);border-radius:8px}
+.stats{display:flex;margin:12px 16px;background:var(--c);border-radius:20px;padding:16px}.stats div{flex:1;text-align:center}.stats b{display:block;font-size:24px}.stats span{color:var(--mu);font-size:14px;font-weight:700}
+.lvbar{height:10px;border-radius:6px;background:var(--ln);overflow:hidden;margin-top:8px}.lvbar b{display:block;height:100%;background:var(--g)}
+.sheet{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;flex-direction:column;max-width:480px;margin:0 auto}.sheet.on{display:flex}#sheet2{z-index:40}
+.sh{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--c);border-bottom:2px solid var(--ln)}.sh h2{flex:1;font-size:21px}.x{width:40px;height:40px;border-radius:50%;background:var(--bg);color:var(--mu);font-size:18px}
+.pb{flex:1;height:12px;background:var(--ln);border-radius:8px;overflow:hidden}.pb b{display:block;height:100%;background:var(--g);transition:width .3s}
+.sc{flex:1;overflow-y:auto;padding:14px 16px 120px}.sc h3.t{font-size:22px;margin:6px 0 14px}
+.ft{position:absolute;left:16px;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:auto}
+.vc{background:var(--c);border-radius:20px;padding:16px 18px;margin-bottom:12px}.vc .r{display:flex;align-items:baseline;gap:8px}.vc .jp{font-size:26px;font-weight:800;font-family:'Noto Sans JP',sans-serif}.vc .ro{color:var(--mu)}.vc .r button{margin-left:auto;font-size:22px}.vc p{font-size:19px;margin-top:6px}
+.notes{background:var(--c);border-radius:22px;padding:22px;line-height:1.7;white-space:pre-wrap;font-size:19px}
+.qw{text-align:center;padding-top:12px}.qbig{font-size:54px;font-weight:800;margin:20px 0 6px;font-family:'Noto Sans JP',Padauk,sans-serif;line-height:1.2}.qro{color:var(--mu);margin-bottom:22px;font-size:20px;min-height:12px}
+.opt{display:block;width:100%;background:var(--c);border:3px solid var(--ln);border-radius:18px;padding:16px;font-size:20px;font-weight:700;margin-bottom:12px;font-family:'Noto Sans JP',Padauk,Nunito,sans-serif}.opt.ok{border-color:var(--g);background:var(--gl)}.opt.no{border-color:var(--red);background:var(--pk)}
+.res{text-align:center;padding:50px 10px;font-size:26px;font-weight:800}.res div{font-size:84px}.res small{display:block;color:var(--mu);font-size:18px;margin-top:6px}
+.ld{position:fixed;inset:0;background:#0006;z-index:99;display:grid;place-items:center;opacity:0;pointer-events:none}.ld.on{opacity:1;pointer-events:auto;transition:opacity .2s .35s}.ld i{width:44px;height:44px;border:5px solid #fff5;border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:#222e;color:#fff;padding:12px 20px;border-radius:24px;font-weight:700;z-index:100;max-width:88%;text-align:center}
+iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-
-<div class="animated-bg"></div>
-
-<div id="loadingOverlay">
-  <div class="spinner" style="width:40px;height:40px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;"></div>
-  <div class="loader-bar-container"><div class="loader-fill" id="loaderFill"></div></div>
-  <p style="color:#fff;margin-top:1rem;font-weight:600;font-size:1.1rem;" id="loaderText">ခဏလေးပါနော်...</p>
+<div id="authv" class="auth hide">
+  <div class="logo">🦊</div><h1>Nihongo Class</h1><p class="s">Learn Japanese with your teacher</p>
+  <div class="fg hide" id="rn"><label>Your name</label><input id="aname" autocomplete="name"></div>
+  <div class="fg"><label>Username</label><input id="auser" autocapitalize="none" autocomplete="username"></div>
+  <div class="fg"><label>Password</label><input id="apass" type="password" autocomplete="current-password"></div>
+  <button class="cta" id="abtn" data-a="auth">Log in</button>
+  <p class="sw" id="asw">New student? <a data-a="authmode">Create account</a></p>
 </div>
-
-<!-- AUTH SCREEN -->
-<div id="authScreen">
-  <div class="auth-box">
-    <div style="position:absolute; top:15px; right:15px;">
-      <select class="lang-select" onchange="changeLang(this.value)">
-        <option value="mm">🇲🇲 မြန်မာ</option>
-        <option value="en">🇬🇧 English</option>
-        <option value="jp">🇯🇵 日本語</option>
-      </select>
-    </div>
-    
-    <h1 id="mainLogo" style="color:var(--primary);margin-bottom:1.5rem;font-size:2rem;display:flex;justify-content:center;align-items:center;gap:10px;font-weight:800;user-select:none;cursor:pointer;">
-      <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      Myan Learn
-    </h1>
-    
-    <div id="loginForm">
-      <div class="input-group"><input id="loginUser" data-i18n="username" placeholder="Username" /></div>
-      <div class="input-group">
-        <input type="password" id="loginPass" data-i18n="password" placeholder="Password" />
-        <span class="eye-icon" onclick="togglePass('loginPass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
-      </div>
-      <button class="btn" id="loginBtn" data-i18n="signin" style="width:100%;margin-bottom:1rem;">Sign In</button>
-      <p style="font-size:0.9rem;color:var(--text-muted);"><span data-i18n="noacc">No account?</span> <a href="#" onclick="toggleAuth(true)" style="color:var(--primary);font-weight:700;" data-i18n="register">Register</a></p>
-    </div>
-
-    <div id="registerForm" style="display:none;">
-      <div class="input-group"><input id="regUser" data-i18n="username" placeholder="Username" /></div>
-      <div class="input-group">
-        <input type="password" id="regPass" data-i18n="password" placeholder="Password" />
-        <span class="eye-icon" onclick="togglePass('regPass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
-      </div>
-      <div class="role-selector">
-        <input type="radio" name="role" id="roleStudent" value="student" checked>
-        <label for="roleStudent" data-i18n="student">Student</label>
-        <input type="radio" name="role" id="roleTeacher" value="teacher">
-        <label for="roleTeacher" data-i18n="teacher">Teacher</label>
-        <div class="role-slider"></div>
-      </div>
-      <button class="btn" id="regBtn" data-i18n="createacc" style="width:100%;margin-bottom:1rem;">Create Account</button>
-      <p style="font-size:0.9rem;color:var(--text-muted);"><span data-i18n="haveacc">Have an account?</span> <a href="#" onclick="toggleAuth(false)" style="color:var(--primary);font-weight:700;" data-i18n="login">Login</a></p>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN LOGIN MODAL -->
-<div class="modal" id="adminLoginModal">
-  <div class="modal-content" style="text-align:center;">
-    <h3 style="margin-bottom:1rem;color:var(--primary);">Admin Access</h3>
-    <div class="input-group"><input id="adminUser" placeholder="Admin Username" value="admin" /></div>
-    <div class="input-group">
-      <input type="password" id="adminPass" placeholder="Password" />
-      <span class="eye-icon" onclick="togglePass('adminPass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
-    </div>
-    <button class="btn" style="width:100%;" onclick="doAdminLogin()">Verify</button>
-    <button class="btn btn-outline" style="width:100%;margin-top:10px;" onclick="closeModal('adminLoginModal')">Cancel</button>
-  </div>
-</div>
-
-<!-- MAIN APP -->
-<div id="app">
-  <div class="side-nav glass">
-    <div style="font-size:1.5rem;font-weight:800;color:var(--primary);margin-bottom:1.5rem;padding-left:0.5rem;">MyanLearn</div>
-    <div class="nav-item active" onclick="switchView('home')"><svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span data-i18n="home">Home</span></div>
-    <div class="nav-item" onclick="switchView('teachers')"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span data-i18n="teachers">Teachers</span></div>
-    <div class="nav-item" id="navTeachDesk" style="display:none;" onclick="switchView('teach')"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> <span>Teach / Create</span></div>
-    <div class="nav-item" onclick="switchView('chats')"><svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> <span data-i18n="messages">Messages</span></div>
-    <div class="nav-item" onclick="switchView('profile')"><svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span data-i18n="profile">Profile</span></div>
-    <div style="margin-top:auto;">
-      <div class="nav-item" onclick="toggleTheme()"><svg class="icon" viewBox="0 0 24 24" id="themeIcon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> <span data-i18n="theme">Theme</span></div>
-      <div class="nav-item" onclick="logout()" style="color:#EF4444;"><svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> <span data-i18n="logout">Log Out</span></div>
-    </div>
-  </div>
-
-  <div class="main-content">
-    <div class="header glass">
-      <h2 style="font-size:1.2rem;font-weight:800;">Myan Learn</h2>
-      <div style="display:flex;gap:12px;align-items:center;">
-        <select class="lang-select" onchange="changeLang(this.value)" style="display:none;" id="deskLang"></select>
-        <div class="coin-pill" onclick="switchView('shop')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.5h-3.2a1.8 1.8 0 0 0 0 3.6h1.4a1.8 1.8 0 0 1 0 3.6H9.5"/></svg>
-          <span id="coinValue">0</span>
-        </div>
-        <div class="avatar" id="headerAvatar" onclick="switchView('profile')" style="width:40px;height:40px;font-size:1.1rem;cursor:pointer;">U</div>
-      </div>
-    </div>
-
-    <!-- Views -->
-    <div id="viewHome" class="app-view" style="display:none;">
-      <div class="post-card glass" style="padding:1rem;">
-        <div style="display:flex;gap:12px;">
-          <div class="avatar" id="postAvatar">U</div>
-          <textarea id="postInput" data-i18n="whatsup" placeholder="ဘာတွေမျှဝေချင်လဲ?" style="flex:1;border:none;background:transparent;resize:none;outline:none;color:var(--text);font-size:1rem;padding-top:10px;"></textarea>
-        </div>
-        <div style="margin-top:10px;" id="postPreviewContainer"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
-          <label style="cursor:pointer;color:var(--primary);display:flex;align-items:center;gap:6px;font-weight:600;font-size:0.9rem;">
-            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span data-i18n="addphoto">ပုံထည့်</span> <input type="file" id="postImgInput" accept="image/*" style="display:none;" onchange="handlePostImage(this)" />
-          </label>
-          <button class="btn" onclick="createPost()" data-i18n="postbtn" style="padding:0.5rem 1.2rem;border-radius:20px;font-size:0.85rem;">တင်မည်</button>
-        </div>
-      </div>
-      <div id="feedList"></div>
-    </div>
-
-    <div id="viewTeachers" class="app-view" style="display:none;">
-      <div id="teacherList"></div>
-    </div>
-    
-    <!-- TEACHER PROFILE PAGE (Full Page) -->
-    <div id="viewTeacherProfile" class="app-view" style="display:none;">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
-        <button class="btn btn-glass" onclick="switchView('teachers')" style="padding:0.5rem; border-radius:50%;">
-          <svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <h2 style="font-size:1.2rem;font-weight:800;" data-i18n="teacherprofile">Teacher Profile</h2>
-      </div>
-      
-      <div class="tp-hero">
-        <img id="tpImg" class="tp-image" src="" />
-        <div class="tp-details">
-          <h2 id="tpName" class="tp-name">Teacher Name</h2>
-          <p id="tpSpecialty" class="tp-specialty">Specialty</p>
-          <div class="tp-rating">
-            <svg class="icon icon-sm" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span id="tpRating">0.0</span> <span id="tpReviews" style="color:var(--text-muted);font-size:0.8rem;font-weight:normal;">(0 Reviews)</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tp-stats">
-        <div class="tp-stat"><b id="tpExp">-</b><span>Experience</span></div>
-        <div class="tp-stat"><b id="tpStudents">-</b><span>Students</span></div>
-        <div class="tp-stat"><b id="tpCourses">0</b><span>Courses</span></div>
-      </div>
-
-      <div class="post-card glass">
-        <div style="display:flex;gap:10px;margin-bottom:1rem;">
-          <button class="btn" onclick="openChatWithFromProfile()" style="flex:1;border-radius:30px;">Message</button>
-          <button class="btn btn-glass" onclick="showRatingStars()" style="flex:1;border-radius:30px;">Rate</button>
-        </div>
-        <div id="ratingArea" style="display:none;text-align:center;margin-bottom:1rem;">
-          <p style="font-size:0.9rem;font-weight:700;margin-bottom:5px;">ဆရာ့ကို Rating ပေးပါ</p>
-          <div class="star-rating" id="starRating">
-            <svg onclick="submitRating(1)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg onclick="submitRating(2)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg onclick="submitRating(3)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg onclick="submitRating(4)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <svg onclick="submitRating(5)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-        </div>
-        <h4 style="margin-top:1rem;margin-bottom:0.5rem;font-weight:800;">Courses</h4>
-        <div id="tpCourseList" style="display:flex;flex-direction:column;gap:10px;"></div>
-      </div>
-    </div>
-
-    <!-- TEACHER CREATE COURSE -->
-    <div id="viewTeach" class="app-view" style="display:none;">
-      <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;">သင်ခန်းစာအသစ်တင်မည်</h2>
-      <div class="post-card glass">
-        <div class="input-group"><label>ခေါင်းစဉ် (Title)</label><input id="cTitle" placeholder="e.g. Basic English Grammar" /></div>
-        <div class="input-group"><label>ရှင်းလင်းချက် (Free Description)</label><textarea id="cDesc" rows="2" placeholder="သင်ခန်းစာအကြောင်း အကျဉ်းချုပ်..."></textarea></div>
-        <div class="input-group"><label>ဝယ်မှဖတ်ရမည့် ရှင်းလင်းချက် (Paid Description)</label><textarea id="cLockedDesc" rows="3" placeholder="Coins ပေးမှ ဖတ်ရမည့် အသေးစိတ်..."></textarea></div>
-        <div class="input-group"><label>Zoom Link</label><input id="cZoom" placeholder="https://zoom.us/j/..." /></div>
-        <div class="input-group"><label>PDF File Link (Drive)</label><input id="cPdf" placeholder="https://drive.google.com/..." /></div>
-        <div class="input-group">
-          <label>သင်ခန်းစာ မျက်နှာဖုံးပုံ</label>
-          <div style="display:flex;gap:10px;">
-             <input type="text" id="cImgUrl" placeholder="Google Drive Link ထည့်ပါ..." style="flex:1;" />
-             <label class="btn btn-glass" style="padding:0.5rem 1rem;">File<input type="file" id="cImgInput" accept="image/*" style="display:none;" onchange="handleCourseImage(this)" /></label>
-          </div>
-          <span id="cImgStatus" style="font-size:0.8rem;color:var(--text-muted);"></span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center;margin-bottom:1rem;">
-          <input type="checkbox" id="cIsFree" onchange="document.getElementById('cPrice').disabled=this.checked" />
-          <label for="cIsFree" style="font-size:0.9rem;">အခမဲ့ သင်ကြားမည် (Free)</label>
-        </div>
-        <div class="input-group"><label>ဈေးနှုန်း (Coins)</label><input type="number" id="cPrice" placeholder="50" /></div>
-        <button class="btn" style="width:100%;" onclick="publishCourse()">သင်ခန်းစာ တင်မည်</button>
-      </div>
-    </div>
-
-    <div id="viewChats" class="app-view" style="display:none;">
-      <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;" data-i18n="messages">Messages</h2>
-      <div id="chatList" style="padding:0 1rem;"></div>
-    </div>
-
-    <div id="viewProfile" class="app-view" style="display:none;">
-      <div class="teacher-card glass" style="text-align:center;align-items:center; margin: 0 1rem 1rem 1rem;">
-        <div class="avatar avatar-lg" id="profileAvatar" style="margin:0 auto 1rem;">U</div>
-        <h2 id="profileName" style="margin-bottom:0.2rem;">User</h2>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.2rem;" id="profileUsername">@user</p>
-        <p id="profileSpecialty" style="color:var(--primary);font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;"></p>
-        <p id="profileBio" style="font-size:0.95rem;margin-bottom:1rem;max-width:80%;">Bio here...</p>
-        
-        <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
-          <button class="btn btn-glass" onclick="openEditProfile()" data-i18n="editprofile">Edit Profile</button>
-          <button class="btn btn-glass" id="adminPanelBtn" onclick="openAdminPanel()" style="display:none;background:var(--primary);color:white;">Admin Panel</button>
-          <button class="btn btn-glass" onclick="toggleTheme()" style="display:flex;align-items:center;gap:5px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Theme</button>
-          <button class="btn btn-glass" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:5px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
-        </div>
-      </div>
-      <h3 style="margin:1.5rem 0 1rem 1rem;font-size:1.1rem;" data-i18n="myposts">My Posts</h3>
-      <div id="myPostsList" style="padding:0 1rem;"></div>
-    </div>
-
-    <div id="viewShop" class="app-view" style="display:none;">
-      <h2 style="margin-bottom:1rem;font-size:1.2rem;padding-left:1rem;" data-i18n="shop">Coin Shop</h2>
-      <div id="shopList" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:0 1rem;"></div>
-    </div>
-  </div>
-
-  <!-- Mobile Bottom Nav -->
-  <div class="bottom-nav glass">
-    <div class="nav-item active" onclick="switchView('home')"><svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span data-i18n="home">Home</span></div>
-    <div class="nav-item" onclick="switchView('teachers')"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span data-i18n="teachers">Teachers</span></div>
-    <div class="nav-item" id="navTeachMobile" style="display:none;" onclick="switchView('teach')"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create</div>
-    <div class="nav-item" onclick="switchView('chats')"><svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span data-i18n="messages">Chats</span></div>
-    <div class="nav-item" onclick="switchView('profile')"><svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span data-i18n="profile">Profile</span></div>
-  </div>
-</div>
-
-<!-- COURSE DETAIL MODAL -->
-<div class="modal" id="courseModal">
-  <div class="modal-content">
-    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-      <h3 style="font-weight:800;" id="cTitleDisplay">Course Title</h3>
-      <span onclick="closeModal('courseModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
-    </div>
-    <img id="cImgDisplay" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:12px; margin-bottom:1rem; display:none;" />
-    <p id="cDescDisplay" class="desc-text"></p>
-    <span class="read-more-btn" onclick="toggleReadMore(this)">ဆက်ဖတ်ရန်</span>
-    
-    <div id="cLockedArea" style="margin-top:1rem; padding:1rem; background:rgba(0,0,0,0.05); border-radius:12px; text-align:center;">
-      <!-- Filled by JS -->
-    </div>
-    
-    <div id="cActionArea" style="margin-top:1rem;"></div>
-  </div>
-</div>
-
-<!-- CONFIRM MODAL -->
-<div class="modal" id="confirmModal">
-  <div class="modal-content">
-    <div style="width:60px;height:60px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-      <svg class="icon icon-lg" viewBox="0 0 24 24" style="color:#EF4444;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    </div>
-    <h3 id="confirmTitle" style="margin-bottom:0.5rem;font-weight:800;text-align:center;">Are you sure?</h3>
-    <p id="confirmMsg" style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem;text-align:center;">ဒီလုပ်ဆောင်ချက်ကို ပြန်ပြင်၍ မရနိုင်ပါ။</p>
-    <div style="display:flex;gap:10px;">
-      <button class="btn btn-glass" style="flex:1;" onclick="closeModal('confirmModal')">Cancel</button>
-      <button class="btn" style="flex:1;background:#EF4444;" id="confirmYesBtn">Confirm</button>
-    </div>
-  </div>
-</div>
-
-<!-- CHAT MODAL -->
-<div class="modal" id="chatModal">
-  <div class="modal-content" style="display:flex;flex-direction:column;height:80vh;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;">
-      <h3 id="chatWithName" style="font-weight:800;font-size:1.1rem;">User</h3>
-      <div style="display:flex;gap:10px;">
-        <span id="chatSelBtn" onclick="toggleChatSelectMode()" style="cursor:pointer;color:var(--primary);font-weight:600;font-size:0.9rem;display:none;">Select</span>
-        <span onclick="closeModal('chatModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
-      </div>
-    </div>
-    <div class="chat-box" id="chatBox"></div>
-    <div id="chatSelectBar" style="display:none;justify-content:space-between;align-items:center;background:var(--bg);padding:10px;border-radius:12px;margin-bottom:10px;">
-      <span id="selCount">0 selected</span>
-      <div>
-        <button class="btn btn-outline" onclick="toggleChatSelectMode()" style="padding:0.4rem 0.8rem;font-size:0.8rem;">Cancel</button>
-        <button class="btn" onclick="deleteSelectedChats()" style="padding:0.4rem 0.8rem;font-size:0.8rem;background:#EF4444;">Delete</button>
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;" id="chatInputArea">
-      <input id="chatInput" placeholder="Message..." style="flex:1;padding:0.8rem;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;" onkeypress="if(event.key==='Enter') sendChat()" />
-      <button class="btn" onclick="sendChat()" style="padding:0.8rem 1.2rem;border-radius:20px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-    </div>
-  </div>
-</div>
-
-<!-- PAYMENT MODAL -->
-<div class="modal" id="paymentModal">
-  <div class="modal-content">
-    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-      <h3 style="font-weight:800;" data-i18n="paytitle">Payment</h3>
-      <span onclick="closeModal('paymentModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
-    </div>
-    <div style="text-align:center;margin-bottom:1rem;">
-      <p style="font-size:0.9rem;margin-bottom:0.5rem;">လွှဲပေးရမည့် ပမာဏ</p>
-      <h2 id="payAmount" style="color:var(--primary);font-weight:800;margin-bottom:1rem;"></h2>
-      
-      <div style="display:flex;gap:10px;margin-bottom:1rem;">
-        <div style="flex:1;border:1px solid var(--border);border-radius:10px;padding:10px;">
-          <b>KPay</b><br/><span id="kpayNum" style="font-size:0.8rem;"></span>
-          <img id="kpayQrImg" style="width:100%;margin-top:5px;display:none;border-radius:5px;" />
-        </div>
-        <div style="flex:1;border:1px solid var(--border);border-radius:10px;padding:10px;">
-          <b>Wave</b><br/><span id="waveNum" style="font-size:0.8rem;"></span>
-          <img id="waveQrImg" style="width:100%;margin-top:5px;display:none;border-radius:5px;" />
-        </div>
-      </div>
-
-      <label for="proofInput" style="cursor:pointer;display:block;border:2px dashed var(--primary);padding:1rem;border-radius:12px;">
-        <svg class="icon" viewBox="0 0 24 24" style="color:var(--primary);"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <p style="font-size:0.85rem;color:var(--primary);margin-top:5px;">ငွေလွှဲပြေစာ တင်ရန်</p>
-      </label>
-      <input type="file" id="proofInput" accept="image/*" style="display:none;" onchange="handleProofImage(this)" />
-      <div id="proofPreview" style="margin-top:10px;"></div>
-    </div>
-    <button class="btn" style="width:100%;" onclick="submitPurchase()" data-i18n="submitpay">ငွေလွှဲပြီးပါပြီ (Submit)</button>
-  </div>
-</div>
-
-<!-- EDIT PROFILE MODAL -->
-<div class="modal" id="editProfileModal">
-  <div class="modal-content">
-    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-      <h3 style="font-weight:800;">Edit Profile</h3>
-      <span onclick="closeModal('editProfileModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
-    </div>
-    <div style="text-align:center;margin-bottom:1rem;">
-      <label for="epImgInput" style="cursor:pointer;">
-        <div class="avatar avatar-lg" id="epAvatar" style="margin:0 auto;">U</div>
-        <div style="font-size:0.8rem;color:var(--primary);margin-top:0.5rem;font-weight:600;">Change Photo (File)</div>
-      </label>
-      <input type="file" id="epImgInput" accept="image/*" style="display:none;" onchange="handleProfileImage(this)" />
-      <input type="text" id="epImgUrl" placeholder="သို့မဟုတ် Drive Link ထည့်ပါ" style="margin-top:10px;width:100%;padding:0.5rem;border-radius:8px;border:1px solid var(--border);" />
-    </div>
-    <div class="input-group"><label>Display Name</label><input id="epName" /></div>
-    <div class="input-group"><label>Bio</label><textarea id="epBio" rows="2"></textarea></div>
-    <div class="input-group"><label>Inbox / Specialty (e.g. Math, English)</label><input id="epSpecialty" placeholder="သင်ကြားသော ဘာသာရပ်..." /></div>
-    <div style="display:flex;gap:10px;">
-      <div class="input-group" style="flex:1;"><label>Experience (e.g. 5 Yrs)</label><input id="epExp" placeholder="5 Yrs" /></div>
-      <div class="input-group" style="flex:1;"><label>Students (e.g. 100+)</label><input id="epStudents" placeholder="100+" /></div>
-    </div>
-    <button class="btn" style="width:100%;" onclick="saveProfile()">Save Changes</button>
-  </div>
-</div>
-
-<!-- ADMIN PANEL MODAL -->
-<div class="modal" id="adminModal">
-  <div class="modal-content">
-    <div style="display:flex;justify-content:space-between;margin-bottom:1rem;">
-      <h3 style="font-weight:800;color:var(--primary);">Admin Dashboard</h3>
-      <span onclick="closeModal('adminModal')" style="cursor:pointer;color:var(--text-muted);">✕</span>
-    </div>
-    
-    <div style="display:flex;gap:10px;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:0.5rem;overflow-x:auto;">
-      <button class="btn btn-glass" onclick="loadAdminReqs()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Requests</button>
-      <button class="btn btn-glass" onclick="loadAdminPkgs()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Packages</button>
-      <button class="btn btn-glass" onclick="loadAdminPurchases()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Purchases</button>
-      <button class="btn btn-glass" onclick="loadAdminUsers()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Users</button>
-      <button class="btn btn-glass" onclick="loadAdminSettings()" style="padding:0.4rem 0.8rem;font-size:0.8rem;white-space:nowrap;">Settings</button>
-    </div>
-
-    <div id="adminContentArea"></div>
-  </div>
-</div>
+<div id="app" class="hide"><main id="view"></main><nav id="nav"></nav></div>
+<div class="sheet" id="sheet"></div><div class="sheet" id="sheet2"></div>
+<div class="ld" id="ld"><i></i></div>
 
 <script>
-  // --- TRANSLATIONS ---
-  const i18n = {
-    en: { username: "Username", password: "Password", signin: "Sign In", noacc: "No account?", register: "Register", haveacc: "Have an account?", login: "Login", student: "Student", teacher: "Teacher", createacc: "Create Account", home: "Home", teachers: "Teachers", messages: "Messages", profile: "Profile", theme: "Theme", logout: "Log Out", whatsup: "What's on your mind?", addphoto: "Add Photo", postbtn: "Post", editprofile: "Edit Profile", myposts: "My Posts", shop: "Coin Shop", teacherprofile: "Teacher Profile", paytitle: "Payment", submitpay: "I've Paid (Submit)", viewbtn: "View", readmore: "Read More", readless: "Read Less", unlock: "Unlock", buyconfirm: "Are you sure you want to buy?", buyyes: "Yes, Buy" },
-    mm: { username: "အသုံးပြုသူအမည်", password: "စကားဝှက်", signin: "ဝင်ရောက်မည်", noacc: "အကောင့်မရှိဘူးလား?", register: "အကောင့်ဖွင့်မည်", haveacc: "အကောင့်ရှိပြီးသားလား?", login: "ဝင်ရောက်မည်", student: "ကျောင်းသား", teacher: "ဆရာ/ဆရာမ", createacc: "အကောင့်ဖွင့်မည်", home: "ပင်မ", teachers: "ဆရာများ", messages: "စာတိုများ", profile: "ကိုယ်ရေးအချက်အလက်", theme: "အရောင်", logout: "ထွက်မည်", whatsup: "ဘာတွေမျှဝေချင်လဲ?", addphoto: "ပုံထည့်", postbtn: "တင်မည်", editprofile: "ပြင်ဆင်မည်", myposts: "ကျွန်ုပ်၏ ပို့စ်များ", shop: "ရွှေစင်ဆိုင်", teacherprofile: "ဆရာ၏ အချက်အလက်", paytitle: "ငွေပေးချေမှု", submitpay: "ငွေလွှဲပြီးပါပြီ (Submit)", viewbtn: "ကြည့်မည်", readmore: "ဆက်ဖတ်ရန်", readless: "လျှော့ပြရန်", unlock: "ဖွင့်မည်", buyconfirm: "သေချာပြီလား? Coins ဖြင့် ဝယ်ယူမှာလား?", buyyes: "ဝယ်မည်" },
-    jp: { username: "ユーザー名", password: "パスワード", signin: "サインイン", noacc: "アカウントをお持ちでないですか？", register: "登録", haveacc: "すでにアカウントをお持ちですか？", login: "ログイン", student: "学生", teacher: "先生", createacc: "アカウント作成", home: "ホーム", teachers: "先生", messages: "メッセージ", profile: "プロフィール", theme: "テーマ", logout: "ログアウト", whatsup: "何を共有しますか？", addphoto: "写真を追加", postbtn: "投稿", editprofile: "プロフィール編集", myposts: "私の投稿", shop: "コインショップ", teacherprofile: "先生のプロフィール", paytitle: "支払い", submitpay: "支払いました（送信）", viewbtn: "表示", readmore: "続きを読む", readless: "閉じる", unlock: "ロック解除", buyconfirm: "購入してもよろしいですか？", buyyes: "購入する" }
-  };
-  let curLang = localStorage.getItem('ml_lang') || 'mm';
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const S={user:null,units:[],lessons:[],videos:[],classes:[],prog:[],tab:'learn'};
+const staff=()=>S.user&&(S.user.role==='teacher'||S.user.isAdmin);
+const toast=m=>{document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)};
+let busy=0;
+async function api(action,body={}){
+  busy++;$('ld').classList.add('on');
+  try{const r=await fetch('/api/index.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,action,username:body.username??S.user?.username})});
+    const j=await r.json();if(j.logout)logout();return j}
+  catch(e){return{success:false,error:'No internet connection'}}
+  finally{if(--busy<=0)$('ld').classList.remove('on')}
+}
+const speak=t=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';speechSynthesis.speak(u)}catch(e){}};
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+const parseVocab=t=>String(t||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const p=l.split(/\s*[|\t]\s*/);return p.length===2?{jp:p[0],ro:'',m:p[1]}:{jp:p[0],ro:p[1]||'',m:p.slice(2).join(' | ')}}).filter(w=>w.jp&&w.m);
+const ytId=u=>(String(u).match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)||[])[1];
+const doneSet=()=>new Set(S.prog.filter(p=>p.passed).map(p=>p.lessonId));
 
-  function applyLang() {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if(i18n[curLang][key]) {
-        if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = i18n[curLang][key];
-        else el.innerText = i18n[curLang][key];
-      }
-    });
-    document.querySelectorAll('.lang-select').forEach(sel => sel.value = curLang);
-  }
-
-  function changeLang(val) {
-    curLang = val;
-    localStorage.setItem('ml_lang', curLang);
-    applyLang();
-  }
-
-  // --- CONFIG & STATE ---
-  const API_URL = '/api/index.js';
-  const State = { 
-    user: null, teachers: [], feed: [], chats: [], packages: [], settings: {},
-    currentPost: null, currentTeacher: null, currentCourse: null, chatWith: null,
-    postImgUrl: '', epImgUrl: '', proofImgUrl: '', cImgUrl: '', selectedPkg: null,
-    chatSelectMode: false, selectedMsgs: new Set()
-  };
-  const ICONS = {
-    heart: '<svg class="icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
-    heartFill: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
-    comment: '<svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
-    star: '<svg class="icon icon-sm" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
-  };
-
-  function $(id) { return document.getElementById(id); }
-  function esc(s) { return s ? String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) : ''; }
-  function imgUrl(u) {
-    if(!u) return '';
-    if(u.includes('drive.google.com/file/d/')) return `https://lh3.googleusercontent.com/d/${u.split('/d/')[1].split('/')[0]}=w1000`;
-    return u;
-  }
-  
-  async function api(action, body = {}) {
-    body.action = action;
-    const res = await fetch(API_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
-    return await res.json();
-  }
-  
-  function toast(msg) {
-    const t = document.createElement('div');
-    t.style = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--primary);color:white;padding:12px 24px;border-radius:30px;font-size:0.9rem;z-index:9999;box-shadow:0 4px 12px rgba(79,156,249,0.4);font-weight:600;transition:0.3s;';
-    t.textContent = msg; document.body.appendChild(t);
-    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
-  }
-
-  let loadInt;
-  function showLoading() {
-    $('loaderText').textContent = curLang === 'en' ? "Please wait..." : (curLang === 'jp' ? "少々お待ちください..." : "ခဏလေးပါနော်...");
-    $('loadingOverlay').classList.add('show');
-    let w = 0; $('loaderFill').style.width = '0%';
-    loadInt = setInterval(() => { w += Math.random() * 15; if(w > 90) w = 90; $('loaderFill').style.width = w + '%'; }, 200);
-  }
-  function hideLoading() {
-    clearInterval(loadInt); $('loaderFill').style.width = '100%';
-    setTimeout(() => { $('loadingOverlay').classList.remove('show'); }, 300);
-  }
-
-  function togglePass(id, el) {
-    const input = $(id);
-    if(input.type === 'password') { input.type = 'text'; el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'; }
-    else { input.type = 'password'; el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'; }
-  }
-
-  function toggleTheme() {
-    document.body.classList.toggle('dark');
-    const isDark = document.body.classList.contains('dark');
-    const icon = document.getElementById('themeIcon');
-    if(icon) icon.innerHTML = isDark ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>' : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-  }
-
-  // ADMIN LOGIN TRIGGER
-  let holdTimer, holdStart;
-  const logo = $('mainLogo');
-  function startHold(e) {
-    if(e.type === 'touchstart') e.preventDefault();
-    holdStart = Date.now();
-    holdTimer = setInterval(() => {
-      const pct = Math.min(100, ((Date.now() - holdStart) / 3000) * 100);
-      if (pct >= 100) { clearInterval(holdTimer); $('adminLoginModal').classList.add('open'); }
-    }, 100);
-  }
-  logo.addEventListener('mousedown', startHold); logo.addEventListener('touchstart', startHold, {passive:false});
-  logo.addEventListener('mouseup', () => clearInterval(holdTimer)); logo.addEventListener('mouseleave', () => clearInterval(holdTimer)); logo.addEventListener('touchend', () => clearInterval(holdTimer));
-
-  // AUTH
-  function toggleAuth(isReg) { $('loginForm').style.display = isReg ? 'none' : 'block'; $('registerForm').style.display = isReg ? 'block' : 'none'; }
-  
-  $('loginBtn').onclick = async () => {
-    showLoading();
-    const r = await api('login', { username: $('loginUser').value, password: $('loginPass').value });
-    hideLoading();
-    if (r.success) { State.user = r.user; initApp(); } else toast(r.error);
-  };
-  
-  $('regBtn').onclick = async () => {
-    showLoading();
-    const role = document.querySelector('input[name="role"]:checked').value;
-    const r = await api('register', { username: $('regUser').value, password: $('regPass').value, role });
-    hideLoading();
-    if (r.success) { 
-      State.user = r.user; initApp(); 
-      if(role === 'teacher') toast('Teacher အကောင့်အတွက် Admin Approve စောင့်ပါ'); 
-    } else toast(r.error);
-  };
-
-  async function doAdminLogin() {
-    showLoading();
-    const r = await api('login', { username: $('adminUser').value, password: $('adminPass').value });
-    hideLoading();
-    if (r.success && r.user.isAdmin) {
-      closeModal('adminLoginModal');
-      State.user = r.user; initApp();
-    } else toast('Admin Password မှားနေပါသည်');
-  }
-
-  // INIT
-  async function initApp() {
-    $('authScreen').style.display = 'none';
-    $('app').style.display = 'flex';
-    localStorage.setItem('ml_user', JSON.stringify(State.user));
-    await loadData();
-    switchView('home');
-  }
-
-  async function loadData() {
-    showLoading();
-    const r = await api('bootstrap', { username: State.user.username });
-    State.user = r.user; State.feed = r.feed;
-    const tr = await api('getTeachers'); State.teachers = tr.teachers;
-    const sr = await api('getSettings'); State.settings = sr.settings || {};
-    
-    if (State.settings.loginBg) {
-      $('authScreen').style.backgroundImage = `url(${imgUrl(State.settings.loginBg)})`;
-    }
-    hideLoading();
-    
-    const avHtml = State.user.profileImage ? `<img src="${imgUrl(State.user.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : State.user.displayName.charAt(0);
-    $('headerAvatar').innerHTML = avHtml;
-    $('postAvatar').innerHTML = avHtml;
-    $('profileAvatar').innerHTML = avHtml;
-    $('epAvatar').innerHTML = avHtml;
-    
-    $('coinValue').textContent = State.user.coins;
-    $('profileName').textContent = State.user.displayName;
-    $('profileUsername').textContent = '@' + State.user.username;
-    $('profileBio').textContent = State.user.bio || 'Bio မရှိသေးပါ';
-    $('profileSpecialty').textContent = State.user.specialty ? `📚 ${State.user.specialty}` : '';
-    
-    $('adminPanelBtn').style.display = State.user.isAdmin ? 'block' : 'none';
-    if (State.user.role === 'teacher' || State.user.isAdmin) {
-      $('navTeachDesk').style.display = 'flex';
-      $('navTeachMobile').style.display = 'flex';
-    } else {
-      $('navTeachDesk').style.display = 'none';
-      $('navTeachMobile').style.display = 'none';
-    }
-
-    renderFeed(); renderTeachers(); renderMyPosts();
-  }
-
-  // RENDERERS
-  function renderFeed() {
-    const c = $('feedList');
-    if (!State.feed.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-muted);">Post မရှိသေးပါ</p>'; return; }
-    c.innerHTML = State.feed.map(p => `
-      <div class="post-card glass" id="post-${p.id}">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;">
-          <div class="avatar">
-            ${p.authorData.profileImage ? `<img src="${imgUrl(p.authorData.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : (p.authorData.displayName || p.author).charAt(0)}
-          </div>
-          <div style="flex:1;">
-            <div style="font-weight:700;font-size:1rem;display:flex;align-items:center;gap:4px;">
-              ${esc(p.authorData.displayName || p.author)}
-              ${p.authorData.role === 'teacher' ? `<span style="color:#F59E0B;">${ICONS.star}</span>` : ''}
-            </div>
-            <div style="font-size:0.75rem;color:var(--text-muted);">${new Date(p.createdAt).toLocaleDateString()}</div>
-          </div>
-          ${(p.author === State.user.username || State.user.isAdmin) ? `<span onclick="deletePost('${p.id}')" style="cursor:pointer;color:#EF4444;font-weight:bold;padding:5px;">✕</span>` : ''}
-        </div>
-        <p style="font-size:1rem;line-height:1.6;margin-bottom:1rem;white-space:pre-wrap;">${esc(p.content)}</p>
-        ${p.imageUrl ? `<img src="${imgUrl(p.imageUrl)}" class="post-image-169" />` : ''}
-        <div style="display:flex;gap:1.5rem;color:var(--text-muted);font-size:0.9rem;font-weight:600;border-top:1px solid var(--border);padding-top:1rem;">
-          <div class="like-btn" id="like-btn-${p.id}" onclick="toggleLike('${p.id}')" style="color:${p.hasLiked ? '#EF4444' : 'inherit'};">
-            ${p.hasLiked ? ICONS.heartFill : ICONS.heart} <span id="like-count-${p.id}">${p.likeCount}</span>
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function renderTeachers() {
-    const c = $('teacherList');
-    if (!State.teachers.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-muted);">ဆရာ/ဆရာမ မရှိသေးပါ</p>'; return; }
-    c.innerHTML = State.teachers.map(t => `
-      <div class="teacher-card glass" style="margin: 0 1rem 1rem 1rem;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;">
-          <div class="avatar avatar-lg">
-            ${t.profileImage ? `<img src="${imgUrl(t.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : t.displayName.charAt(0)}
-          </div>
-          <div style="background:rgba(255,255,255,0.6);padding:10px;border-radius:50%;cursor:pointer;" onclick="openChatWith('${t.username}', '${t.displayName}')">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-          </div>
-        </div>
-        <h3 style="margin-top:1rem;font-size:1.4rem;font-weight:800;">${esc(t.displayName)}</h3>
-        <p style="color:var(--primary);font-size:0.9rem;font-weight:600;margin-bottom:0.2rem;">${esc(t.specialty || 'Teacher')}</p>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${esc(t.bio || '')}</p>
-        
-        <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:auto;">
-          <div style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:1.1rem;color:#F59E0B;">
-            ${ICONS.star} ${(t.rating || 0).toFixed(1)} <span style="font-size:0.8rem;color:var(--text-muted);font-weight:normal;">(${t.ratingCount || 0})</span>
-          </div>
-          <button class="btn" style="padding:0.5rem 1rem;border-radius:30px;font-size:0.85rem;" data-i18n="viewbtn" onclick="openTeacherProfile('${t.username}')">ကြည့်မည်</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function renderMyPosts() {
-    const c = $('myPostsList');
-    const myPosts = State.feed.filter(p => p.author === State.user.username);
-    if (!myPosts.length) { c.innerHTML = '<p style="text-align:center;color:var(--text-muted);">Post မရှိသေးပါ</p>'; return; }
-    c.innerHTML = myPosts.map(p => `
-      <div class="post-card glass" style="margin-bottom:0.8rem;">
-        <p style="font-size:0.95rem;">${esc(p.content)}</p>
-        ${p.imageUrl ? `<img src="${imgUrl(p.imageUrl)}" style="height:80px;border-radius:10px;margin-top:10px;object-fit:cover;" />` : ''}
-        <div style="text-align:right;margin-top:5px;"><span onclick="deletePost('${p.id}')" style="color:#EF4444;font-size:0.8rem;cursor:pointer;">Delete</span></div>
-      </div>
-    `).join('');
-  }
-
-  // ACTIONS
-  function switchView(v) {
-    ['home','teachers','teach','chats','profile','shop','teacherProfile'].forEach(x => {
-      const el = $('view' + x.charAt(0).toUpperCase() + x.slice(1));
-      if(el) el.style.display = 'none';
-    });
-    const target = $('view' + v.charAt(0).toUpperCase() + v.slice(1));
-    if(target) target.style.display = 'block';
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    if(event && event.currentTarget) event.currentTarget.classList.add('active');
-    if(v === 'chats') loadChatList();
-    if(v === 'shop') loadShop();
-  }
-
-  function closeModal(id) { $(id).classList.remove('open'); }
-
-  async function createPost() {
-    const txt = $('postInput').value.trim();
-    if (!txt && !State.postImgUrl) return;
-    showLoading();
-    $('postInput').value = '';
-    $('postPreviewContainer').innerHTML = '';
-    await api('createPost', { username: State.user.username, content: txt, imageUrl: State.postImgUrl });
-    hideLoading();
-    State.postImgUrl = ''; await loadData(); toast('Post တင်ပြီးပါပြီ!');
-  }
-
-  function deletePost(id) {
-    $('confirmTitle').textContent = "Delete Post?";
-    $('confirmMsg').textContent = "ဒီ Post ကို ဖျက်မှာ သေချာလား?";
-    $('confirmYesBtn').textContent = "Delete";
-    $('confirmYesBtn').onclick = async () => {
-      closeModal('confirmModal');
-      showLoading(); await api('deletePost', { postId: id }); hideLoading();
-      await loadData(); toast('ဖျက်ပြီးပါပြီ');
-    };
-    $('confirmModal').classList.add('open');
-  }
-
-  async function toggleLike(id) {
-    const btn = $(`like-btn-${id}`);
-    const countSpan = $(`like-count-${id}`);
-    const isLiked = btn.style.color === 'rgb(239, 68, 68)';
-    
-    btn.innerHTML = `<div class="spinner"></div>`;
-    const r = await api('toggleLike', { postId: id, username: State.user.username });
-    
-    if(r.success) {
-      btn.style.color = r.liked ? '#EF4444' : 'inherit';
-      btn.innerHTML = `${r.liked ? ICONS.heartFill : ICONS.heart} <span id="like-count-${id}">${isLiked ? Number(countSpan.innerText)-1 : Number(countSpan.innerText)+1}</span>`;
-      await loadData();
-    }
-  }
-
-  // TEACHER PROFILE PAGE
-  async function openTeacherProfile(username) {
-    State.currentTeacher = State.teachers.find(x => x.username === username);
-    const t = State.currentTeacher;
-    showLoading();
-    const r = await api('getTeacherCourses', { teacherId: username });
-    hideLoading();
-    
-    $('tpImg').src = t.coverImage ? imgUrl(t.coverImage) : (t.profileImage ? imgUrl(t.profileImage) : '');
-    $('tpName').textContent = t.displayName;
-    $('tpSpecialty').textContent = t.specialty || 'Teacher';
-    $('tpRating').textContent = (t.rating || 0).toFixed(1);
-    $('tpReviews').textContent = `(${t.ratingCount || 0} Reviews)`;
-    
-    // Dynamic Stats
-    $('tpExp').textContent = t.experience || '-';
-    $('tpStudents').textContent = t.studentsCount || '-';
-    $('tpCourses').textContent = r.courses.length;
-    
-    $('tpCourseList').innerHTML = r.courses.length ? r.courses.map(c => `
-      <div style="border:1px solid var(--border);padding:10px;border-radius:12px;cursor:pointer;display:flex;gap:10px;align-items:center;" onclick="openCourse('${c.id}')">
-        ${c.coverImage ? `<img src="${imgUrl(c.coverImage)}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;" />` : ''}
-        <div style="flex:1;">
-          <b style="font-size:0.95rem;">${esc(c.title)}</b>
-          <div style="font-size:0.8rem;color:var(--primary);font-weight:700;">${c.isFree ? 'Free' : `${c.price} Coins`}</div>
-        </div>
-      </div>
-    `).join('') : '<p style="font-size:0.85rem;color:var(--text-muted);">သင်ခန်းစာ မရှိသေးပါ</p>';
-
-    switchView('teacherProfile');
-  }
-
-  function openChatWithFromProfile() {
-    openChatWith(State.currentTeacher.username, State.currentTeacher.displayName);
-  }
-
-  function showRatingStars() { $('ratingArea').style.display = 'block'; }
-  async function submitRating(val) {
-    const stars = document.querySelectorAll('#starRating svg');
-    stars.forEach((s, i) => { if(i < val) s.classList.add('active'); else s.classList.remove('active'); });
-    showLoading();
-    await api('rateTeacher', { teacherUsername: State.currentTeacher.username, rating: val });
-    hideLoading();
-    toast('Rating ပေးပြီးပါပြီ!');
-    await loadData();
-    openTeacherProfile(State.currentTeacher.username); // Refresh
-  }
-
-  // COURSE DETAIL
-  async function openCourse(id) {
-    const r = await api('getTeacherCourses', { teacherId: State.currentTeacher.username });
-    const c = r.courses.find(x => x.id === id);
-    if(!c) return;
-    State.currentCourse = c;
-    
-    $('cTitleDisplay').textContent = c.title;
-    $('cDescDisplay').textContent = c.description;
-    if (c.coverImage) { $('cImgDisplay').src = imgUrl(c.coverImage); $('cImgDisplay').style.display = 'block'; }
-    else { $('cImgDisplay').style.display = 'none'; }
-    
-    const hasBought = (State.user.purchasedCourses || []).includes(c.id);
-    const isTeacher = State.user.username === c.teacherId;
-    const isAdmin = State.user.isAdmin;
-    
-    if(c.isFree || hasBought || isTeacher || isAdmin || State.user.isVerifiedStudent) {
-      $('cLockedArea').innerHTML = `<p style="font-size:0.95rem;text-align:left;white-space:pre-wrap;">${esc(c.lockedDescription || 'No extra details.')}</p>`;
-      $('cActionArea').innerHTML = `
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          ${c.zoomLink ? `<a href="${c.zoomLink}" target="_blank" class="btn" style="background:#0369A1;">Join Zoom Meeting</a>` : ''}
-          ${c.pdfLink ? `<a href="${c.pdfLink}" target="_blank" class="btn" style="background:#F59E0B;">Download PDF File</a>` : ''}
-        </div>
-      `;
-    } else {
-      $('cLockedArea').innerHTML = `
-        <svg class="icon icon-lg" viewBox="0 0 24 24" style="color:var(--text-muted);margin-bottom:10px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <p style="font-size:0.85rem;color:var(--text-muted);">Coins ပေးမှ ဖတ်ရှုနိုင်မည့် အသေးစိတ် အချက်အလက်များ</p>
-      `;
-      $('cActionArea').innerHTML = `
-        <button class="btn" style="width:100%;" onclick="confirmBuyCourse('${c.id}', ${c.price})">Unlock for ${c.price} Coins</button>
-      `;
-    }
-    $('courseModal').classList.add('open');
-  }
-
-  function toggleReadMore(btn) {
-    const p = btn.previousElementSibling;
-    p.classList.toggle('expanded');
-    btn.textContent = p.classList.contains('expanded') ? i18n[curLang].readless : i18n[curLang].readmore;
-  }
-
-  function confirmBuyCourse(id, price) {
-    $('confirmTitle').textContent = i18n[curLang].buyconfirm;
-    $('confirmMsg').textContent = `Coins ${price} ကုန်ကျပါမည်။`;
-    $('confirmYesBtn').textContent = i18n[curLang].buyyes;
-    $('confirmYesBtn').onclick = async () => {
-      closeModal('confirmModal');
-      showLoading();
-      const r = await api('buyCourse', { username: State.user.username, courseId: id });
-      hideLoading();
-      if(r.success) { toast('ဝယ်ယူပြီးပါပြီ'); await loadData(); openCourse(id); }
-      else toast(r.error);
-    };
-    $('confirmModal').classList.add('open');
-  }
-
-  // TEACHER COURSE
-  async function publishCourse() {
-    const isFree = $('cIsFree').checked;
-    const price = isFree ? 0 : Number($('cPrice').value);
-    if(!$('cTitle').value) return toast('ခေါင်းစဉ် ထည့်ပါ');
-    showLoading();
-    await api('createCourse', {
-      username: State.user.username, title: $('cTitle').value, description: $('cDesc').value,
-      lockedDescription: $('cLockedDesc').value,
-      zoomLink: $('cZoom').value, pdfLink: $('cPdf').value, 
-      coverImage: $('cImgUrl').value || State.cImgUrl, isFree, price
-    });
-    hideLoading();
-    toast('သင်ခန်းစာ တင်ပြီးပါပြီ!');
-    $('cTitle').value = ''; $('cDesc').value = ''; $('cLockedDesc').value = ''; $('cZoom').value = ''; $('cPdf').value = ''; $('cImgUrl').value = ''; State.cImgUrl = '';
-    switchView('home');
-  }
-
-  // CHAT & SELECT MODE
-  function toggleChatSelectMode() {
-    State.chatSelectMode = !State.chatSelectMode;
-    State.selectedMsgs.clear();
-    $('chatSelBtn').textContent = State.chatSelectMode ? 'Cancel' : 'Select';
-    $('chatSelectBar').style.display = State.chatSelectMode ? 'flex' : 'none';
-    $('chatInputArea').style.display = State.chatSelectMode ? 'none' : 'flex';
-    renderMessagesUI();
-  }
-
-  function selectMsg(id) {
-    if(!State.chatSelectMode) return;
-    if(State.selectedMsgs.has(id)) State.selectedMsgs.delete(id);
-    else State.selectedMsgs.add(id);
-    $('selCount').textContent = `${State.selectedMsgs.size} selected`;
-    renderMessagesUI();
-  }
-
-  function deleteSelectedChats() {
-    if(State.selectedMsgs.size === 0) return;
-    $('confirmTitle').textContent = "Delete Messages?";
-    $('confirmMsg').textContent = "ရွေးချယ်ထားသော စာများကို ဖျက်မှာ သေချာလား?";
-    $('confirmYesBtn').textContent = "Delete";
-    $('confirmYesBtn').onclick = async () => {
-      closeModal('confirmModal');
-      showLoading();
-      await api('deleteMessages', { ids: Array.from(State.selectedMsgs) });
-      hideLoading();
-      State.chatSelectMode = false; State.selectedMsgs.clear();
-      $('chatSelBtn').textContent = 'Select';
-      $('chatSelectBar').style.display = 'none';
-      $('chatInputArea').style.display = 'flex';
-      await loadMessages();
-      toast('ဖျက်ပြီးပါပြီ');
-    };
-    $('confirmModal').classList.add('open');
-  }
-
-  async function loadChatList() {
-    $('chatList').innerHTML = '<p style="text-align:center;color:var(--text-muted);">Loading...</p>';
-    const r = await api('getChatList', { username: State.user.username });
-    if(!r.chats.length) { $('chatList').innerHTML = '<p style="text-align:center;color:var(--text-muted);">စာပို့ထားတာ မရှိသေးပါ</p>'; return; }
-    $('chatList').innerHTML = r.chats.map(c => `
-      <div class="post-card glass" style="display:flex;align-items:center;gap:12px;padding:1rem;cursor:pointer;" onclick="openChatWith('${c.username}', '${c.displayName}')">
-        <div class="avatar">${c.profileImage ? `<img src="${imgUrl(c.profileImage)}" style="width:100%;height:100%;object-fit:cover;"/>` : c.displayName.charAt(0)}</div>
-        <div style="flex:1;">
-          <div style="font-weight:700;font-size:1rem;">${esc(c.displayName)}</div>
-          <div style="font-size:0.85rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;">${esc(c.lastMsg)}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  async function openChatWith(username, displayName) {
-    State.chatWith = username; $('chatWithName').textContent = displayName;
-    State.chatSelectMode = false; State.selectedMsgs.clear();
-    $('chatSelBtn').textContent = 'Select'; $('chatSelectBar').style.display = 'none'; $('chatInputArea').style.display = 'flex';
-    $('chatModal').classList.add('open');
-    await loadMessages();
-  }
-
-  let currentMsgs = [];
-  async function loadMessages() {
-    $('chatBox').innerHTML = '';
-    const r = await api('getMessages', { user1: State.user.username, user2: State.chatWith });
-    currentMsgs = r.messages;
-    renderMessagesUI();
-  }
-
-  function renderMessagesUI() {
-    $('chatBox').innerHTML = currentMsgs.map(m => `
-      <div class="chat-msg ${m.from === State.user.username ? 'mine' : 'theirs'} ${State.selectedMsgs.has(m.id) ? 'selected' : ''}" onclick="selectMsg('${m.id}')" oncontextmenu="event.preventDefault(); if(!State.chatSelectMode){toggleChatSelectMode(); selectMsg('${m.id}');}">
-        ${esc(m.text)}
-      </div>
-    `).join('');
-    $('chatBox').scrollTop = $('chatBox').scrollHeight;
-  }
-
-  async function sendChat() {
-    const txt = $('chatInput').value.trim(); if (!txt) return;
-    $('chatInput').value = '';
-    
-    const tempId = 'tmp_' + Date.now();
-    currentMsgs.push({ id: tempId, from: State.user.username, text: txt });
-    renderMessagesUI();
-    
-    const tmpEl = document.querySelector(`.chat-msg:last-child`);
-    const prog = document.createElement('div');
-    prog.className = 'msg-progress';
-    tmpEl.appendChild(prog);
-    setTimeout(() => prog.style.width = '100%', 100);
-
-    await api('sendMessage', { from: State.user.username, to: State.chatWith, text: txt });
-    await loadMessages();
-  }
-
-  // PROFILE & UPLOAD
-  function handlePostImage(input) {
-    if (input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
-        if (r.success) { State.postImgUrl = r.url; $('postPreviewContainer').innerHTML = `<div class="preview-box"><img src="${r.url}" /><div class="remove-preview" onclick="removePostImg()">✕</div></div>`; }
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-  function removePostImg() { State.postImgUrl = ''; $('postPreviewContainer').innerHTML = ''; }
-
-  function handleCourseImage(input) {
-    if (input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
-        if (r.success) { State.cImgUrl = r.url; $('cImgStatus').textContent = '✅ Image Ready'; }
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  function openEditProfile() { 
-    $('epName').value = State.user.displayName; 
-    $('epBio').value = State.user.bio || ''; 
-    $('epSpecialty').value = State.user.specialty || '';
-    $('epImgUrl').value = State.user.profileImage || '';
-    $('epExp').value = State.user.experience || '';
-    $('epStudents').value = State.user.studentsCount || '';
-    $('editProfileModal').classList.add('open'); 
-  }
-  async function saveProfile() {
-    showLoading();
-    const r = await api('updateProfile', { 
-      username: State.user.username, 
-      displayName: $('epName').value, 
-      bio: $('epBio').value, 
-      specialty: $('epSpecialty').value,
-      experience: $('epExp').value,
-      studentsCount: $('epStudents').value,
-      profileImage: $('epImgUrl').value || State.epImgUrl || State.user.profileImage 
-    });
-    hideLoading(); 
-    closeModal('editProfileModal'); 
-    if(r.success) {
-      State.user = r.user;
-      await loadData();
-      toast('Saved!');
-    }
-  }
-
-  function handleProfileImage(input) {
-    if (input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
-        if (r.success) { State.epImgUrl = r.url; $('epAvatar').innerHTML = `<img src="${r.url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`; }
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  // ADMIN
-  function openAdminPanel() { $('adminModal').classList.add('open'); loadAdminReqs(); }
-
-  async function loadAdminReqs() {
-    showLoading(); const r = await api('adminGetRequests'); hideLoading();
-    $('adminContentArea').innerHTML = r.requests.map(req => `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;border:1px solid var(--border);border-radius:12px;margin-bottom:0.5rem;">
-        <div><b>@${esc(req.username)}</b><br/><span style="font-size:0.8rem;color:var(--text-muted)">Teacher Request</span></div>
-        <div>
-          <button class="btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="handleReq('${req.id}', true)">Approve</button>
-          <button class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.8rem;border-color:#EF4444;color:#EF4444;" onclick="handleReq('${req.id}', false)">Reject</button>
-        </div>
-      </div>
-    `).join('') || '<p>No requests.</p>';
-  }
-  async function handleReq(id, approve) { showLoading(); await api('adminApproveRequest', { requestId: id, approve }); hideLoading(); loadAdminReqs(); }
-
-  async function loadAdminPkgs() {
-    $('adminContentArea').innerHTML = `
-      <div class="input-group"><label>Package Name</label><input id="pkgName" placeholder="e.g. 500 Coins" /></div>
-      <div class="input-group"><label>Coins</label><input type="number" id="pkgCoins" placeholder="500" /></div>
-      <div class="input-group"><label>Price (MMK)</label><input type="number" id="pkgPrice" placeholder="5000" /></div>
-      <div class="input-group">
-        <label>Package Image</label>
-        <input type="file" id="pkgImgInput" accept="image/*" onchange="uploadPkgImg(this)" style="padding:0.5rem;border:1px dashed var(--border);" />
-      </div>
-      <button class="btn" style="width:100%;" onclick="savePkg()">Save Package</button>
-    `;
-  }
-  let pkgImgUrl = '';
-  async function uploadPkgImg(input) {
-    if(!input.files[0]) return;
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
-      if(r.success) { pkgImgUrl = r.url; toast('Image uploaded'); }
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-  async function savePkg() {
-    showLoading();
-    await api('adminSavePackage', { name: $('pkgName').value, coins: $('pkgCoins').value, price: $('pkgPrice').value, imageUrl: pkgImgUrl });
-    hideLoading(); toast('Saved!'); pkgImgUrl = '';
-  }
-
-  async function loadAdminPurchases() {
-    showLoading(); const r = await api('adminGetPurchases'); hideLoading();
-    $('adminContentArea').innerHTML = r.purchases.map(p => `
-      <div style="border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:10px;display:flex;gap:10px;">
-        <img src="${p.proofImage}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;" onclick="window.open('${p.proofImage}','_blank')" />
-        <div style="flex:1;">
-          <b>@${esc(p.username)}</b><br/>
-          <span style="font-size:0.8rem;color:var(--text-muted)">${p.packageData.coins} Coins</span>
-          <div style="margin-top:5px;">
-            <button class="btn" style="padding:0.3rem 0.6rem;font-size:0.75rem;" onclick="handlePurchase('${p.id}', true)">Approve</button>
-            <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.75rem;border-color:#EF4444;color:#EF4444;" onclick="handlePurchase('${p.id}', false)">Reject</button>
-          </div>
-        </div>
-      </div>
-    `).join('') || '<p>No pending purchases.</p>';
-  }
-  async function handlePurchase(id, approve) { showLoading(); await api('adminApprovePurchase', { purchaseId: id, approve }); hideLoading(); loadAdminPurchases(); }
-
-  async function loadAdminUsers() {
-    showLoading(); const r = await api('adminGetUsers'); hideLoading();
-    $('adminContentArea').innerHTML = r.users.map(u => `
-      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding:10px 0;">
-        <div><b>@${esc(u.username)}</b><br/><span style="font-size:0.75rem;color:var(--text-muted)">${u.role}</span></div>
-        <div>
-          <button class="btn ${u.isBanned ? 'btn-outline' : ''}" style="padding:0.3rem 0.6rem;font-size:0.75rem;${u.isBanned?'border-color:#10B981;color:#10B981;':''}" onclick="banUser('${u.username}', ${!u.isBanned})">${u.isBanned ? 'Unban' : 'Ban'}</button>
-          <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.75rem;border-color:#EF4444;color:#EF4444;" onclick="deleteUser('${u.username}')">Delete</button>
-        </div>
-      </div>
-    `).join('');
-  }
-  async function banUser(username, isBanned) { showLoading(); await api('adminToggleBan', { username, isBanned }); hideLoading(); loadAdminUsers(); }
-  async function deleteUser(username) {
-    $('confirmTitle').textContent = "Delete User?";
-    $('confirmMsg').textContent = `@${username} ကို ဖျက်ပြစ်မှာ သေချာလား?`;
-    $('confirmYesBtn').textContent = "Delete";
-    $('confirmYesBtn').onclick = async () => {
-      closeModal('confirmModal');
-      showLoading(); await api('adminDeleteUser', { username }); hideLoading(); loadAdminUsers();
-    };
-    $('confirmModal').classList.add('open');
-  }
-
-  function loadAdminSettings() {
-    const s = State.settings;
-    $('adminContentArea').innerHTML = `
-      <h4 style="margin-bottom:10px;">Login Screen Background</h4>
-      <div class="input-group"><label>Background Image URL</label><input id="setLoginBg" value="${s.loginBg || ''}" placeholder="Drive Link or Image URL" /></div>
-      <h4 style="margin:15px 0 10px;">KPay Setup</h4>
-      <div class="input-group"><label>KPay Phone</label><input id="setKpay" value="${s.kpayPhone || ''}" /></div>
-      <div class="input-group"><label>KPay QR Image</label><input type="file" onchange="uploadQr(this, 'kpay')" /></div>
-      <h4 style="margin:15px 0 10px;">Wave Setup</h4>
-      <div class="input-group"><label>Wave Phone</label><input id="setWave" value="${s.wavePhone || ''}" /></div>
-      <div class="input-group"><label>Wave QR Image</label><input type="file" onchange="uploadQr(this, 'wave')" /></div>
-      <button class="btn" style="width:100%;" onclick="saveSettings()">Save Settings</button>
-    `;
-  }
-  let tmpKpayQr = '', tmpWaveQr = '';
-  async function uploadQr(input, type) {
-    if(!input.files[0]) return;
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
-      if(r.success) { if(type==='kpay') tmpKpayQr = r.url; else tmpWaveQr = r.url; toast('QR Uploaded'); }
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-  async function saveSettings() {
-    showLoading();
-    await api('adminSaveSettings', { settings: {
-      loginBg: $('setLoginBg').value,
-      kpayPhone: $('setKpay').value, kpayQr: tmpKpayQr || State.settings.kpayQr,
-      wavePhone: $('setWave').value, waveQr: tmpWaveQr || State.settings.waveQr
-    }});
-    hideLoading(); toast('Saved!'); await loadData();
-  }
-
-  // SHOP & PAYMENT
-  async function loadShop() {
-    showLoading();
-    const r = await api('getPackages'); State.packages = r.packages;
-    hideLoading();
-    $('shopList').innerHTML = State.packages.map(p => `
-      <div class="post-card glass" style="text-align:center;cursor:pointer;" onclick="openPayment('${p.id}', ${p.coins})">
-        ${p.imageUrl ? `<img src="${imgUrl(p.imageUrl)}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 10px;" />` : ''}
-        <h4 style="font-weight:800;font-size:1.1rem;">${esc(p.name)}</h4>
-        <div style="color:var(--primary);font-weight:800;font-size:1.2rem;margin:5px 0;">${p.coins} 🪙</div>
-        <div style="font-size:0.85rem;color:var(--text-muted);">${p.price} MMK</div>
-      </div>
-    `).join('');
-  }
-
-  function openPayment(pkgId, coins) {
-    State.selectedPkg = pkgId; State.proofImgUrl = '';
-    $('payAmount').textContent = `${coins} Coins`;
-    $('proofPreview').innerHTML = '';
-    
-    const s = State.settings;
-    $('kpayNum').textContent = s.kpayPhone || 'Not set';
-    if(s.kpayQr) { $('kpayQrImg').src = imgUrl(s.kpayQr); $('kpayQrImg').style.display = 'block'; }
-    else $('kpayQrImg').style.display = 'none';
-
-    $('waveNum').textContent = s.wavePhone || 'Not set';
-    if(s.waveQr) { $('waveQrImg').src = imgUrl(s.waveQr); $('waveQrImg').style.display = 'block'; }
-    else $('waveQrImg').style.display = 'none';
-
-    $('paymentModal').classList.add('open');
-  }
-
-  async function submitPurchase() {
-    if(!State.proofImgUrl) return toast('ငွေလွှဲပြေစာ တင်ပါဦး');
-    showLoading();
-    await api('submitPurchase', { username: State.user.username, packageId: State.selectedPkg, proofImage: State.proofImgUrl });
-    hideLoading(); closeModal('paymentModal'); toast('Admin စစ်ဆေးပြီးရင် Coins ရပါမည်');
-  }
-
-  function handleProofImage(input) {
-    if (input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        showLoading(); const r = await api('uploadImage', { base64: e.target.result }); hideLoading();
-        if (r.success) { State.proofImgUrl = r.url; $('proofPreview').innerHTML = `<img src="${r.url}" style="height:100px;border-radius:10px;margin-top:10px;" />`; }
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  function logout() { localStorage.removeItem('ml_user'); location.reload(); }
-
-  // INIT
-  applyLang();
-  const saved = localStorage.getItem('ml_user');
-  if (saved) { State.user = JSON.parse(saved); initApp(); }
+let reg=false;
+function showAuth(){$('authv').classList.remove('hide');$('app').classList.add('hide')}
+function logout(){localStorage.removeItem('nk_user');S.user=null;closeSheet();closeSheet('sheet2');showAuth()}
+async function load(){
+  const r=await api('bootstrap');
+  if(!r.success){if(!r.logout)toast(r.error);return false}
+  Object.assign(S,{user:r.user,units:r.units,lessons:r.lessons,videos:r.videos,classes:r.classes,prog:r.progress});
+  localStorage.setItem('nk_user',S.user.username);
+  $('authv').classList.add('hide');$('app').classList.remove('hide');render();return true;
+}
+const TABS=[['learn','📖','Learning'],['alpha','あ','Alphabet'],['class','🎓','Class'],['video','▶️','Video'],['me','👤','Me']];
+function render(){
+  $('nav').innerHTML=TABS.map(t=>`<button class="${S.tab===t[0]?'on':''}" data-a="tab" data-v="${t[0]}"><b>${t[1]}</b>${t[2]}</button>`).join('');
+  $('view').innerHTML=({learn:vLearn,alpha:vAlpha,class:vClass,video:vVideo,me:vMe})[S.tab]();
+  if(S.tab==='alpha')drawK();
+}
+function vLearn(){
+  const done=doneSet();let prev=true,h=`<div class="top"><h1>Learning</h1><span class="chip">⭐ ${S.user.exp||0} exp</span></div>`;
+  if(!S.units.length)return h+`<div class="empty">${staff()?'No lessons yet.<br>Go to <b>Me → Teacher tools</b> and add your first unit and lesson.':'Your teacher has not added lessons yet.<br>Check back soon!'}</div>`;
+  const pos=[50,24,50,76];
+  S.units.forEach(u=>{
+    const ls=S.lessons.filter(l=>l.unitId===u.id),n=ls.filter(l=>done.has(l.id)).length;prev=true;
+    h+=`<div class="unit"><h2>${esc(u.title)}</h2><small>${n}/${ls.length} lessons</small></div><div class="path">`;
+    ls.forEach((l,i)=>{const open=staff()||prev,d=done.has(l.id);prev=d;
+      h+=`<button class="nd ${open?'':'lock'} ${d?'done':''}" style="margin-left:calc(${pos[i%4]}% - 65px)" data-a="open" data-v="${l.id}"><span class="b">${open?'📖':'🔒'}</span>${esc(l.title)}</button>`});
+    h+='</div>';
+  });
+  return h;
+}
+let kmode='h';
+const KANA='あ a,い i,う u,え e,お o,か ka,き ki,く ku,け ke,こ ko,さ sa,し shi,す su,せ se,そ so,た ta,ち chi,つ tsu,て te,と to,な na,に ni,ぬ nu,ね ne,の no,は ha,ひ hi,ふ fu,へ he,ほ ho,ま ma,み mi,む mu,め me,も mo,や ya,_,ゆ yu,_,よ yo,ら ra,り ri,る ru,れ re,ろ ro,わ wa,_,_,_,を wo,ん n'.split(',').map(s=>s==='_'?null:s.split(' '));
+function vAlpha(){return `<div class="top"><h1>Alphabet</h1></div><div class="tabs"><button class="${kmode==='h'?'on':''}" data-a="km" data-v="h">Hiragana</button><button class="${kmode==='k'?'on':''}" data-a="km" data-v="k">Katakana</button></div><div class="grid" id="kg"></div><p class="sw">Tap a character to hear it</p>`}
+function drawK(){$('kg').innerHTML=KANA.map(k=>{if(!k)return'<div class="kc e"></div>';const c=kmode==='h'?k[0]:String.fromCharCode(k[0].charCodeAt(0)+96);return`<button class="kc" data-a="say2" data-v="${c}">${c}<small>${k[1]}</small></button>`}).join('')}
+function vClass(){
+  const h=`<div class="top"><h1>Live classes</h1></div>`;
+  if(!S.classes.length)return h+`<div class="empty">No classes scheduled.${staff()?'<br>Add one in Me → Teacher tools → Classes.':''}</div>`;
+  return h+S.classes.map(c=>`<div class="card"><div class="row"><div class="grow"><h3>${esc(c.title)}</h3><small>${c.when?new Date(c.when).toLocaleString([],{dateStyle:'medium',timeStyle:'short'}):'Time not set'}</small></div>${c.link?`<a class="sm" href="${esc(c.link)}" target="_blank" rel="noopener" style="text-decoration:none">Join</a>`:''}</div>${c.note?`<p style="margin-top:10px;color:var(--mu);white-space:pre-wrap">${esc(c.note)}</p>`:''}</div>`).join('');
+}
+let vq='';
+function vVideo(){return `<div class="top"><h1>Video</h1></div><input class="search" id="vs" placeholder="Search videos" value="${esc(vq)}" aria-label="Search videos"><div id="vl">${vList()}</div>`}
+function vList(){const l=S.videos.filter(v=>v.title.toLowerCase().includes(vq.toLowerCase()));if(!l.length)return`<div class="empty">${S.videos.length?'No match.':'No videos yet.'}${staff()&&!S.videos.length?'<br>Add YouTube links in Me → Teacher tools.':''}</div>`;
+  return l.map(v=>{const id=ytId(v.url);return`<div class="card vid" data-a="vid" data-v="${v.id}"><div class="th" style="${id?`background-image:url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`:''}"></div><h3>${esc(v.title)}</h3><span class="lv">${esc(v.level||'Easy')}</span></div>`}).join('')}
+function vMe(){
+  const u=S.user,d=doneSet(),tot=S.prog.reduce((a,p)=>a+p.total,0),cor=S.prog.reduce((a,p)=>a+p.correct,0),exp=u.exp||0,lv=Math.floor(exp/100)+1;
+  const days=[...Array(7)].map((_,i)=>{const t=new Date();t.setDate(t.getDate()-6+i);const k=t.toISOString().slice(0,10);return{n:t.toLocaleDateString('en',{weekday:'short'}),e:S.prog.filter(p=>p.day===k).reduce((a,p)=>a+p.exp,0)}});
+  const mx=Math.max(50,...days.map(x=>x.e));
+  return `<div class="prof"><div class="av">🦊</div><div style="min-width:0"><h2>${esc(u.displayName)}</h2><p>@${esc(u.username)} · ${staff()?'Teacher':'Student'}</p><p>Level ${lv} · ${exp} exp</p></div></div>
+  <div class="stats"><div><b>${d.size}</b><span>Lessons</span></div><div><b>${tot?Math.round(cor/tot*100):0}%</b><span>Correct</span></div><div><b>${S.prog.length}</b><span>Practices</span></div></div>
+  <div class="card"><b>Level ${lv}</b> <span style="color:var(--mu)">— ${100-exp%100} exp to level ${lv+1}</span><div class="lvbar"><b style="width:${exp%100}%"></b></div></div>
+  <div class="wk"><h3>Weekly practice</h3><div class="bars">${days.map(x=>`<div><i><b style="height:${x.e/mx*100}%"></b></i>${x.n}</div>`).join('')}</div></div>
+  ${staff()?'<div class="card"><button class="cta" data-a="tools">🧑‍🏫 Teacher tools</button></div>':''}
+  <div class="card" style="display:grid;gap:10px"><button class="cta sec" data-a="rename">Change my name</button><button class="cta sec ${deferred?'':'hide'}" id="inst" data-a="install">Install app</button><button class="cta red" data-a="logout">Log out</button></div>`;
+}
+let L,words=[],qs=[],qi=0,score=0,lock=0;
+const sheet=(h,id='sheet')=>{$(id).innerHTML=h;$(id).classList.add('on')};
+const closeSheet=(id='sheet')=>$(id).classList.remove('on');
+const ph=p=>`<div class="sh"><button class="x" data-a="close" aria-label="Close">✕</button><div class="pb"><b style="width:${p}%"></b></div></div>`;
+function openLesson(id){
+  const l=S.lessons.find(x=>x.id===id),sib=S.lessons.filter(x=>x.unitId===l.unitId),k=sib.indexOf(l);
+  if(!staff()&&k>0&&!doneSet().has(sib[k-1].id))return toast('Finish the previous lesson first');
+  L=l;words=parseVocab(l.vocab);if(!words.length)return toast('This lesson has no vocabulary yet');step('vocab');
+}
+function step(s){
+  if(s==='vocab')sheet(ph(15)+`<div class="sc"><h3 class="t">👉 ${esc(L.title)}</h3>${words.map((w,i)=>`<div class="vc"><div class="r"><span class="jp">${esc(w.jp)}</span>${w.ro?`<span class="ro">(${esc(w.ro)})</span>`:''}<button data-a="say" data-v="${i}" aria-label="Listen">🔊</button></div><p>${esc(w.m)}</p></div>`).join('')}</div><button class="cta ft" data-a="${L.notes?'notes':'quiz'}">${L.notes?'Next':'Start practice'}</button>`);
+  if(s==='notes')sheet(ph(40)+`<div class="sc"><h3 class="t">Grammar & notes</h3><div class="notes">${esc(L.notes)}</div></div><button class="cta ft" data-a="quiz">Start practice</button>`);
+}
+function startQuiz(){
+  const pool=S.lessons.flatMap(l=>parseVocab(l.vocab));
+  qs=shuffle(words).slice(0,10).map((w,i)=>{const rev=i%2===1,key=rev?'jp':'m',seen=new Set([w[key]]),opts=[w];
+    shuffle(pool).forEach(x=>{if(opts.length<4&&!seen.has(x[key])){seen.add(x[key]);opts.push(x)}});return{w,rev,opts:shuffle(opts)}});
+  qi=0;score=0;lock=0;drawQ();
+}
+function drawQ(){const q=qs[qi];
+  sheet(ph(40+qi/qs.length*60)+`<div class="sc"><div class="qw"><h3>${q.rev?'Choose the Japanese':'What does this mean?'}</h3><div class="qbig">${esc(q.rev?q.w.m:q.w.jp)}</div><div class="qro">${q.rev?'':esc(q.w.ro)}</div>${q.opts.map((o,i)=>`<button class="opt" data-a="ans" data-v="${i}">${esc(q.rev?o.jp:o.m)}</button>`).join('')}</div></div>`);
+  if(!q.rev)speak(q.w.jp);
+}
+async function finish(){
+  const r=await api('complete',{lessonId:L.id,correct:score,total:qs.length});
+  const ok=r.success&&r.passed;
+  sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>Result</h2></div><div class="sc"><div class="res"><div>${ok?'🎉':'💪'}</div>${score}/${qs.length} correct<small>${r.success?`+${r.exp} exp`:esc(r.error)}</small><small>${ok?'Lesson complete!':'Score 60% or more to finish. Try again!'}</small></div></div><button class="cta ft" data-a="${ok?'close':'quiz'}">${ok?'Continue':'Try again'}</button>`);
+  load();
+}
+const FORMS={
+  unit:{t:'Unit',c:'units',f:[['title','Unit title (e.g. Basic 1)'],['order','Order (1, 2, 3…)','number']]},
+  lesson:{t:'Lesson',c:'lessons',f:[['unitId','Unit','unit'],['title','Lesson title (e.g. Greetings)'],['order','Order (1, 2, 3…)','number'],['vocab','Vocabulary — one word per line:\n日本語 | romaji | meaning\n(you can paste from Excel / Google Sheets)','area'],['notes','Grammar / notes (optional)','area']]},
+  video:{t:'Video',c:'videos',f:[['title','Title'],['url','YouTube link'],['level','Level','level']]},
+  class:{t:'Live class',c:'classes',f:[['title','Title'],['link','Zoom / Meet link'],['when','Date & time','datetime-local'],['note','Note for students','area']]}
+};
+let TT='lesson',editing=null;
+function tools(){
+  const tabs=[['lesson','Lessons'],['unit','Units'],['video','Videos'],['class','Classes'],...(S.user.isAdmin?[['users','Students']]:[])];
+  sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>Teacher tools</h2></div><div class="tabs">${tabs.map(t=>`<button class="${TT===t[0]?'on':''}" data-a="tt" data-v="${t[0]}">${t[1]}</button>`).join('')}</div><div class="sc" id="tl" style="padding-top:0"></div>`);
+  if(TT==='users')return users();
+  const F=FORMS[TT],items=S[F.c];
+  $('tl').innerHTML=`<button class="cta" data-a="form" data-v="${TT}" style="margin-bottom:6px">＋ Add ${F.t.toLowerCase()}</button>`+(items.length?items.map(i=>{
+    const sub=TT==='lesson'?`${esc((S.units.find(u=>u.id===i.unitId)||{}).title||'No unit')} · ${parseVocab(i.vocab).length} words`:TT==='unit'?`${S.lessons.filter(l=>l.unitId===i.id).length} lessons`:TT==='video'?esc(i.level||''):esc(i.when?new Date(i.when).toLocaleString():'');
+    return`<div class="card" style="margin:12px 0"><div class="row"><div class="grow"><h3>${esc(i.title)}</h3><small>${sub}</small></div><button class="sm o" data-a="form" data-v="${TT}" data-id="${i.id}">Edit</button><button class="sm r" data-a="del" data-v="${TT}" data-id="${i.id}">Delete</button></div></div>`}).join(''):`<div class="empty">Nothing here yet.</div>`);
+}
+async function users(){
+  const r=await api('adminGetUsers');if(!r.success)return toast(r.error);
+  $('tl').innerHTML=r.users.map(u=>`<div class="card" style="margin:12px 0"><div class="row"><div class="grow"><h3>${esc(u.displayName)}</h3><small>@${esc(u.username)} · ${u.isAdmin?'Admin':u.role} · ${u.exp||0} exp${u.isBanned?' · disabled':''}</small></div></div>${u.username===S.user.username?'':`<div class="row" style="margin-top:10px;flex-wrap:wrap"><button class="sm o" data-a="uact" data-v="role" data-u="${u.username}" data-r="${u.role==='teacher'?'student':'teacher'}">Make ${u.role==='teacher'?'student':'teacher'}</button><button class="sm o" data-a="uact" data-v="pw" data-u="${u.username}">Reset password</button><button class="sm o" data-a="uact" data-v="ban" data-u="${u.username}" data-b="${u.isBanned?'':'1'}">${u.isBanned?'Enable':'Disable'}</button><button class="sm r" data-a="uact" data-v="del" data-u="${u.username}">Delete</button></div>`}</div>`).join('');
+}
+function fld([n,l,t],v){v=v??'';let i;
+  if(t==='area')i=`<textarea id="f_${n}" rows="${n==='vocab'?10:3}" placeholder="${n==='vocab'?'こんにちは | konnichiwa | Hello\nさようなら | sayounara | Goodbye':''}">${esc(v)}</textarea>`;
+  else if(t==='unit')i=`<select id="f_${n}">${S.units.map(u=>`<option value="${u.id}" ${u.id===v?'selected':''}>${esc(u.title)}</option>`).join('')}</select>`;
+  else if(t==='level')i=`<select id="f_${n}">${['Easy','Medium','Hard'].map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
+  else i=`<input id="f_${n}" type="${t||'text'}" value="${esc(v)}">`;
+  return`<div class="fg"><label>${l}</label>${i}</div>`}
+function form(kind,id){
+  const F=FORMS[kind];if(kind==='lesson'&&!S.units.length)return toast('Add a unit first');
+  editing=id?S[F.c].find(x=>x.id===id):null;const e={...(editing||{})};
+  if(!id&&kind==='lesson')e.order=S.lessons.length+1;if(!id&&kind==='unit')e.order=S.units.length+1;
+  sheet(`<div class="sh"><button class="x" data-a="close2">✕</button><h2>${id?'Edit':'New'} ${F.t.toLowerCase()}</h2></div><div class="sc">${F.f.map(f=>fld(f,e[f[0]])).join('')}</div><button class="cta ft" data-a="save" data-v="${kind}">Save</button>`,'sheet2');
+}
+async function save(kind){
+  const d={};FORMS[kind].f.forEach(([n])=>d[n]=$('f_'+n).value);if(editing)d.id=editing.id;
+  if(!d.title.trim())return toast('Please enter a title');
+  if(kind==='lesson'&&!parseVocab(d.vocab).length)return toast('Add at least one word: 日本語 | romaji | meaning');
+  if(kind==='video'&&!ytId(d.url))return toast('Paste a valid YouTube link');
+  const r=await api('save',{kind,data:d});if(!r.success)return toast(r.error);
+  closeSheet('sheet2');await load();TT=kind;tools();toast('Saved ✓');
+}
+const A={
+  auth:async()=>{const u=$('auser').value.trim(),p=$('apass').value;if(!u||!p)return toast('Enter username and password');
+    const r=await api(reg?'register':'login',{username:u,password:p,displayName:$('aname').value.trim()||u});
+    if(!r.success)return toast(r.error);S.user=r.user;await load()},
+  authmode:()=>{reg=!reg;$('rn').classList.toggle('hide',!reg);$('abtn').textContent=reg?'Create account':'Log in';$('asw').innerHTML=reg?'Have an account? <a data-a="authmode">Log in</a>':'New student? <a data-a="authmode">Create account</a>'},
+  tab:v=>{S.tab=v;render();scrollTo(0,0)},km:v=>{kmode=v;render()},say2:v=>speak(v),say:v=>speak(words[v].jp),
+  open:v=>openLesson(v),notes:()=>step('notes'),quiz:()=>startQuiz(),close:()=>closeSheet(),close2:()=>closeSheet('sheet2'),
+  ans:(v,el)=>{if(lock)return;lock=1;const q=qs[qi],ok=q.opts[v]===q.w;if(ok)score++;el.classList.add(ok?'ok':'no');
+    if(!ok)document.querySelector(`.opt[data-v="${q.opts.indexOf(q.w)}"]`).classList.add('ok');speak(q.w.jp);
+    setTimeout(()=>{qi++;lock=0;qi<qs.length?drawQ():finish()},1100)},
+  vid:v=>{const x=S.videos.find(i=>i.id===v),id=ytId(x.url);sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>${esc(x.title)}</h2></div><div class="sc"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0" allow="accelerometer;encrypted-media;picture-in-picture" allowfullscreen></iframe></div>`)},
+  tools:()=>tools(),tt:v=>{TT=v;tools()},form:(v,el)=>form(v,el.dataset.id),save:v=>save(v),
+  del:async(v,el)=>{if(!confirm('Delete this '+FORMS[v].t.toLowerCase()+'?'+(v==='unit'?' All its lessons will be deleted too.':'')))return;
+    const r=await api('del',{kind:v,id:el.dataset.id});if(!r.success)return toast(r.error);await load();tools()},
+  uact:async(v,el)=>{const t=el.dataset.u;let r;
+    if(v==='role')r=await api('adminSetRole',{target:t,role:el.dataset.r});
+    if(v==='ban')r=await api('adminToggleBan',{target:t,isBanned:!!el.dataset.b});
+    if(v==='pw'){const p=prompt('New password for @'+t+' (min 4 characters)');if(!p)return;r=await api('adminResetPassword',{target:t,password:p});if(r.success)toast('Password changed')}
+    if(v==='del'){if(!confirm('Delete @'+t+' and all progress?'))return;r=await api('adminDeleteUser',{target:t})}
+    if(!r.success)return toast(r.error);users()},
+  rename:async()=>{const n=prompt('Your name',S.user.displayName);if(!n)return;await api('updateProfile',{displayName:n});load()},
+  install:()=>{if(deferred){deferred.prompt();deferred=null}},logout
+};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t&&A[t.dataset.a]){e.preventDefault();A[t.dataset.a](t.dataset.v,t)}});
+document.addEventListener('input',e=>{if(e.target.id==='vs'){vq=e.target.value;$('vl').innerHTML=vList()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('authv').classList.contains('hide'))A.auth()});
+let deferred;addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;const b=$('inst');if(b)b.classList.remove('hide')});
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+const saved=localStorage.getItem('nk_user');
+if(saved){S.user={username:saved};load().then(ok=>{if(!ok)showAuth()})}else showAuth();
 </script>
 </body>
 </html>
