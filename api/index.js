@@ -30,9 +30,28 @@ module.exports = async (req, res) => {
   try {
     const usersCol = await getCollection('users');
     const coursesCol = await getCollection('courses');
+    const postsCol = await getCollection('posts');
+    const commentsCol = await getCollection('comments');
+    const likesCol = await getCollection('likes');
+    const chatsCol = await getCollection('chat_messages');
+    const packagesCol = await getCollection('coin_packages');
+    const purchasesCol = await getCollection('purchases');
+    const settingsCol = await getCollection('settings');
     const requestsCol = await getCollection('requests');
 
-    // ---------------- AUTH ----------------
+    // ---------------- SETTINGS ----------------
+    if (action === 'getSettings') {
+      const settings = await settingsCol.findOne({ key: 'globalSettings' }) || { 
+        kpayPhone: '', kpayQr: '', wavePhone: '', waveQr: '', loginBg: '' 
+      };
+      return send(res, { success: true, settings });
+    }
+    if (action === 'adminSaveSettings') {
+      await settingsCol.updateOne({ key: 'globalSettings' }, { $set: body.settings }, { upsert: true });
+      return send(res, { success: true });
+    }
+
+    // ---------------- AUTH & PROFILE ----------------
     if (action === 'register') {
       const { username, password, role } = body;
       const existing = await usersCol.findOne({ username: username.toLowerCase() });
@@ -41,7 +60,8 @@ module.exports = async (req, res) => {
       const newUser = {
         username: username.toLowerCase(), passwordHash: hashPassword(password), displayName: username,
         role: role === 'teacher' ? 'student' : role, isVerifiedStudent: false, isApprovedTeacher: false, isAdmin: false,
-        isBanned: false, coins: 500, xp: 0, purchasedCourses: [], completedLessons: [], profileImage: '', bio: '', specialty: '', experience: '', studentsCount: '', rating: 0, ratingCount: 0, createdAt: nowIso()
+        isBanned: false, coins: 100, purchasedCourses: [], profileImage: '', coverImage: '', bio: '', specialty: '', 
+        experience: '', studentsCount: '', rating: 0, ratingCount: 0, createdAt: nowIso()
       };
       await usersCol.insertOne(newUser);
       if (role === 'teacher') await requestsCol.insertOne({ username: newUser.username, type: 'teacher', status: 'pending', createdAt: nowIso() });
@@ -61,67 +81,159 @@ module.exports = async (req, res) => {
     }
 
     if (action === 'updateProfile') {
-      const { username, displayName, bio, profileImage, specialty, experience, studentsCount } = body;
-      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, specialty, experience, studentsCount } });
+      const { username, displayName, bio, profileImage, coverImage, specialty, experience, studentsCount } = body;
+      await usersCol.updateOne({ username: username.toLowerCase() }, { $set: { displayName, bio, profileImage, coverImage, specialty, experience, studentsCount } });
       const updatedUser = await usersCol.findOne({ username: username.toLowerCase() });
       const { passwordHash, _id, ...safeUser } = updatedUser;
       return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
     }
 
+    if (action === 'rateTeacher') {
+      const { teacherUsername, rating } = body;
+      const teacher = await usersCol.findOne({ username: teacherUsername });
+      if (!teacher) return send(res, { success: false, error: 'Teacher not found' });
+      const newCount = (teacher.ratingCount || 0) + 1;
+      const newRating = (((teacher.rating || 0) * (teacher.ratingCount || 0)) + rating) / newCount;
+      await usersCol.updateOne({ username: teacherUsername }, { $set: { rating: newRating, ratingCount: newCount } });
+      return send(res, { success: true, rating: newRating, count: newCount });
+    }
+
+    // ---------------- POSTS ----------------
+    if (action === 'createPost') {
+      await postsCol.insertOne({ author: body.username.toLowerCase(), content: body.content, imageUrl: body.imageUrl, likeCount: 0, commentCount: 0, createdAt: nowIso() });
+      return send(res, { success: true });
+    }
+    if (action === 'deletePost') {
+      await postsCol.deleteOne({ _id: toObjectId(body.postId) });
+      return send(res, { success: true });
+    }
+    if (action === 'toggleLike') {
+      const { postId, username } = body;
+      const existing = await likesCol.findOne({ postId, username });
+      if (existing) {
+        await likesCol.deleteOne({ _id: existing._id });
+        await postsCol.updateOne({ _id: toObjectId(postId) }, { $inc: { likeCount: -1 } });
+        return send(res, { success: true, liked: false });
+      } else {
+        await likesCol.insertOne({ postId, username });
+        await postsCol.updateOne({ _id: toObjectId(postId) }, { $inc: { likeCount: 1 } });
+        return send(res, { success: true, liked: true });
+      }
+    }
+
     // ---------------- COURSES ----------------
     if (action === 'createCourse') {
-      const { username, title, description, coverImage, isFree, price, modules } = body;
+      const { username, title, description, lockedDescription, zoomLink, pdfLink, coverImage, isFree, price } = body;
       const teacher = await usersCol.findOne({ username: username.toLowerCase() });
       await coursesCol.insertOne({
         teacherId: teacher.username, teacherName: teacher.displayName, teacherImage: teacher.profileImage,
-        title, description, coverImage, isFree, price: Number(price) || 0, modules: modules || [], createdAt: nowIso()
+        title, description, lockedDescription, zoomLink, pdfLink, coverImage, isFree, price: Number(price) || 0, createdAt: nowIso()
       });
       return send(res, { success: true });
     }
-
-    if (action === 'getAllCourses') {
-      let courses = await coursesCol.find({}).sort({ createdAt: -1 }).toArray();
-      // Auto seed if empty for better user experience
-      if(courses.length === 0) {
-        const seedCourse = {
-          teacherId: 'admin', teacherName: 'System Admin', teacherImage: '',
-          title: 'Japanese Basic 1', description: 'Learn Japanese from scratch.', coverImage: '', isFree: true, price: 0,
-          modules: [
-            { id: 'm1', type: 'theory', title: 'Theory', vocab: [{word: 'こんにちは', romaji: 'konnichiwa', meaning: 'Hello'}, {word: 'さようなら', romaji: 'sayounara', meaning: 'Goodbye'}] },
-            { id: 'm2', type: 'intro', title: 'Introduction', imageUrl: '', text: 'Welcome to Japanese! Let us learn together.' }
-          ],
-          createdAt: nowIso()
-        };
-        await coursesCol.insertOne(seedCourse);
-        courses = [seedCourse];
-      }
+    if (action === 'getTeacherCourses') {
+      const courses = await coursesCol.find({ teacherId: body.teacherId }).sort({ createdAt: -1 }).toArray();
       return send(res, { success: true, courses: normalizeDocs(courses) });
     }
-
-    if (action === 'getCourseDetails') {
-      const course = await coursesCol.findOne({ _id: toObjectId(body.courseId) });
-      if(!course) return send(res, { success: false, error: 'Course not found' });
-      return send(res, { success: true, course: normalizeDoc(course) });
+    if (action === 'buyCourse') {
+      const { username, courseId } = body;
+      const user = await usersCol.findOne({ username: username.toLowerCase() });
+      const course = await coursesCol.findOne({ _id: toObjectId(courseId) });
+      if (user.coins < course.price) return send(res, { success: false, error: 'Coins မလုံလောက်ပါ' });
+      
+      await usersCol.updateOne({ username: user.username }, { $inc: { coins: -course.price }, $push: { purchasedCourses: courseId } });
+      await usersCol.updateOne({ username: course.teacherId }, { $inc: { coins: course.price } });
+      return send(res, { success: true });
     }
 
-    if (action === 'completeLesson') {
-      const { username, lessonId, xpAmount } = body;
-      const user = await usersCol.findOne({ username });
-      if(user.completedLessons && !user.completedLessons.includes(lessonId)) {
-        await usersCol.updateOne({ username }, { $addToSet: { completedLessons: lessonId }, $inc: { xp: (xpAmount || 20) } });
+    // ---------------- CHAT ----------------
+    if (action === 'sendMessage') {
+      const { from, to, text } = body;
+      await chatsCol.insertOne({ from, to, text, createdAt: nowIso() });
+      return send(res, { success: true });
+    }
+    if (action === 'getChatList') {
+      const { username } = body;
+      const msgs = await chatsCol.find({ $or: [{ from: username }, { to: username }] }).sort({ createdAt: -1 }).toArray();
+      const convMap = new Map();
+      for (const m of msgs) {
+        const other = m.from === username ? m.to : m.from;
+        if (!convMap.has(other)) {
+          const u = await usersCol.findOne({ username: other });
+          convMap.set(other, { username: other, displayName: u?.displayName || other, profileImage: u?.profileImage || '', lastMsg: m.text, time: m.createdAt });
+        }
+      }
+      return send(res, { success: true, chats: Array.from(convMap.values()) });
+    }
+    if (action === 'getMessages') {
+      const msgs = await chatsCol.find({ $or: [{ from: body.user1, to: body.user2 }, { from: body.user2, to: body.user1 }] }).sort({ createdAt: 1 }).toArray();
+      return send(res, { success: true, messages: normalizeDocs(msgs) });
+    }
+    if (action === 'deleteMessages') {
+      const { ids } = body;
+      for(const id of ids) {
+        await chatsCol.deleteOne({ _id: toObjectId(id) });
       }
       return send(res, { success: true });
     }
 
-    // ---------------- ADMIN ----------------
+    // ---------------- COINS & PAYMENT ----------------
+    if (action === 'getPackages') {
+      const pkgs = await packagesCol.find({}).toArray();
+      return send(res, { success: true, packages: normalizeDocs(pkgs) });
+    }
+    if (action === 'adminSavePackage') {
+      await packagesCol.insertOne({ name: body.name, coins: Number(body.coins), price: Number(body.price), imageUrl: body.imageUrl });
+      return send(res, { success: true });
+    }
+    if (action === 'submitPurchase') {
+      await purchasesCol.insertOne({ username: body.username, packageId: body.packageId, proofImage: body.proofImage, status: 'pending', createdAt: nowIso() });
+      return send(res, { success: true });
+    }
+    if (action === 'adminGetPurchases') {
+      const list = await purchasesCol.find({ status: 'pending' }).toArray();
+      const detailed = [];
+      for (const p of list) {
+        const pkg = await packagesCol.findOne({ _id: toObjectId(p.packageId) });
+        detailed.push({ ...normalizeDoc(p), packageData: normalizeDoc(pkg) });
+      }
+      return send(res, { success: true, purchases: detailed });
+    }
+    if (action === 'adminApprovePurchase') {
+      const purchase = await purchasesCol.findOne({ _id: toObjectId(body.purchaseId) });
+      const pkg = await packagesCol.findOne({ _id: toObjectId(purchase.packageId) });
+      if (body.approve) {
+        await usersCol.updateOne({ username: purchase.username }, { $inc: { coins: pkg.coins } });
+        await purchasesCol.updateOne({ _id: purchase._id }, { $set: { status: 'approved' } });
+      } else {
+        await purchasesCol.updateOne({ _id: purchase._id }, { $set: { status: 'rejected' } });
+      }
+      return send(res, { success: true });
+    }
+
+    // ---------------- ADMIN & USERS ----------------
+    if (action === 'getTeachers') {
+      const teachers = await usersCol.find({ isApprovedTeacher: true }).project({ passwordHash: 0 }).toArray();
+      return send(res, { success: true, teachers: normalizeDocs(teachers) });
+    }
+    if (action === 'adminGetUsers') {
+      const users = await usersCol.find({}).project({ passwordHash: 0 }).toArray();
+      return send(res, { success: true, users: normalizeDocs(users) });
+    }
+    if (action === 'adminToggleBan') {
+      await usersCol.updateOne({ username: body.username }, { $set: { isBanned: body.isBanned } });
+      return send(res, { success: true });
+    }
+    if (action === 'adminDeleteUser') {
+      await usersCol.deleteOne({ username: body.username });
+      return send(res, { success: true });
+    }
     if (action === 'adminGetRequests') {
       const reqs = await requestsCol.find({ status: 'pending' }).toArray();
       return send(res, { success: true, requests: normalizeDocs(reqs) });
     }
-    
     if (action === 'adminApproveRequest') {
       const req = await requestsCol.findOne({ _id: toObjectId(body.requestId) });
-      if (!req) return send(res, { success: false, error: 'Request not found' });
       if (body.approve) {
         await usersCol.updateOne({ username: req.username }, { $set: { role: 'teacher', isApprovedTeacher: true } });
         await requestsCol.updateOne({ _id: req._id }, { $set: { status: 'approved' } });
@@ -142,14 +254,19 @@ module.exports = async (req, res) => {
     // ---------------- BOOTSTRAP ----------------
     if (action === 'bootstrap') {
       const user = await usersCol.findOne({ username: body.username });
-      if(!user) return send(res, { success: false, error: 'User not found' });
-      const { passwordHash, _id, ...safeUser } = user;
-      return send(res, { success: true, user: { id: _id.toString(), ...safeUser } });
+      const posts = await postsCol.find({}).sort({ createdAt: -1 }).limit(30).toArray();
+      const feed = [];
+      for (const p of posts) {
+        const author = await usersCol.findOne({ username: p.author });
+        const hasLiked = user ? !!(await likesCol.findOne({ postId: p._id.toString(), username: user.username })) : false;
+        feed.push({ ...normalizeDoc(p), authorData: author ? { displayName: author.displayName, profileImage: author.profileImage, role: author.role } : { displayName: p.author }, hasLiked });
+      }
+      const { passwordHash, _id, ...safeUser } = user || {};
+      return send(res, { success: true, user: user ? { id: _id.toString(), ...safeUser } : null, feed });
     }
 
     return send(res, { success: false, error: 'Unknown action' }, 400);
   } catch (err) {
-    console.error(err);
     return send(res, { success: false, error: err.message }, 500);
   }
 };
