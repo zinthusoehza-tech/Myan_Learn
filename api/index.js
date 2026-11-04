@@ -2,13 +2,17 @@ const { ObjectId } = require('mongodb');
 const { getCollection } = require('../lib/db');
 const { hashPassword, verifyPassword, generateToken } = require('../lib/auth');
 
+// Languages the app supports (alphabet + content are filtered per language)
+const LANGS = ['ja', 'ko', 'my'];
+
 // Teachers can create these 4 kinds of content. Only these fields are stored.
 const FIELDS = {
-  unit:   ['title', 'order'],
-  lesson: ['unitId', 'title', 'order', 'vocab', 'notes'],
-  video:  ['title', 'url', 'level'],
-  class:  ['title', 'link', 'when', 'note']
+  unit:   ['title', 'order', 'lang'],
+  lesson: ['unitId', 'title', 'order', 'vocab', 'notes', 'images', 'lang'],
+  video:  ['title', 'url', 'level', 'lang'],
+  class:  ['title', 'link', 'when', 'note', 'lang']
 };
+
 const oid = (id) => { try { return new ObjectId(String(id)); } catch (e) { return null; } };
 const clean = (d) => { if (!d) return null; const { _id, passwordHash, ...r } = d; return { id: _id.toString(), ...r }; };
 const today = () => new Date().toISOString().slice(0, 10);
@@ -47,6 +51,18 @@ module.exports = async (req, res) => {
     const isStaff = !!(active && (me.role === 'teacher' || me.isAdmin));
     const isAdmin = !!(active && me.isAdmin);
 
+    // Promote any username listed in the ADMIN_USERS env var (comma separated).
+    // This fixes "I logged in as admin but see no admin panel":
+    // e.g. ADMIN_USERS=teacher@gmail.com,owner2
+    if (me) {
+      const envAdmins = (process.env.ADMIN_USERS || '')
+        .split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+      if (envAdmins.includes(me.username) && !me.isAdmin) {
+        await users.updateOne({ username: me.username }, { $set: { isAdmin: true, role: 'teacher' } });
+        me.isAdmin = true; me.role = 'teacher';
+      }
+    }
+
     // ---------- AUTH ----------
     if (a === 'register') {
       const u = String(b.username || '').trim().toLowerCase();
@@ -56,8 +72,11 @@ module.exports = async (req, res) => {
       if (await users.findOne({ username: u })) return fail('This username is already taken');
       const first = (await users.countDocuments({})) === 0; // first account = admin teacher
       const doc = {
-        username: u, passwordHash: hashPassword(p), displayName: String(b.displayName || u).trim().slice(0, 40),
-        role: first ? 'teacher' : 'student', isAdmin: first, isBanned: false, exp: 0, createdAt: new Date().toISOString()
+        username: u, passwordHash: hashPassword(p),
+        displayName: String(b.displayName || u).trim().slice(0, 40),
+        role: first ? 'teacher' : 'student', isAdmin: first, isBanned: false,
+        exp: 0, lang: LANGS.includes(b.lang) ? b.lang : 'ja',
+        createdAt: new Date().toISOString()
       };
       await users.insertOne(doc);
       return send({ success: true, user: clean(doc), token: generateToken(u) });
@@ -74,8 +93,10 @@ module.exports = async (req, res) => {
     if (!active) return send({ success: false, error: 'Please log in again', logout: true }, 401);
 
     if (a === 'bootstrap') {
+      const myLang = LANGS.includes(me.lang) ? me.lang : 'ja';
+      const vis = (x) => !x.lang || x.lang === myLang; // legacy docs without lang are visible to all
       const all = (await content.find({}).toArray()).map(clean);
-      const by = (k) => all.filter((x) => x.kind === k)
+      const by = (k) => all.filter((x) => x.kind === k && vis(x))
         .sort((p, q) => (Number(p.order) || 0) - (Number(q.order) || 0) || String(p.createdAt).localeCompare(String(q.createdAt)));
       const mine = await progress.find({ username: me.username }).toArray();
       return send({
@@ -87,7 +108,11 @@ module.exports = async (req, res) => {
     }
 
     if (a === 'updateProfile') {
-      await users.updateOne({ username: me.username }, { $set: { displayName: String(b.displayName || me.username).trim().slice(0, 40) } });
+      const set = {};
+      const dn = String(b.displayName || '').trim();
+      if (dn) set.displayName = dn.slice(0, 40);
+      if (LANGS.includes(b.lang)) set.lang = b.lang;
+      if (Object.keys(set).length) await users.updateOne({ username: me.username }, { $set: set });
       return send({ success: true });
     }
 
@@ -98,11 +123,18 @@ module.exports = async (req, res) => {
       const total = Math.max(1, Math.min(50, Number(b.total) || 1));
       const correct = Math.max(0, Math.min(total, Number(b.correct) || 0));
       const passed = correct >= Math.ceil(total * 0.6);
+
+      // FIX: repeating an already-passed lesson gives NO exp.
+      // The attempt is still saved for statistics.
       const before = await progress.findOne({ username: me.username, lessonId: String(b.lessonId), passed: true });
-      const exp = correct * 5 + (passed && !before ? 10 : 0);
-      await progress.insertOne({ username: me.username, lessonId: String(b.lessonId), correct, total, passed, exp, day: today(), createdAt: new Date().toISOString() });
-      await users.updateOne({ username: me.username }, { $inc: { exp } });
-      return send({ success: true, exp, passed });
+      const exp = passed && !before ? correct * 5 + 10 : 0;
+
+      await progress.insertOne({
+        username: me.username, lessonId: String(b.lessonId), correct, total, passed, exp,
+        day: today(), createdAt: new Date().toISOString()
+      });
+      if (exp) await users.updateOne({ username: me.username }, { $inc: { exp } });
+      return send({ success: true, exp, passed, alreadyPassed: !!before });
     }
 
     // ---------- TEACHER: ADD / EDIT / DELETE CONTENT ----------
@@ -118,6 +150,7 @@ module.exports = async (req, res) => {
       const d = b.data || {};
       const doc = {};
       FIELDS[kind].forEach((f) => { doc[f] = f === 'order' ? Number(d[f]) || 0 : String(d[f] ?? '').slice(0, 20000); });
+      if (!LANGS.includes(doc.lang)) doc.lang = 'ja';
       if (!doc.title.trim()) return fail('Title is required');
       if (d.id) await content.updateOne({ _id: oid(d.id), kind }, { $set: doc });
       else await content.insertOne({ kind, ...doc, author: me.username, createdAt: new Date().toISOString() });
@@ -127,11 +160,31 @@ module.exports = async (req, res) => {
     // ---------- ADMIN: STUDENTS ----------
     if (a.startsWith('admin')) {
       if (!isAdmin) return fail('Admin only');
-      const target = String(b.target || '').toLowerCase();
+
       if (a === 'adminGetUsers') {
         const list = await users.find({}).sort({ createdAt: -1 }).toArray();
         return send({ success: true, users: list.map(clean) });
       }
+
+      if (a === 'adminCreateUser') {
+        const u = String(b.username || '').trim().toLowerCase();
+        const p = String(b.password || '');
+        if (!/^[a-z0-9_.]{3,20}$/.test(u)) return fail('Username must be 3-20 letters/numbers (a-z, 0-9)');
+        if (p.length < 4) return fail('Password must be at least 4 characters');
+        if (await users.findOne({ username: u })) return fail('This username is already taken');
+        const doc = {
+          username: u, passwordHash: hashPassword(p),
+          displayName: String(b.displayName || u).trim().slice(0, 40),
+          role: b.role === 'teacher' ? 'teacher' : 'student',
+          isAdmin: false, isBanned: false, exp: 0,
+          lang: LANGS.includes(b.lang) ? b.lang : 'ja',
+          createdAt: new Date().toISOString()
+        };
+        await users.insertOne(doc);
+        return send({ success: true });
+      }
+
+      const target = String(b.target || '').toLowerCase();
       if (target === me.username) return fail('You cannot change your own account here');
       if (a === 'adminSetRole') await users.updateOne({ username: target }, { $set: { role: b.role === 'teacher' ? 'teacher' : 'student' } });
       else if (a === 'adminToggleBan') await users.updateOne({ username: target }, { $set: { isBanned: !!b.isBanned } });
