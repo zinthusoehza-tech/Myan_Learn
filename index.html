@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#22c55e">
-<link rel="manifest" href="/manifest.json">
 <title>Nihongo Class</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@500;700&family=Padauk:wght@400;700&display=swap');
@@ -20,20 +19,22 @@ button,input,select,textarea{font:inherit;color:inherit}button{border:0;backgrou
 #app{max-width:480px;margin:0 auto;min-height:100dvh;position:relative;padding-bottom:110px}
 .hide{display:none!important}
 .hint{color:var(--mu);font-size:15px;line-height:1.5}
-/* ---------- AUTH ---------- */
+.err{color:var(--red);font-weight:800;font-size:14px;padding:10px 14px;background:var(--pk);border-radius:12px;margin-bottom:12px;display:none}
+.err.on{display:block}
 .auth{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:28px;max-width:480px;margin:0 auto}
 .auth .logo{font-size:80px;text-align:center;filter:drop-shadow(0 10px 20px rgba(34,197,94,.3))}
 .auth h1{text-align:center;font-size:32px;font-weight:900;margin:6px 0 4px}
-.auth p.s{text-align:center;color:var(--mu);margin-bottom:26px;font-weight:700}
-.fg{margin-bottom:14px}.fg label{display:block;font-weight:800;font-size:13px;color:var(--mu);margin-bottom:6px;white-space:pre-line;letter-spacing:.3px}
+.auth p.s{text-align:center;color:var(--mu);margin-bottom:20px;font-weight:700}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-weight:800;font-size:13px;color:var(--mu);margin-bottom:6px;white-space:pre-line;letter-spacing:.3px}
 .fg input,.fg select,.fg textarea{width:100%;padding:15px 17px;border:2px solid var(--ln);border-radius:16px;background:var(--c);font-size:17px;transition:border-color .15s}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--g);outline:none}
 .fg textarea{font-family:'Noto Sans JP',Padauk,Nunito,sans-serif;line-height:1.55;resize:vertical}
 .cta{display:block;width:100%;background:linear-gradient(#2fbf63,#1fa34e);color:#fff;font-weight:900;font-size:19px;padding:16px;border-radius:22px;box-shadow:0 8px 20px rgba(34,197,94,.35);transition:transform .1s}
-.cta:active{transform:scale(.97)}.cta.sec{background:var(--c);color:var(--g);box-shadow:none;border:2px solid var(--ln)}
+.cta:active{transform:scale(.97)}
+.cta.sec{background:var(--c);color:var(--g);box-shadow:none;border:2px solid var(--ln)}
 .cta.red{background:linear-gradient(#f2606a,#e33f4e);box-shadow:0 8px 20px rgba(239,68,68,.25)}
 .sw{text-align:center;margin-top:18px;color:var(--mu);font-weight:700}.sw a{color:var(--g);font-weight:900;cursor:pointer}
-/* ---------- HEADER / NAV ---------- */
 .topbar{position:sticky;top:0;z-index:9;display:flex;align-items:center;gap:8px;padding:14px 16px 10px;background:linear-gradient(var(--bg) 75%,transparent);backdrop-filter:blur(8px)}
 .tlogo{width:38px;height:38px;border-radius:13px;background:linear-gradient(#2fbf63,#1fa34e);display:grid;place-items:center;font-size:21px;box-shadow:0 6px 14px rgba(34,197,94,.35)}
 .tname{flex:1;font-weight:900;font-size:19px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -42,7 +43,6 @@ nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);width:calc(10
 nav button{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:900;color:var(--mu);padding:6px 10px;border-radius:18px;transition:color .15s}nav b{font-size:23px;filter:grayscale(1) opacity(.45)}
 nav button.on{color:var(--g);background:var(--gl)}nav button.on b{filter:none}
 .empty{margin:26px 18px;padding:34px 22px;background:var(--c);border-radius:24px;text-align:center;color:var(--mu);line-height:1.65;font-weight:600;box-shadow:var(--sh)}
-/* ---------- LEARN PATH ---------- */
 .vtop{padding:8px 20px 2px}.vtop h1{font-size:27px;font-weight:900}.vtop p{color:var(--mu);font-weight:700;font-size:14px;margin-top:2px}
 .unit{margin:20px 16px 6px;background:linear-gradient(120deg,var(--gl),transparent);border:2px solid var(--gl);border-radius:20px;padding:15px 18px}
 .unit h2{font-size:21px;font-weight:900}.unit small{color:var(--mu);font-weight:800}
@@ -52,7 +52,6 @@ nav button.on{color:var(--g);background:var(--gl)}nav button.on b{filter:none}
 .nd.lock{color:var(--mu)}.nd.lock .b{background:#e8ebf2;border-color:transparent;box-shadow:none;filter:grayscale(1);opacity:.65}
 .nd.done .b::after{content:"✓";position:absolute;right:-6px;top:-6px;background:var(--gold);color:#fff;width:26px;height:26px;border-radius:50%;font-size:14px;display:grid;place-items:center;font-weight:900;box-shadow:0 3px 8px rgba(245,158,11,.4)}
 .nd:active .b{transform:scale(.93)}
-/* ---------- CARDS ---------- */
 .card{background:var(--c);border-radius:22px;padding:18px;margin:14px 16px;box-shadow:var(--sh)}
 .row{display:flex;align-items:center;gap:12px}.row .grow{flex:1;min-width:0}
 .row h3{font-size:18px;font-weight:900;overflow:hidden;text-overflow:ellipsis}
@@ -69,7 +68,6 @@ nav button.on{color:var(--g);background:var(--gl)}nav button.on b{filter:none}
 .vid .th{height:190px;border-radius:18px;background:#222 center/cover;position:relative;margin-bottom:12px}
 .vid .th::after{content:"▶";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:44px;text-shadow:0 2px 14px #000c}
 .lv{display:inline-block;background:var(--gl);color:var(--g);padding:4px 13px;border-radius:13px;font-weight:900;font-size:13px;margin-top:8px}
-/* ---------- PROFILE ---------- */
 .prof{margin:16px;background:linear-gradient(135deg,#15803d,#22c55e);border-radius:26px;padding:22px;color:#fff;display:flex;gap:16px;align-items:center;box-shadow:0 12px 30px rgba(34,197,94,.35)}
 .av{width:78px;height:78px;border-radius:26px;background:#ffffff33;border:3px solid #ffffff55;display:grid;place-items:center;font-size:42px;flex:none}
 .prof h2{color:#fef9c3;font-size:23px;font-weight:900}.prof p{font-size:15px;font-weight:700;opacity:.95}
@@ -89,7 +87,6 @@ nav button.on{color:var(--g);background:var(--gl)}nav button.on b{filter:none}
 .bdg.off{opacity:.4;filter:grayscale(1)}
 .rv{display:flex;align-items:center;gap:16px}
 .rvnum{font-size:44px;font-weight:900;color:var(--g);min-width:64px;text-align:center;background:var(--gl);border-radius:20px;padding:12px 0}
-/* ---------- SHEETS ---------- */
 .sheet{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;flex-direction:column;max-width:480px;margin:0 auto}
 .sheet.on{display:flex}#sheet2{z-index:40}
 .sh{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--c);border-bottom:2px solid var(--ln)}
@@ -112,7 +109,6 @@ nav button.on{color:var(--g);background:var(--gl)}nav button.on b{filter:none}
 .notes{background:var(--c);border-radius:22px;padding:22px;line-height:1.75;white-space:pre-wrap;font-size:18px;box-shadow:var(--sh);font-weight:600}
 .imgs{display:grid;gap:12px;margin-top:14px}
 .imgs img{width:100%;border-radius:18px;display:block;box-shadow:var(--sh)}
-/* ---------- QUIZ ---------- */
 .qw{text-align:center;padding-top:14px}
 .qw h3{font-size:19px;font-weight:900}
 .qbig{font-size:52px;font-weight:800;margin:22px 0 6px;font-family:'Noto Sans JP',Padauk,sans-serif;line-height:1.2}
@@ -125,7 +121,6 @@ nav button.on{color:var(--g);background:var(--gl)}nav button.on b{filter:none}
 .bigplay:active{transform:scale(.93)}
 .res{text-align:center;padding:56px 10px;font-size:26px;font-weight:900}
 .res div{font-size:84px}.res small{display:block;color:var(--mu);font-size:17px;margin-top:8px;font-weight:700}
-/* ---------- FLASHCARD DECK ---------- */
 .deckwrap{display:grid;place-items:center;padding:16px 0 4px}
 .deck{perspective:1100px;width:100%;max-width:320px;aspect-ratio:3/3.6;cursor:pointer}
 .dcard{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.3,1.1)}
@@ -137,7 +132,6 @@ nav button.on{color:var(--g);background:var(--gl)}nav button.on b{filter:none}
 .face.ba{background:linear-gradient(135deg,#15803d,#22c55e);color:#fff;transform:rotateY(180deg)}
 .face.ba p{font-size:23px;font-weight:900;text-align:center;line-height:1.4}
 .face.ba small{font-weight:800;opacity:.9}
-/* ---------- MISC ---------- */
 .ld{position:fixed;inset:0;background:#0008;z-index:99;display:grid;place-items:center;opacity:0;pointer-events:none}
 .ld.on{opacity:1;pointer-events:auto;transition:opacity .2s .35s}
 .ld i{width:44px;height:44px;border:5px solid #fff5;border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}
@@ -147,11 +141,11 @@ iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:18px;background:#000}
 select{background:var(--c)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
-<base target="_blank">
 </head>
 <body>
 <div id="authv" class="auth hide">
   <div class="logo">🦊</div><h1>Nihongo Class</h1><p class="s">Learn a language, one lesson a day</p>
+  <div class="err" id="autherr"></div>
   <div class="fg hide" id="rn">
     <label>Your name</label><input id="aname" autocomplete="name">
     <label style="margin-top:12px">Language you want to learn</label>
@@ -165,6 +159,9 @@ select{background:var(--c)}
   <div class="fg"><label>Password</label><input id="apass" type="password" autocomplete="current-password"></div>
   <button class="cta" id="abtn">Log in</button>
   <p class="sw" id="asw">New student? <a data-a="authmode">Create account</a></p>
+  <p class="sw" style="margin-top:14px;font-size:13px">
+    <a data-a="servercfg">⚙️ Server: <span id="srvname">default</span></a>
+  </p>
 </div>
 <div id="app" class="hide">
   <header id="hd"></header>
@@ -176,317 +173,489 @@ select{background:var(--c)}
 <div class="ld" id="ld"><i></i></div>
 
 <script>
-const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const S={user:null,units:[],lessons:[],videos:[],classes:[],prog:[],tab:'learn'};
-const LANGS={ja:{n:'Japanese',f:'🇯🇵',tts:'ja-JP'},ko:{n:'Korean',f:'🇰🇷',tts:'ko-KR'},my:{n:'Myanmar',f:'🇲🇲',tts:'my-MM'}};
-const lang=()=>(S.user&&LANGS[S.user.lang])?S.user.lang:'ja';
-const staff=()=>S.user&&(S.user.role==='teacher'||S.user.isAdmin);
-const admin=()=>!!(S.user&&S.user.isAdmin);
-const toast=m=>{document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)};
-let busy=0;
-async function api(action,body={}){
-  busy++;$('ld').classList.add('on');
-  try{const r=await fetch('/api/index.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,action,username:body.username??S.user?.username})});
-    const j=await r.json();if(j.logout)logout();return j}
-  catch(e){return{success:false,error:'No internet connection'}}
-  finally{if(--busy<=0)$('ld').classList.remove('on')}
-}
-const speak=(t,l)=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=l||LANGS[lang()].tts;u.rate=.9;speechSynthesis.speak(u)}catch(e){}};
-const shuffle=a=>[...a].sort(()=>Math.random()-.5);
-const parseVocab=t=>String(t||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const p=l.split(/\s*[|\t]\s*/);return p.length===2?{jp:p[0],ro:'',m:p[1]}:{jp:p[0],ro:p[1]||'',m:p.slice(2).join(' | ')}}).filter(w=>w.jp&&w.m);
-const ytId=u=>(String(u).match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)||[])[1];
-// Convert a Google Drive share link into a direct-viewable image URL
-const driveImg=u=>{const m=String(u).match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?[^"']*?id=)([\w-]{10,})/);return m?`https://lh3.googleusercontent.com/d/${m[1]}=w1200`:u};
-const allVocab=()=>S.lessons.flatMap(l=>parseVocab(l.vocab));
-const doneSet=()=>new Set(S.prog.filter(p=>p.passed).map(p=>p.lessonId));
-const isoDay=d=>new Date(d).toISOString().slice(0,10);
-function streak(){const days=new Set(S.prog.filter(p=>p.passed).map(p=>p.day));let n=0;const d=new Date();if(!days.has(isoDay(d)))d.setDate(d.getDate()-1);while(days.has(isoDay(d))){n++;d.setDate(d.getDate()-1)}return n}
-// weak-word review deck (stored on device per user)
-const wkey=()=>'nk_weak_'+(S.user?S.user.username:'x');
-const getWeak=()=>{try{return JSON.parse(localStorage.getItem(wkey())||'[]')}catch(e){return[]}};
-const saveWeak=a=>localStorage.setItem(wkey(),JSON.stringify(a.slice(0,300)));
-const addWeak=w=>{const a=getWeak();if(!a.some(x=>x.jp===w.jp&&x.m===w.m)){a.push(w);saveWeak(a)}};
-const delWeak=w=>saveWeak(getWeak().filter(x=>!(x.jp===w.jp&&x.m===w.m)));
+/* ============================================================
+   ⚠️ CONFIG — APK အတွက် ဒီနေရာမှာ Server URL ထည့်ပါ
+   ဥပမာ - const API_BASE = 'https://your-app.vercel.app';
+   Web deployment ဖြစ်ရင် ကွက်လပ် ထားခဲ့ပါ။
+============================================================ */
+const API_BASE_FALLBACK = ''; // ← ဒီနေရာမှာ APK အတွက် URL ထည့်ပါ
 
-/* ---------- ALPHABET DATA (per language) ---------- */
-const mk=s=>s.split(',').map(x=>{if(x.trim()==='_')return null;const p=x.trim().split(/\s+/);return[p[0],p.slice(1).join(' ')]});
-const KANA=mk('あ a,い i,う u,え e,お o,か ka,き ki,く ku,け ke,こ ko,さ sa,し shi,す su,せ se,そ so,た ta,ち chi,つ tsu,て te,と to,な na,に ni,ぬ nu,ね ne,の no,は ha,ひ hi,ふ fu,へ he,ほ ho,ま ma,み mi,む mu,め me,も mo,や ya,_,ゆ yu,_,よ yo,ら ra,り ri,る ru,れ re,ろ ro,わ wa,_,_,_,を wo,ん n');
-const KO_C=mk('ㄱ g,ㄲ kk,ㄴ n,ㄷ d,ㄸ tt,ㄹ r,ㅁ m,ㅂ b,ㅃ pp,ㅅ s,ㅆ ss,ㅇ ng,ㅈ j,ㅉ jj,ㅊ ch,ㅋ k,ㅌ t,ㅍ p,ㅎ h');
-const KO_V=mk('ㅏ a,ㅑ ya,ㅓ eo,ㅕ yeo,ㅗ o,ㅛ yo,ㅜ u,ㅠ yu,ㅡ eu,ㅣ i');
-const MY_C=mk('က ka,ခ hka,ဂ ga,ဃ ga,င nga,စ sa,ဆ hsa,ဇ za,ဈ za,ည nya,ဋ ta,ဌ hta,ဍ da,ဎ da,ဏ na,တ ta,ထ hta,ဒ da,ဓ da,န na,ပ pa,ဖ hpa,ဗ ba,ဘ ba,မ ma,ယ ya,ရ ya,လ la,ဝ wa,သ tha,ဟ ha,ဠ la,အ a');
-let ksub='h';
-const scriptTabs=()=>{const l=lang();return l==='ja'?[['h','Hiragana'],['k','Katakana']]:l==='ko'?[['c','Consonants'],['v','Vowels']]:[['c','Alphabet']]};
-const alphaData=()=>{const l=lang();if(l==='ko')return ksub==='v'?KO_V:KO_C;if(l==='my')return MY_C;return KANA};
+const API_BASE = (localStorage.getItem('nk_api_base') || API_BASE_FALLBACK).trim().replace(/\/+$/,'');
+const API_URL = (API_BASE || '') + '/api';
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const S = { user:null, token:null, units:[], lessons:[], videos:[], classes:[], prog:[], tab:'learn' };
+const LANGS = {ja:{n:'Japanese',f:'🇯🇵',tts:'ja-JP'},ko:{n:'Korean',f:'🇰🇷',tts:'ko-KR'},my:{n:'Myanmar',f:'🇲🇲',tts:'my-MM'}};
+const lang = () => (S.user && LANGS[S.user.lang]) ? S.user.lang : 'ja';
+const staff = () => S.user && (S.user.role === 'teacher' || S.user.isAdmin);
+const admin = () => !!(S.user && S.user.isAdmin);
+const toast = m => {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = m;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+};
+
+/* ---------- API CLIENT (token-based) ---------- */
+let busy = 0;
+async function api(action, body = {}) {
+  busy++; $('ld').classList.add('on');
+  const headers = { 'Content-Type': 'application/json' };
+  if (S.token) headers['Authorization'] = 'Bearer ' + S.token;
+  try {
+    const r = await fetch(API_URL, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ ...body, action })
+    });
+    let j;
+    try { j = await r.json(); }
+    catch (e) { return { success:false, error:'Server မှ မှားယွင်းသော response ပြန်သည် (HTTP '+r.status+')' }; }
+    if (j.logout) logout();
+    return j;
+  } catch (e) {
+    return { success:false, error:'Network error — Server URL ကို စစ်ဆေးပါ ('+API_URL+')' };
+  } finally { if (--busy <= 0) $('ld').classList.remove('on'); }
+}
+
+const speak = (t, l) => { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = l || LANGS[lang()].tts; u.rate = .9; speechSynthesis.speak(u); } catch(e){} };
+const shuffle = a => [...a].sort(() => Math.random() - .5);
+const parseVocab = t => String(t || '').split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+  const p = l.split(/\s*[|\t]\s*/);
+  return p.length === 2 ? {jp:p[0], ro:'', m:p[1]} : {jp:p[0], ro:p[1]||'', m:p.slice(2).join(' | ')};
+}).filter(w => w.jp && w.m);
+const ytId = u => (String(u).match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)||[])[1];
+const driveImg = u => { const m = String(u).match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?[^"']*?id=)([\w-]{10,})/); return m ? `https://lh3.googleusercontent.com/d/${m[1]}=w1200` : u; };
+const allVocab = () => S.lessons.flatMap(l => parseVocab(l.vocab));
+const doneSet = () => new Set(S.prog.filter(p => p.passed).map(p => p.lessonId));
+const isoDay = d => new Date(d).toISOString().slice(0,10);
+function streak() {
+  const days = new Set(S.prog.filter(p => p.passed).map(p => p.day));
+  let n = 0; const d = new Date();
+  if (!days.has(isoDay(d))) d.setDate(d.getDate() - 1);
+  while (days.has(isoDay(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+const wkey = () => 'nk_weak_' + (S.user ? S.user.username : 'x');
+const getWeak = () => { try { return JSON.parse(localStorage.getItem(wkey()) || '[]'); } catch(e) { return []; } };
+const saveWeak = a => localStorage.setItem(wkey(), JSON.stringify(a.slice(0, 300)));
+const addWeak = w => { const a = getWeak(); if (!a.some(x => x.jp === w.jp && x.m === w.m)) { a.push(w); saveWeak(a); } };
+const delWeak = w => saveWeak(getWeak().filter(x => !(x.jp === w.jp && x.m === w.m)));
+
+/* ---------- ALPHABET ---------- */
+const mk = s => s.split(',').map(x => { if (x.trim() === '_') return null; const p = x.trim().split(/\s+/); return [p[0], p.slice(1).join(' ')]; });
+const KANA = mk('あ a,い i,う u,え e,お o,か ka,き ki,く ku,け ke,こ ko,さ sa,し shi,す su,せ se,そ so,た ta,ち chi,つ tsu,て te,と to,な na,に ni,ぬ nu,ね ne,の no,は ha,ひ hi,ふ fu,へ he,ほ ho,ま ma,み mi,む mu,め me,も mo,や ya,_,ゆ yu,_,よ yo,ら ra,り ri,る ru,れ re,ろ ro,わ wa,_,_,_,を wo,ん n');
+const KO_C = mk('ㄱ g,ㄲ kk,ㄴ n,ㄷ d,ㄸ tt,ㄹ r,ㅁ m,ㅂ b,ㅃ pp,ㅅ s,ㅆ ss,ㅇ ng,ㅈ j,ㅉ jj,ㅊ ch,ㅋ k,ㅌ t,ㅍ p,ㅎ h');
+const KO_V = mk('ㅏ a,ㅑ ya,ㅓ eo,ㅕ yeo,ㅗ o,ㅛ yo,ㅜ u,ㅠ yu,ㅡ eu,ㅣ i');
+const MY_C = mk('က ka,ခ hka,ဂ ga,ဃ ga,င nga,စ sa,ဆ hsa,ဇ za,ဈ za,ည nya,ဋ ta,ဌ hta,ဍ da,ဎ da,ဏ na,တ ta,ထ hta,ဒ da,ဓ da,န na,ပ pa,ဖ hpa,ဗ ba,ဘ ba,မ ma,ယ ya,ရ ya,လ la,ဝ wa,သ tha,ဟ ha,ဠ la,အ a');
+let ksub = 'h';
+const scriptTabs = () => { const l = lang(); return l === 'ja' ? [['h','Hiragana'],['k','Katakana']] : l === 'ko' ? [['c','Consonants'],['v','Vowels']] : [['c','Alphabet']]; };
+const alphaData = () => { const l = lang(); if (l === 'ko') return ksub === 'v' ? KO_V : KO_C; if (l === 'my') return MY_C; return KANA; };
 
 /* ---------- AUTH ---------- */
-let reg=false;
-function showAuth(){$('authv').classList.remove('hide');$('app').classList.add('hide')}
-function logout(){localStorage.removeItem('nk_user');S.user=null;closeSheet();closeSheet('sheet2');showAuth()}
-async function load(){
-  const r=await api('bootstrap');
-  if(!r.success){if(!r.logout)toast(r.error);return false}
-  Object.assign(S,{user:r.user,units:r.units,lessons:r.lessons,videos:r.videos,classes:r.classes,prog:r.progress});
-  localStorage.setItem('nk_user',S.user.username);
-  $('authv').classList.add('hide');$('app').classList.remove('hide');render();return true;
+let reg = false;
+function showAuth() {
+  $('authv').classList.remove('hide');
+  $('app').classList.add('hide');
+  $('srvname').textContent = API_BASE ? API_BASE : 'default';
+}
+function logout() {
+  localStorage.removeItem('nk_user');
+  localStorage.removeItem('nk_token');
+  S.user = null; S.token = null;
+  closeSheet(); closeSheet('sheet2'); showAuth();
+}
+async function load() {
+  const r = await api('bootstrap');
+  if (!r.success) {
+    if (!r.logout) toast(r.error);
+    if (r.logout) logout();
+    return false;
+  }
+  Object.assign(S, {user:r.user, units:r.units, lessons:r.lessons, videos:r.videos, classes:r.classes, prog:r.progress});
+  localStorage.setItem('nk_user', S.user.username);
+  $('authv').classList.add('hide');
+  $('app').classList.remove('hide');
+  render(); return true;
 }
 
-/* ---------- APP SHELL ---------- */
-const TABS=[['learn','📖','Learn'],['alpha','あ','ABC'],['review','🧠','Review'],['video','▶️','Video'],['me','👤','Me']];
-function render(){
-  if(!S.user)return;
-  $('hd').innerHTML=`<div class="topbar"><span class="tlogo">🦊</span><span class="tname">${esc(S.user.displayName)}</span><span class="chip">🔥 ${streak()}</span><span class="chip">⭐ ${S.user.exp||0}</span></div>`;
-  $('nav').innerHTML=TABS.map(t=>`<button class="${S.tab===t[0]?'on':''}" data-a="tab" data-v="${t[0]}"><b>${t[1]}</b>${t[2]}</button>`).join('');
-  $('view').innerHTML=({learn:vLearn,alpha:vAlpha,review:vReview,class:vClass,video:vVideo,me:vMe})[S.tab]();
-  if(S.tab==='alpha')drawK();
+/* ---------- SHELL ---------- */
+const TABS = [['learn','📖','Learn'],['alpha','あ','ABC'],['review','🧠','Review'],['video','▶️','Video'],['me','👤','Me']];
+function render() {
+  if (!S.user) return;
+  $('hd').innerHTML = `<div class="topbar"><span class="tlogo">🦊</span><span class="tname">${esc(S.user.displayName)}</span><span class="chip">🔥 ${streak()}</span><span class="chip">⭐ ${S.user.exp||0}</span></div>`;
+  $('nav').innerHTML = TABS.map(t => `<button class="${S.tab===t[0]?'on':''}" data-a="tab" data-v="${t[0]}"><b>${t[1]}</b>${t[2]}</button>`).join('');
+  $('view').innerHTML = ({learn:vLearn, alpha:vAlpha, review:vReview, class:vClass, video:vVideo, me:vMe})[S.tab]();
+  if (S.tab === 'alpha') drawK();
 }
-function vtop(t,p){return `<div class="vtop"><h1>${t}</h1><p>${p}</p></div>`}
+function vtop(t, p) { return `<div class="vtop"><h1>${t}</h1><p>${p}</p></div>`; }
 
 /* ---------- LEARN ---------- */
-function vLearn(){
-  const done=doneSet();let prev=true;
-  let h=vtop('Learning',`${LANGS[lang()].f} ${LANGS[lang()].n} course`);
-  if(!S.units.length)return h+`<div class="empty">${staff()?'No lessons yet.<br>Go to <b>Me → Teacher tools</b> and add your first unit and lesson.':'Your teacher has not added lessons yet.<br>Check back soon!'}</div>`;
-  const pos=[50,20,50,80];
-  S.units.forEach(u=>{
-    const ls=S.lessons.filter(l=>l.unitId===u.id),n=ls.filter(l=>done.has(l.id)).length;prev=true;
-    h+=`<div class="unit"><h2>${esc(u.title)}</h2><small>${n}/${ls.length} lessons</small></div><div class="path">`;
-    ls.forEach((l,i)=>{const open=staff()||prev,d=done.has(l.id);prev=d;
-      h+=`<button class="nd ${open?'':'lock'} ${d?'done':''}" style="margin-left:calc(${pos[i%4]}% - 36px)" data-a="open" data-v="${l.id}"><span class="b">${open?'📖':'🔒'}</span>${esc(l.title)}</button>`});
-    h+='</div>';
+function vLearn() {
+  const done = doneSet(); let prev = true;
+  let h = vtop('Learning', `${LANGS[lang()].f} ${LANGS[lang()].n} course`);
+  if (!S.units.length) return h + `<div class="empty">${staff()?'No lessons yet.<br>Go to <b>Me → Teacher tools</b>.':'Your teacher has not added lessons yet.'}</div>`;
+  const pos = [50,20,50,80];
+  S.units.forEach(u => {
+    const ls = S.lessons.filter(l => l.unitId === u.id), n = ls.filter(l => done.has(l.id)).length; prev = true;
+    h += `<div class="unit"><h2>${esc(u.title)}</h2><small>${n}/${ls.length} lessons</small></div><div class="path">`;
+    ls.forEach((l,i) => {
+      const open = staff() || prev, d = done.has(l.id); prev = d;
+      h += `<button class="nd ${open?'':'lock'} ${d?'done':''}" style="margin-left:calc(${pos[i%4]}% - 36px)" data-a="open" data-v="${l.id}"><span class="b">${open?'📖':'🔒'}</span>${esc(l.title)}</button>`;
+    });
+    h += '</div>';
   });
   return h;
 }
 
 /* ---------- ALPHABET ---------- */
-function vAlpha(){
-  const t=scriptTabs();if(!t.some(x=>x[0]===ksub))ksub=t[0][0];
-  return vtop('Alphabet',`${LANGS[lang()].f} ${LANGS[lang()].n} · tap a character to hear it`)+
-  `<div class="tabs">${t.map(x=>`<button class="${ksub===x[0]?'on':''}" data-a="km" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><div class="grid" id="kg"></div>`;
+function vAlpha() {
+  const t = scriptTabs(); if (!t.some(x => x[0] === ksub)) ksub = t[0][0];
+  return vtop('Alphabet', `${LANGS[lang()].f} ${LANGS[lang()].n} · tap a character to hear it`) +
+    `<div class="tabs">${t.map(x => `<button class="${ksub===x[0]?'on':''}" data-a="km" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><div class="grid" id="kg"></div>`;
 }
-function drawK(){
-  const l=lang(),tts=LANGS[l].tts;
-  $('kg').innerHTML=alphaData().map(k=>{
-    if(!k)return'<div class="kc e"></div>';
-    const c=(l==='ja'&&ksub==='k')?String.fromCharCode(k[0].charCodeAt(0)+96):k[0];
-    return`<button class="kc" data-a="say2" data-v="${c}" data-l="${tts}">${c}<small>${k[1]}</small></button>`}).join('');
+function drawK() {
+  const l = lang(), tts = LANGS[l].tts;
+  $('kg').innerHTML = alphaData().map(k => {
+    if (!k) return '<div class="kc e"></div>';
+    const c = (l === 'ja' && ksub === 'k') ? String.fromCharCode(k[0].charCodeAt(0) + 96) : k[0];
+    return `<button class="kc" data-a="say2" data-v="${c}" data-l="${tts}">${c}<small>${k[1]}</small></button>`;
+  }).join('');
 }
 
 /* ---------- REVIEW ---------- */
-function vReview(){
-  const wk=getWeak(),done=doneSet().size;
-  let h=vtop('Review','🧠 smart review with flashcards');
-  h+=`<div class="card rv"><div class="rvnum">${wk.length}</div><div><b>Words in your deck</b><br><small class="hint">During a lesson, tap 🔁 on tricky words to add them here.</small></div></div>`;
-  h+=`<div class="card" style="display:grid;gap:10px">
+function vReview() {
+  const wk = getWeak(), done = doneSet().size;
+  let h = vtop('Review','🧠 smart review with flashcards');
+  h += `<div class="card rv"><div class="rvnum">${wk.length}</div><div><b>Words in your deck</b><br><small class="hint">Tap 🔁 on tricky words during a lesson to add them here.</small></div></div>`;
+  h += `<div class="card" style="display:grid;gap:10px">
     <button class="cta" data-a="deck" ${wk.length?'':'disabled style="opacity:.45"'}>🃏 Flashcard review</button>
-    <button class="cta sec" data-a="quizreview" ${wk.length?'':'disabled style="opacity:.5"'}>⚡ Quick quiz</button></div>`;
-  h+=done?`<div class="card"><b>💡 Tip</b><p class="hint" style="margin-top:6px">5 minutes every day beats one long session once a week. Keep the streak 🔥 alive!</p></div>`
-         :`<div class="empty">Finish a lesson first, then mark tricky words with 🔁 to review them here.</div>`;
+    <button class="cta sec" data-a="quizreview" ${wk.length?'':'disabled style="opacity:.45"'}>⚡ Quick quiz</button></div>`;
+  h += done ? `<div class="card"><b>💡 Tip</b><p class="hint" style="margin-top:6px">5 minutes daily beats one long session. Keep the streak 🔥</p></div>`
+           : `<div class="empty">Finish a lesson first, then tap 🔁 on tricky words to review them here.</div>`;
   return h;
 }
-let deck=[],di=0;
-function startDeck(){deck=shuffle(getWeak());if(!deck.length)return toast('No words in your review deck yet');di=0;drawDeck()}
-function drawDeck(){
-  const w=deck[di];
+let deck = [], di = 0;
+function startDeck() { deck = shuffle(getWeak()); if (!deck.length) return toast('No words in your review deck yet'); di = 0; drawDeck(); }
+function drawDeck() {
+  const w = deck[di];
   sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>Review · ${di+1}/${deck.length}</h2></div><div class="sc">
   <div class="deckwrap"><div class="deck" data-a="flip" id="dk"><div class="dcard"><div class="face fo"><span class="jp">${esc(w.jp)}</span><small>${w.ro?esc(w.ro)+' · ':''}tap to flip</small></div><div class="face ba"><p>${esc(w.m)}</p>${w.ro?`<small>${esc(w.ro)}</small>`:''}</div></div></div></div>
   <div style="text-align:center;margin-top:14px"><button class="sm o" data-a="dsay">🔊 Listen</button></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px"><button class="cta sec" data-a="dknow">✅ I know it</button><button class="cta" data-a="dagain">🔁 Again</button></div></div>`);
 }
-function deckNext(){di++;if(di<deck.length)drawDeck();else{closeSheet();toast('Review complete — nice work! 🎉');render()}}
+function deckNext() { di++; if (di < deck.length) drawDeck(); else { closeSheet(); toast('Review complete — nice work! 🎉'); render(); } }
 
 /* ---------- CLASS & VIDEO ---------- */
-function vClass(){
-  let h=vtop('Live classes','lessons with your teacher');
-  if(!S.classes.length)return h+`<div class="empty">No classes scheduled.${staff()?'<br>Add one in Me → Teacher tools → Classes.':''}</div>`;
-  return h+S.classes.map(c=>`<div class="card"><div class="row"><div class="grow"><h3>${esc(c.title)}</h3><small>${c.when?new Date(c.when).toLocaleString([],{dateStyle:'medium',timeStyle:'short'}):'Time not set'}</small></div>${c.link?`<a class="sm" href="${esc(c.link)}" target="_blank" rel="noopener" style="text-decoration:none">Join</a>`:''}</div>${c.note?`<p class="hint" style="margin-top:10px;white-space:pre-wrap">${esc(c.note)}</p>`:''}</div>`).join('');
+function vClass() {
+  let h = vtop('Live classes','lessons with your teacher');
+  if (!S.classes.length) return h + `<div class="empty">No classes scheduled.${staff()?'<br>Add one in Me → Teacher tools → Classes.':''}</div>`;
+  return h + S.classes.map(c => `<div class="card"><div class="row"><div class="grow"><h3>${esc(c.title)}</h3><small>${c.when?new Date(c.when).toLocaleString([],{dateStyle:'medium',timeStyle:'short'}):'Time not set'}</small></div>${c.link?`<a class="sm" href="${esc(c.link)}" target="_blank" rel="noopener" style="text-decoration:none">Join</a>`:''}</div>${c.note?`<p class="hint" style="margin-top:10px;white-space:pre-wrap">${esc(c.note)}</p>`:''}</div>`).join('');
 }
-let vq='';
-function vVideo(){return vtop('Video','learn with YouTube')+`<input class="search" id="vs" placeholder="Search videos" value="${esc(vq)}" aria-label="Search videos"><div id="vl">${vList()}</div>`}
-function vList(){
-  const l=S.videos.filter(v=>v.title.toLowerCase().includes(vq.toLowerCase()));
-  if(!l.length)return`<div class="empty">${S.videos.length?'No match.':'No videos yet.'}${staff()&&!S.videos.length?'<br>Add YouTube links in Me → Teacher tools.':''}</div>`;
-  return l.map(v=>{const id=ytId(v.url);return`<div class="card vid" data-a="vid" data-v="${v.id}"><div class="th" style="${id?`background-image:url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`:''}"></div><h3 style="font-size:19px;font-weight:900">${esc(v.title)}</h3><span class="lv">${esc(v.level||'Easy')}</span></div>`}).join('');
+let vq = '';
+function vVideo() { return vtop('Video','learn with YouTube') + `<input class="search" id="vs" placeholder="Search videos" value="${esc(vq)}" aria-label="Search videos"><div id="vl">${vList()}</div>`; }
+function vList() {
+  const l = S.videos.filter(v => v.title.toLowerCase().includes(vq.toLowerCase()));
+  if (!l.length) return `<div class="empty">${S.videos.length?'No match.':'No videos yet.'}${staff()&&!S.videos.length?'<br>Add YouTube links in Me → Teacher tools.':''}</div>`;
+  return l.map(v => {
+    const id = ytId(v.url);
+    return `<div class="card vid" data-a="vid" data-v="${v.id}"><div class="th" style="${id?`background-image:url(https://img.youtube.com/vi/${id}/hqdefault.jpg)`:''}"></div><h3 style="font-size:19px;font-weight:900">${esc(v.title)}</h3><span class="lv">${esc(v.level||'Easy')}</span></div>`;
+  }).join('');
 }
 
 /* ---------- ME ---------- */
-function badges(){
-  const d=doneSet().size,e=S.user.exp||0,st=streak();
-  return[
+function badges() {
+  const d = doneSet().size, e = S.user.exp || 0, st = streak();
+  return [
     {i:'🌱',t:'First steps',ok:d>=1},{i:'📚',t:'5 lessons',ok:d>=5},{i:'🏆',t:'10 lessons',ok:d>=10},
     {i:'🔥',t:'7-day streak',ok:st>=7},{i:'💎',t:'500 exp',ok:e>=500},{i:'🎯',t:'Perfect quiz',ok:S.prog.some(p=>p.passed&&p.correct===p.total&&p.total>=5)}
   ];
 }
-function vMe(){
-  const u=S.user,d=doneSet(),tot=S.prog.reduce((a,p)=>a+p.total,0),cor=S.prog.reduce((a,p)=>a+p.correct,0),exp=u.exp||0,lv=Math.floor(exp/100)+1;
-  const days=[...Array(7)].map((_,i)=>{const t=new Date();t.setDate(t.getDate()-6+i);const k=isoDay(t);return{n:t.toLocaleDateString('en',{weekday:'short'}),e:S.prog.filter(p=>p.day===k).reduce((a,p)=>a+p.exp,0)}});
-  const mx=Math.max(50,...days.map(x=>x.e));
+function vMe() {
+  const u = S.user, d = doneSet(), tot = S.prog.reduce((a,p) => a+p.total, 0), cor = S.prog.reduce((a,p) => a+p.correct, 0), exp = u.exp||0, lv = Math.floor(exp/100)+1;
+  const days = [...Array(7)].map((_,i) => { const t = new Date(); t.setDate(t.getDate()-6+i); const k = isoDay(t); return {n:t.toLocaleDateString('en',{weekday:'short'}), e:S.prog.filter(p=>p.day===k).reduce((a,p)=>a+p.exp,0)}; });
+  const mx = Math.max(50, ...days.map(x => x.e));
   return `<div class="prof"><div class="av">🦊</div><div style="min-width:0"><h2>${esc(u.displayName)}</h2><p>@${esc(u.username)} · ${admin()?'👑 Admin':staff()?'Teacher':'Student'}</p><p>Level ${lv} · ${exp} exp</p></div></div>
   <div class="streak"><span class="fl">🔥</span><div><b>${streak()} day${streak()===1?'':'s'} streak</b><br><small>Practice every day to keep it burning</small></div></div>
   <div class="stats"><div><b>${d.size}</b><span>Lessons</span></div><div><b>${tot?Math.round(cor/tot*100):0}%</b><span>Correct</span></div><div><b>${S.prog.length}</b><span>Practices</span></div></div>
   <div class="card"><b>Level ${lv}</b> <span class="hint">— ${100-exp%100} exp to level ${lv+1}</span><div class="lvbar"><b style="width:${exp%100}%"></b></div></div>
-  <div class="wk"><h3>Weekly practice</h3><div class="bars">${days.map(x=>`<div><i><b style="height:${x.e/mx*100}%"></b></i>${x.n}</div>`).join('')}</div></div>
-  <div class="card"><b>Achievements</b><div class="bgrid">${badges().map(b=>`<div class="bdg ${b.ok?'':'off'}"><span>${b.i}</span><small>${b.t}</small></div>`).join('')}</div></div>
-  <div class="card"><b>Learning language</b><div class="row" style="margin-top:10px"><select id="langsel" style="flex:1;padding:12px;border:2px solid var(--ln);border-radius:14px">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}" ${k===lang()?'selected':''}>${v.f} ${v.n}</option>`).join('')}</select><button class="sm" data-a="savelang">Save</button></div></div>
-  ${staff()?`<div class="card"><button class="cta" data-a="tools">🧑‍🏫 ${admin()?'Admin panel':'Teacher tools'}</button></div>`:''}
-  <div class="card" style="display:grid;gap:10px"><button class="cta sec" data-a="rename">Change my name</button><button class="cta sec ${deferred?'':'hide'}" id="inst" data-a="install">Install app</button><button class="cta red" data-a="logout">Log out</button></div>`;
+  <div class="wk"><h3>Weekly practice</h3><div class="bars">${days.map(x => `<div><i><b style="height:${x.e/mx*100}%"></b></i>${x.n}</div>`).join('')}</div></div>
+  <div class="card"><b>Achievements</b><div class="bgrid">${badges().map(b => `<div class="bdg ${b.ok?'':'off'}"><span>${b.i}</span><small>${b.t}</small></div>`).join('')}</div></div>
+  <div class="card"><b>Learning language</b><div class="row" style="margin-top:10px"><select id="langsel" style="flex:1;padding:12px;border:2px solid var(--ln);border-radius:14px">${Object.entries(LANGS).map(([k,v]) => `<option value="${k}" ${k===lang()?'selected':''}>${v.f} ${v.n}</option>`).join('')}</select><button class="sm" data-a="savelang">Save</button></div></div>
+  <div class="card" style="display:grid;gap:10px">
+    <button class="cta sec" data-a="rename">✏️ Change my name</button>
+    <button class="cta sec" data-a="changepw">🔑 Change password</button>
+    ${staff()?`<button class="cta" data-a="tools">🧑‍🏫 ${admin()?'Admin panel':'Teacher tools'}</button>`:''}
+    <button class="cta sec ${deferred?'':'hide'}" id="inst" data-a="install">📲 Install app</button>
+    <button class="cta red" data-a="logout">🚪 Log out</button>
+  </div>`;
 }
 
 /* ---------- LESSON SHEET ---------- */
-let L,words=[],qs=[],qi=0,score=0,lock=0,quizKind='lesson';
-const sheet=(h,id='sheet')=>{$(id).innerHTML=h;$(id).classList.add('on')};
-const closeSheet=(id='sheet')=>$(id).classList.remove('on');
-const ph=p=>`<div class="sh"><button class="x" data-a="close" aria-label="Close">✕</button><div class="pb"><b style="width:${p}%"></b></div></div>`;
-const lessonImgs=l=>String(l.images||'').split('\n').map(x=>x.trim()).filter(Boolean);
-function openLesson(id){
-  const l=S.lessons.find(x=>x.id===id),sib=S.lessons.filter(x=>x.unitId===l.unitId),k=sib.indexOf(l);
-  if(!staff()&&k>0&&!doneSet().has(sib[k-1].id))return toast('Finish the previous lesson first');
-  L=l;words=parseVocab(l.vocab);if(!words.length)return toast('This lesson has no vocabulary yet');step('vocab');
+let L, words = [], qs = [], qi = 0, score = 0, lock = 0, quizKind = 'lesson';
+const sheet = (h, id='sheet') => { $(id).innerHTML = h; $(id).classList.add('on'); };
+const closeSheet = (id='sheet') => $(id).classList.remove('on');
+const ph = p => `<div class="sh"><button class="x" data-a="close" aria-label="Close">✕</button><div class="pb"><b style="width:${p}%"></b></div></div>`;
+const lessonImgs = l => String(l.images||'').split('\n').map(x => x.trim()).filter(Boolean);
+function openLesson(id) {
+  const l = S.lessons.find(x => x.id === id), sib = S.lessons.filter(x => x.unitId === l.unitId), k = sib.indexOf(l);
+  if (!staff() && k > 0 && !doneSet().has(sib[k-1].id)) return toast('Finish the previous lesson first');
+  L = l; words = parseVocab(l.vocab);
+  if (!words.length) return toast('This lesson has no vocabulary yet');
+  step('vocab');
 }
-function step(s){
-  if(s==='vocab')sheet(ph(12)+`<div class="sc"><h3 class="t">👉 ${esc(L.title)}</h3><p class="hint" style="margin-bottom:14px">Tap 🔊 to listen. Mark tricky words with 🔁 to review them later.</p>${words.map((w,i)=>`<div class="vc"><div class="r"><span class="jp">${esc(w.jp)}</span>${w.ro?`<span class="ro">${esc(w.ro)}</span>`:''}<button data-a="say" data-v="${i}" aria-label="Listen">🔊</button></div><p>${esc(w.m)}</p><div class="vact"><button class="tag" data-a="know" data-v="${i}">😊 Got it</button><button class="tag" data-a="rere" data-v="${i}">🔁 Review</button></div></div>`).join('')}</div><button class="cta ft" data-a="${L.notes||lessonImgs(L).length?'notes':'quiz'}">Next</button>`);
-  if(s==='notes'){
-    const im=lessonImgs(L).map(driveImg);
-    sheet(ph(36)+`<div class="sc"><h3 class="t">Grammar & notes</h3>${L.notes?`<div class="notes">${esc(L.notes)}</div>`:''}${im.length?`<div class="imgs">${im.map(u=>`<img src="${esc(u)}" loading="lazy" alt="lesson picture">`).join('')}</div>`:''}</div><button class="cta ft" data-a="quiz">Start practice</button>`);
+function step(s) {
+  if (s === 'vocab') sheet(ph(12) + `<div class="sc"><h3 class="t">👉 ${esc(L.title)}</h3><p class="hint" style="margin-bottom:14px">Tap 🔊 to listen. Tap 🔁 to review tricky words later.</p>${words.map((w,i) => `<div class="vc"><div class="r"><span class="jp">${esc(w.jp)}</span>${w.ro?`<span class="ro">${esc(w.ro)}</span>`:''}<button data-a="say" data-v="${i}" aria-label="Listen">🔊</button></div><p>${esc(w.m)}</p><div class="vact"><button class="tag" data-a="know" data-v="${i}">😊 Got it</button><button class="tag" data-a="rere" data-v="${i}">🔁 Review</button></div></div>`).join('')}</div><button class="cta ft" data-a="${L.notes||lessonImgs(L).length?'notes':'quiz'}">Next</button>`);
+  if (s === 'notes') {
+    const im = lessonImgs(L).map(driveImg);
+    sheet(ph(36) + `<div class="sc"><h3 class="t">Grammar & notes</h3>${L.notes?`<div class="notes">${esc(L.notes)}</div>`:''}${im.length?`<div class="imgs">${im.map(u => `<img src="${esc(u)}" loading="lazy" alt="lesson picture">`).join('')}</div>`:''}</div><button class="cta ft" data-a="quiz">Start practice</button>`);
   }
 }
+
 /* ---------- QUIZ ---------- */
-function startQuiz(kind='lesson'){
-  quizKind=kind;
-  const list=kind==='review'?getWeak():words,pool=allVocab();
-  qs=shuffle(list).slice(0,kind==='review'?8:10).map((w,i)=>{
-    const type=(kind==='lesson'&&w.ro&&i%4===3)?'type':['read','rev','listen'][i%3];
-    const rev=type==='rev',key=rev?'jp':'m',seen=new Set([w[key]]),opts=[w];
-    shuffle(pool).forEach(x=>{if(opts.length<4&&!seen.has(x[key])&&x.jp&&x.m){seen.add(x[key]);opts.push(x)}});
-    return{w,type,rev,opts:shuffle(opts)};
-  }).filter(q=>q.opts.length>=2);
-  if(!qs.length)return toast('Not enough words yet');
-  qi=0;score=0;lock=0;drawQ();
+function startQuiz(kind='lesson') {
+  quizKind = kind;
+  const list = kind === 'review' ? getWeak() : words, pool = allVocab();
+  qs = shuffle(list).slice(0, kind === 'review' ? 8 : 10).map((w,i) => {
+    const type = (kind === 'lesson' && w.ro && i % 4 === 3) ? 'type' : ['read','rev','listen'][i%3];
+    const rev = type === 'rev', key = rev ? 'jp' : 'm', seen = new Set([w[key]]), opts = [w];
+    shuffle(pool).forEach(x => { if (opts.length < 4 && !seen.has(x[key]) && x.jp && x.m) { seen.add(x[key]); opts.push(x); } });
+    return {w, type, rev, opts:shuffle(opts)};
+  }).filter(q => q.opts.length >= 2);
+  if (!qs.length) return toast('Not enough words yet');
+  qi = 0; score = 0; lock = 0; drawQ();
 }
-function drawQ(){
-  const q=qs[qi];let body='';
-  if(q.type==='type'){
-    body=`<div class="qw"><h3>Type the romaji</h3><div class="qbig" style="font-size:32px">${esc(q.w.m)}</div><input id="tans" class="tin" placeholder="type here…" autocomplete="off" autocapitalize="off"><button class="cta" data-a="check" style="margin-top:14px">Check</button><div id="tfb" style="margin-top:14px;font-weight:900;font-size:19px;min-height:26px"></div></div>`;
-  }else{
-    const big=q.rev?esc(q.w.m):esc(q.w.jp);
-    body=`<div class="qw"><h3>${q.rev?'Choose the Japanese':q.type==='listen'?'Listen and choose the meaning':'What does this mean?'}</h3>${q.type==='listen'?`<button class="bigplay" data-a="hear" aria-label="Listen">🔊</button>`:`<div class="qbig">${big}</div>`}${q.type==='listen'?'<div class="qro">tap the speaker to play</div>':''}${!q.rev&&q.w.ro?`<div class="qro">${esc(q.w.ro)}</div>`:''}<div style="margin-top:16px">${q.opts.map((o,i)=>`<button class="opt" data-a="ans" data-v="${i}">${esc(q.rev?o.jp:o.m)}</button>`).join('')}</div></div>`;
+function drawQ() {
+  const q = qs[qi]; let body = '';
+  if (q.type === 'type') {
+    body = `<div class="qw"><h3>Type the romaji</h3><div class="qbig" style="font-size:32px">${esc(q.w.m)}</div><input id="tans" class="tin" placeholder="type here…" autocomplete="off" autocapitalize="off"><button class="cta" data-a="check" style="margin-top:14px">Check</button><div id="tfb" style="margin-top:14px;font-weight:900;font-size:19px;min-height:26px"></div></div>`;
+  } else {
+    const big = q.rev ? esc(q.w.m) : esc(q.w.jp);
+    body = `<div class="qw"><h3>${q.rev?'Choose the Japanese':q.type==='listen'?'Listen and choose the meaning':'What does this mean?'}</h3>${q.type==='listen'?`<button class="bigplay" data-a="hear" aria-label="Listen">🔊</button>`:`<div class="qbig">${big}</div>`}${q.type==='listen'?'<div class="qro">tap the speaker to play</div>':''}${!q.rev&&q.w.ro?`<div class="qro">${esc(q.w.ro)}</div>`:''}<div style="margin-top:16px">${q.opts.map((o,i) => `<button class="opt" data-a="ans" data-v="${i}">${esc(q.rev?o.jp:o.m)}</button>`).join('')}</div></div>`;
   }
-  sheet(ph(30+qi/qs.length*70)+`<div class="sc">${body}</div>`);
-  if(q.type==='listen')setTimeout(()=>speak(q.w.jp),250);
-  if(q.type==='type'){const t=$('tans');setTimeout(()=>t.focus(),300);t.addEventListener('keydown',e=>{if(e.key==='Enter')A.check()})}
+  sheet(ph(30 + qi/qs.length*70) + `<div class="sc">${body}</div>`);
+  if (q.type === 'listen') setTimeout(() => speak(q.w.jp), 250);
+  if (q.type === 'type') { const t = $('tans'); setTimeout(() => t.focus(), 300); t.addEventListener('keydown', e => { if (e.key === 'Enter') A.check(); }); }
 }
-function nextQ(){qi++;lock=0;qi<qs.length?drawQ():finish()}
-async function finish(){
-  if(quizKind==='review'){
+function nextQ() { qi++; lock = 0; qi < qs.length ? drawQ() : finish(); }
+async function finish() {
+  if (quizKind === 'review') {
     sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>Review done</h2></div><div class="sc"><div class="res"><div>${score>=Math.ceil(qs.length/2)?'🎉':'💪'}</div>${score}/${qs.length} correct<small>${getWeak().length} words left in your review deck</small></div></div><button class="cta ft" data-a="close">Done</button>`);
-    render();return;
+    render(); return;
   }
-  const r=await api('complete',{lessonId:L.id,correct:score,total:qs.length});
-  const ok=r.success&&r.passed;
+  const r = await api('complete', {lessonId:L.id, correct:score, total:qs.length});
+  const ok = r.success && r.passed;
   sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>Result</h2></div><div class="sc"><div class="res"><div>${ok?'🎉':'💪'}</div>${score}/${qs.length} correct<small>${r.success?(r.exp?`+${r.exp} exp earned`:'Practice only — lesson already completed 🎯'):esc(r.error)}</small><small>${ok?'Lesson complete!':'Score 60% or more to finish. Try again!'}</small></div></div><button class="cta ft" data-a="${ok?'close':'quiz'}">${ok?'Continue':'Try again'}</button>`);
   load();
 }
 
 /* ---------- TEACHER / ADMIN TOOLS ---------- */
-const FORMS={
+const FORMS = {
   unit:{t:'Unit',c:'units',f:[['title','Unit title (e.g. Basic 1)'],['order','Order (1, 2, 3…)','number'],['lang','Language','langsel']]},
-  lesson:{t:'Lesson',c:'lessons',f:[['unitId','Unit','unit'],['title','Lesson title'],['order','Order (1, 2, 3…)','number'],['lang','Language','langsel'],['vocab','Vocabulary — one word per line:\n日本語 | romaji | meaning\n(you can paste from Excel / Google Sheets)','area'],['notes','Grammar / notes (optional)','area'],['images','Pictures — Google Drive share links, one per line (optional)','area']]},
+  lesson:{t:'Lesson',c:'lessons',f:[['unitId','Unit','unit'],['title','Lesson title'],['order','Order (1, 2, 3…)','number'],['lang','Language','langsel'],['vocab','Vocabulary — one word per line:\n日本語 | romaji | meaning','area'],['notes','Grammar / notes (optional)','area'],['images','Pictures — Google Drive links, one per line (optional)','area']]},
   video:{t:'Video',c:'videos',f:[['title','Title'],['url','YouTube link'],['level','Level','level'],['lang','Language','langsel']]},
   class:{t:'Live class',c:'classes',f:[['title','Title'],['link','Zoom / Meet link'],['when','Date & time','datetime-local'],['note','Note for students','area'],['lang','Language','langsel']]}
 };
-let TT='lesson',editing=null;
-function tools(){
-  const tabs=[['lesson','Lessons'],['unit','Units'],['video','Videos'],['class','Classes'],...(admin()?[['users','Students']]:[])];
-  sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>${admin()?'👑 Admin panel':'🧑‍🏫 Teacher tools'}</h2></div><div class="tabs">${tabs.map(t=>`<button class="${TT===t[0]?'on':''}" data-a="tt" data-v="${t[0]}">${t[1]}</button>`).join('')}</div><div class="sc" id="tl" style="padding-top:8px"></div>`);
-  if(TT==='users')return users();
-  const F=FORMS[TT],items=S[F.c];
-  $('tl').innerHTML=`<button class="cta" data-a="form" data-v="${TT}" style="margin-bottom:8px">＋ Add ${F.t.toLowerCase()}</button>`+(items.length?items.map(i=>{
-    const sub=TT==='lesson'?`${esc((S.units.find(u=>u.id===i.unitId)||{}).title||'No unit')} · ${parseVocab(i.vocab).length} words${i.lang?' · '+i.lang:''}`:TT==='unit'?`${S.lessons.filter(l=>l.unitId===i.id).length} lessons`:TT==='video'?esc(i.level||''):esc(i.when?new Date(i.when).toLocaleString():'');
-    return`<div class="card" style="margin:12px 0"><div class="row"><div class="grow"><h3>${esc(i.title)}</h3><small>${sub}</small></div><button class="sm o" data-a="form" data-v="${TT}" data-id="${i.id}">Edit</button><button class="sm r" data-a="del" data-v="${TT}" data-id="${i.id}">Delete</button></div></div>`}).join(''):`<div class="empty">Nothing here yet.</div>`);
+let TT = 'lesson', editing = null;
+function tools() {
+  const tabs = [['lesson','Lessons'],['unit','Units'],['video','Videos'],['class','Classes'],...(admin()?[['users','Students']]:[])];
+  sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>${admin()?'👑 Admin panel':'🧑‍🏫 Teacher tools'}</h2></div><div class="tabs">${tabs.map(t => `<button class="${TT===t[0]?'on':''}" data-a="tt" data-v="${t[0]}">${t[1]}</button>`).join('')}</div><div class="sc" id="tl" style="padding-top:8px"></div>`);
+  if (TT === 'users') return users();
+  const F = FORMS[TT], items = S[F.c];
+  $('tl').innerHTML = `<button class="cta" data-a="form" data-v="${TT}" style="margin-bottom:8px">＋ Add ${F.t.toLowerCase()}</button>` + (items.length ? items.map(i => {
+    const sub = TT === 'lesson' ? `${esc((S.units.find(u => u.id === i.unitId)||{}).title||'No unit')} · ${parseVocab(i.vocab).length} words${i.lang?' · '+i.lang:''}` : TT === 'unit' ? `${S.lessons.filter(l => l.unitId === i.id).length} lessons` : TT === 'video' ? esc(i.level||'') : esc(i.when?new Date(i.when).toLocaleString():'');
+    return `<div class="card" style="margin:12px 0"><div class="row"><div class="grow"><h3>${esc(i.title)}</h3><small>${sub}</small></div><button class="sm o" data-a="form" data-v="${TT}" data-id="${i.id}">Edit</button><button class="sm r" data-a="del" data-v="${TT}" data-id="${i.id}">Delete</button></div></div>`;
+  }).join('') : `<div class="empty">Nothing here yet.</div>`);
 }
-async function users(){
-  const r=await api('adminGetUsers');if(!r.success)return toast(r.error);
-  $('tl').innerHTML=`<button class="cta" data-a="adduser" style="margin-bottom:8px">＋ Add student account</button>`+r.users.map(u=>`<div class="card" style="margin:12px 0"><div class="row"><div class="grow"><h3>${esc(u.displayName)}</h3><small>@${esc(u.username)} · ${u.isAdmin?'👑 Admin':u.role} · ${u.exp||0} exp${u.isBanned?' · disabled':''}</small></div></div>${u.username===S.user.username?'':`<div class="row" style="margin-top:10px;flex-wrap:wrap;gap:8px"><button class="sm o" data-a="uact" data-v="role" data-u="${u.username}" data-r="${u.role==='teacher'?'student':'teacher'}">Make ${u.role==='teacher'?'student':'teacher'}</button><button class="sm o" data-a="uact" data-v="pw" data-u="${u.username}">Reset password</button><button class="sm o" data-a="uact" data-v="ban" data-u="${u.username}" data-b="${u.isBanned?'':'1'}">${u.isBanned?'Enable':'Disable'}</button><button class="sm r" data-a="uact" data-v="del" data-u="${u.username}">Delete</button></div>`}</div>`).join('');
+async function users() {
+  const r = await api('adminGetUsers');
+  if (!r.success) return toast(r.error);
+  $('tl').innerHTML = `<button class="cta" data-a="adduser" style="margin-bottom:8px">＋ Add student account</button>` + r.users.map(u => `<div class="card" style="margin:12px 0"><div class="row"><div class="grow"><h3>${esc(u.displayName)}</h3><small>@${esc(u.username)} · ${u.isAdmin?'👑 Admin':u.role} · ${u.exp||0} exp${u.isBanned?' · disabled':''}</small></div></div>${u.username===S.user.username?'':`<div class="row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+    <button class="sm o" data-a="uact" data-v="role" data-u="${u.username}" data-r="${u.role==='teacher'?'student':'teacher'}">${u.role==='teacher'?'→ Student':'→ Teacher'}</button>
+    <button class="sm o" data-a="uact" data-v="admin" data-u="${u.username}" data-ad="${u.isAdmin?'':'1'}">${u.isAdmin?'Remove admin':'Make admin'}</button>
+    <button class="sm o" data-a="uact" data-v="pw" data-u="${u.username}">Reset password</button>
+    <button class="sm o" data-a="uact" data-v="ban" data-u="${u.username}" data-b="${u.isBanned?'':'1'}">${u.isBanned?'Enable':'Disable'}</button>
+    <button class="sm r" data-a="uact" data-v="del" data-u="${u.username}">Delete</button></div>`}</div>`).join('');
 }
-function fld([n,l,t],v){v=v??'';let i;
-  if(t==='area')i=`<textarea id="f_${n}" rows="${n==='vocab'?9:3}" placeholder="${n==='vocab'?'こんにちは | konnichiwa | Hello\nさようなら | sayounara | Goodbye':''}">${esc(v)}</textarea>`;
-  else if(t==='unit')i=`<select id="f_${n}">${S.units.map(u=>`<option value="${u.id}" ${u.id===v?'selected':''}>${esc(u.title)}</option>`).join('')}</select>`;
-  else if(t==='level')i=`<select id="f_${n}">${['Easy','Medium','Hard'].map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
-  else if(t==='langsel')i=`<select id="f_${n}">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}" ${k===(v||lang())?'selected':''}>${v.f} ${v.n}</option>`).join('')}</select>`;
-  else i=`<input id="f_${n}" type="${t||'text'}" value="${esc(v)}">`;
-  return`<div class="fg"><label>${l}</label>${i}</div>`}
-function form(kind,id){
-  const F=FORMS[kind];if(kind==='lesson'&&!S.units.length)return toast('Add a unit first');
-  editing=id?S[F.c].find(x=>x.id===id):null;const e={...(editing||{})};
-  if(!id&&kind==='lesson')e.order=S.lessons.length+1;if(!id&&kind==='unit')e.order=S.units.length+1;
-  sheet(`<div class="sh"><button class="x" data-a="close2">✕</button><h2>${id?'Edit':'New'} ${F.t.toLowerCase()}</h2></div><div class="sc">${F.f.map(f=>fld(f,e[f[0]])).join('')}</div><button class="cta ft" data-a="save" data-v="${kind}">Save</button>`,'sheet2');
+function fld([n,l,t], v) {
+  v = v ?? ''; let i;
+  if (t === 'area') i = `<textarea id="f_${n}" rows="${n==='vocab'?9:3}" placeholder="${n==='vocab'?'こんにちは | konnichiwa | Hello\nさようなら | sayounara | Goodbye':''}">${esc(v)}</textarea>`;
+  else if (t === 'unit') i = `<select id="f_${n}">${S.units.map(u => `<option value="${u.id}" ${u.id===v?'selected':''}>${esc(u.title)}</option>`).join('')}</select>`;
+  else if (t === 'level') i = `<select id="f_${n}">${['Easy','Medium','Hard'].map(x => `<option ${x===v?'selected':''}>${x}</option>`).join('')}</select>`;
+  else if (t === 'langsel') i = `<select id="f_${n}">${Object.entries(LANGS).map(([k,v]) => `<option value="${k}" ${k===(v||lang())?'selected':''}>${v.f} ${v.n}</option>`).join('')}</select>`;
+  else i = `<input id="f_${n}" type="${t||'text'}" value="${esc(v)}">`;
+  return `<div class="fg"><label>${l}</label>${i}</div>`;
 }
-async function save(kind){
-  const d={};FORMS[kind].f.forEach(([n])=>d[n]=$('f_'+n).value);if(editing)d.id=editing.id;
-  if(!d.title.trim())return toast('Please enter a title');
-  if(kind==='lesson'&&!parseVocab(d.vocab).length)return toast('Add at least one word: 日本語 | romaji | meaning');
-  if(kind==='video'&&!ytId(d.url))return toast('Paste a valid YouTube link');
-  const r=await api('save',{kind,data:d});if(!r.success)return toast(r.error);
-  closeSheet('sheet2');await load();TT=kind;tools();toast('Saved ✓');
+function form(kind, id) {
+  const F = FORMS[kind];
+  if (kind === 'lesson' && !S.units.length) return toast('Add a unit first');
+  editing = id ? S[F.c].find(x => x.id === id) : null;
+  const e = {...(editing||{})};
+  if (!id && kind === 'lesson') e.order = S.lessons.length + 1;
+  if (!id && kind === 'unit') e.order = S.units.length + 1;
+  sheet(`<div class="sh"><button class="x" data-a="close2">✕</button><h2>${id?'Edit':'New'} ${F.t.toLowerCase()}</h2></div><div class="sc">${F.f.map(f => fld(f, e[f[0]])).join('')}</div><button class="cta ft" data-a="save" data-v="${kind}">Save</button>`, 'sheet2');
 }
-function addUser(){
+async function save(kind) {
+  const d = {};
+  FORMS[kind].f.forEach(([n]) => d[n] = $('f_'+n).value);
+  if (editing) d.id = editing.id;
+  if (!d.title.trim()) return toast('Please enter a title');
+  if (kind === 'lesson' && !parseVocab(d.vocab).length) return toast('Add at least one word: 日本語 | romaji | meaning');
+  if (kind === 'video' && !ytId(d.url)) return toast('Paste a valid YouTube link');
+  const r = await api('save', {kind, data:d});
+  if (!r.success) return toast(r.error);
+  closeSheet('sheet2'); await load(); TT = kind; tools(); toast('Saved ✓');
+}
+function addUser() {
   sheet(`<div class="sh"><button class="x" data-a="close2">✕</button><h2>New student account</h2></div><div class="sc">
   <div class="fg"><label>Username (3-20 letters/numbers)</label><input id="nu_user" autocapitalize="none"></div>
   <div class="fg"><label>Password (min 4 characters)</label><input id="nu_pass"></div>
   <div class="fg"><label>Display name</label><input id="nu_name"></div>
   <div class="fg"><label>Role</label><select id="nu_role"><option value="student">Student</option><option value="teacher">Teacher</option></select></div>
   <div class="fg"><label>Language</label><select id="nu_lang"><option value="ja">🇯🇵 Japanese</option><option value="ko">🇰🇷 Korean</option><option value="my">🇲🇲 Myanmar</option></select></div></div>
-  <button class="cta ft" data-a="saveuser">Create account</button>`,'sheet2');
+  <button class="cta ft" data-a="saveuser">Create account</button>`, 'sheet2');
 }
-async function saveUser(){
-  const r=await api('adminCreateUser',{username:$('nu_user').value.trim(),password:$('nu_pass').value,displayName:$('nu_name').value.trim(),role:$('nu_role').value,lang:$('nu_lang').value});
-  if(!r.success)return toast(r.error);
-  closeSheet('sheet2');toast('Account created ✓');users();
+async function saveUser() {
+  const r = await api('adminCreateUser', {username:$('nu_user').value.trim(), password:$('nu_pass').value, displayName:$('nu_name').value.trim(), role:$('nu_role').value, lang:$('nu_lang').value});
+  if (!r.success) return toast(r.error);
+  closeSheet('sheet2'); toast('Account created ✓'); users();
+}
+function changePwSheet() {
+  sheet(`<div class="sh"><button class="x" data-a="close2">✕</button><h2>Change password</h2></div><div class="sc">
+  <div class="fg"><label>Current password</label><input id="pw_old" type="password"></div>
+  <div class="fg"><label>New password (min 4 characters)</label><input id="pw_new" type="password"></div>
+  <div class="fg"><label>Confirm new password</label><input id="pw_new2" type="password"></div>
+  </div><button class="cta ft" data-a="dopw">Save password</button>`, 'sheet2');
+}
+function serverCfg() {
+  const cur = localStorage.getItem('nk_api_base') || API_BASE_FALLBACK || '';
+  const v = prompt('Server URL (leave empty for same domain):\n\nExample: https://your-app.vercel.app', cur);
+  if (v === null) return;
+  localStorage.setItem('nk_api_base', v.trim());
+  location.reload();
 }
 
 /* ---------- ACTIONS ---------- */
-const A={
-  auth:async()=>{const u=$('auser').value.trim(),p=$('apass').value;if(!u||!p)return toast('Enter username and password');
-    const r=await api(reg?'register':'login',{username:u,password:p,displayName:$('aname').value.trim()||u,lang:$('alang').value});
-    if(!r.success)return toast(r.error);S.user=r.user;await load()},
-  authmode:()=>{reg=!reg;$('rn').classList.toggle('hide',!reg);$('abtn').textContent=reg?'Create account':'Log in';$('asw').innerHTML=reg?'Have an account? <a data-a="authmode">Log in</a>':'New student? <a data-a="authmode">Create account</a>'},
-  tab:v=>{S.tab=v;render();scrollTo(0,0)},km:v=>{ksub=v;render()},
-  say2:(v,el)=>speak(v,el.dataset.l),say:v=>speak(words[v].jp),
-  open:v=>openLesson(v),notes:()=>step('notes'),quiz:()=>startQuiz('lesson'),quizreview:()=>startQuiz('review'),
-  deck:()=>startDeck(),flip:()=>{const d=$('dk');if(d)d.querySelector('.dcard').classList.toggle('flip')},
-  dsay:()=>speak(deck[di].jp),dknow:()=>{delWeak(deck[di]);deckNext()},dagain:()=>{addWeak(deck[di]);deckNext()},
-  know:(v,el)=>{delWeak(words[v]);el.classList.add('on');el.textContent='😊 Got it ✓'},
-  rere:(v,el)=>{addWeak(words[v]);el.classList.add('on');el.textContent='🔁 In review deck ✓'},
-  hear:()=>speak(qs[qi].w.jp),
-  ans:(v,el)=>{if(lock)return;lock=1;const q=qs[qi],ok=q.opts[v]===q.w;if(ok)score++;else addWeak(q.w);
-    el.classList.add(ok?'ok':'no');if(!ok)document.querySelector(`.opt[data-v="${q.opts.indexOf(q.w)}"]`).classList.add('ok');speak(q.w.jp);
-    setTimeout(nextQ,1100)},
-  check:()=>{if(lock)return;const q=qs[qi],t=$('tans'),norm=s=>String(s).toLowerCase().replace(/[\s\-'.\u2019]/g,'');
-    const ok=norm(t.value)&&norm(t.value)===norm(q.w.ro)||norm(t.value)===norm(q.w.jp);
-    $('tfb').style.color=ok?'var(--g)':'var(--red)';$('tfb').innerHTML=ok?'✅ Correct!':`❌ Answer: <b>${esc(q.w.ro||q.w.jp)}</b>`;
-    if(ok)score++;else addWeak(q.w);lock=1;speak(q.w.jp);setTimeout(nextQ,1300)},
-  close:()=>closeSheet(),close2:()=>closeSheet('sheet2'),
-  vid:v=>{const x=S.videos.find(i=>i.id===v),id=ytId(x.url);sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>${esc(x.title)}</h2></div><div class="sc"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0" allow="accelerometer;encrypted-media;picture-in-picture" allowfullscreen></iframe></div>`)},
-  tools:()=>tools(),tt:v=>{TT=v;tools()},form:(v,el)=>form(v,el.dataset.id),save:v=>save(v),
-  adduser:()=>addUser(),saveuser:()=>saveUser(),
-  del:async(v,el)=>{if(!confirm('Delete this '+FORMS[v].t.toLowerCase()+'?'+(v==='unit'?' All its lessons will be deleted too.':'')))return;
-    const r=await api('del',{kind:v,id:el.dataset.id});if(!r.success)return toast(r.error);await load();tools()},
-  uact:async(v,el)=>{const t=el.dataset.u;let r;
-    if(v==='role')r=await api('adminSetRole',{target:t,role:el.dataset.r});
-    if(v==='ban')r=await api('adminToggleBan',{target:t,isBanned:!!el.dataset.b});
-    if(v==='pw'){const p=prompt('New password for @'+t+' (min 4 characters)');if(!p)return;r=await api('adminResetPassword',{target:t,password:p});if(r.success)toast('Password changed')}
-    if(v==='del'){if(!confirm('Delete @'+t+' and all progress?'))return;r=await api('adminDeleteUser',{target:t})}
-    if(!r.success)return toast(r.error);users()},
-  savelang:async()=>{await api('updateProfile',{lang:$('langsel').value});toast('Language updated 🌐');load()},
-  rename:async()=>{const n=prompt('Your name',S.user.displayName);if(!n)return;await api('updateProfile',{displayName:n});load()},
-  install:()=>{if(deferred){deferred.prompt();deferred=null}},logout
+const A = {
+  auth: async () => {
+    $('autherr').classList.remove('on');
+    const u = $('auser').value.trim(), p = $('apass').value;
+    if (!u || !p) { $('autherr').textContent = 'Username နှင့် password ထည့်ပါ'; $('autherr').classList.add('on'); return; }
+    const body = {username:u, password:p};
+    if (reg) { body.displayName = $('aname').value.trim() || u; body.lang = $('alang').value; }
+    const r = await api(reg ? 'register' : 'login', body);
+    if (!r.success) { $('autherr').textContent = r.error; $('autherr').classList.add('on'); return; }
+    S.user = r.user; S.token = r.token;
+    localStorage.setItem('nk_token', r.token);
+    await load();
+  },
+  authmode: () => {
+    reg = !reg;
+    $('rn').classList.toggle('hide', !reg);
+    $('abtn').textContent = reg ? 'Create account' : 'Log in';
+    $('asw').innerHTML = reg ? 'Have an account? <a data-a="authmode">Log in</a>' : 'New student? <a data-a="authmode">Create account</a>';
+    $('autherr').classList.remove('on');
+  },
+  servercfg: () => serverCfg(),
+  tab: v => { S.tab = v; render(); scrollTo(0,0); },
+  km: v => { ksub = v; render(); },
+  say2: (v, el) => speak(v, el.dataset.l),
+  say: v => speak(words[v].jp),
+  open: v => openLesson(v),
+  notes: () => step('notes'),
+  quiz: () => startQuiz('lesson'),
+  quizreview: () => startQuiz('review'),
+  deck: () => startDeck(),
+  flip: () => { const d = $('dk'); if (d) d.querySelector('.dcard').classList.toggle('flip'); },
+  dsay: () => speak(deck[di].jp),
+  dknow: () => { delWeak(deck[di]); deckNext(); },
+  dagain: () => { addWeak(deck[di]); deckNext(); },
+  know: (v, el) => { delWeak(words[v]); el.classList.add('on'); el.textContent = '😊 Got it ✓'; },
+  rere: (v, el) => { addWeak(words[v]); el.classList.add('on'); el.textContent = '🔁 In review deck ✓'; },
+  hear: () => speak(qs[qi].w.jp),
+  ans: (v, el) => {
+    if (lock) return; lock = 1;
+    const q = qs[qi], ok = q.opts[v] === q.w;
+    if (ok) score++; else addWeak(q.w);
+    el.classList.add(ok?'ok':'no');
+    if (!ok) document.querySelector(`.opt[data-v="${q.opts.indexOf(q.w)}"]`).classList.add('ok');
+    speak(q.w.jp);
+    setTimeout(nextQ, 1100);
+  },
+  check: () => {
+    if (lock) return;
+    const q = qs[qi], t = $('tans');
+    const norm = s => String(s).toLowerCase().replace(/[\s\-'.\u2019]/g, '');
+    const ok = norm(t.value) && (norm(t.value) === norm(q.w.ro) || norm(t.value) === norm(q.w.jp));
+    $('tfb').style.color = ok ? 'var(--g)' : 'var(--red)';
+    $('tfb').innerHTML = ok ? '✅ Correct!' : `❌ Answer: <b>${esc(q.w.ro||q.w.jp)}</b>`;
+    if (ok) score++; else addWeak(q.w);
+    lock = 1; speak(q.w.jp);
+    setTimeout(nextQ, 1300);
+  },
+  close: () => closeSheet(),
+  close2: () => closeSheet('sheet2'),
+  vid: v => {
+    const x = S.videos.find(i => i.id === v), id = ytId(x.url);
+    sheet(`<div class="sh"><button class="x" data-a="close">✕</button><h2>${esc(x.title)}</h2></div><div class="sc"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0" allow="accelerometer;encrypted-media;picture-in-picture" allowfullscreen></iframe></div>`);
+  },
+  tools: () => tools(),
+  tt: v => { TT = v; tools(); },
+  form: (v, el) => form(v, el.dataset.id),
+  save: v => save(v),
+  adduser: () => addUser(),
+  saveuser: () => saveUser(),
+  del: async (v, el) => {
+    if (!confirm('Delete this ' + FORMS[v].t.toLowerCase() + '?' + (v==='unit'?' All its lessons will be deleted too.':''))) return;
+    const r = await api('del', {kind:v, id:el.dataset.id});
+    if (!r.success) return toast(r.error);
+    await load(); tools();
+  },
+  uact: async (v, el) => {
+    const t = el.dataset.u; let r;
+    if (v === 'role') r = await api('adminSetRole', {target:t, role:el.dataset.r});
+    if (v === 'admin') r = await api('adminSetAdmin', {target:t, isAdmin:!!el.dataset.ad});
+    if (v === 'ban') r = await api('adminToggleBan', {target:t, isBanned:!!el.dataset.b});
+    if (v === 'pw') { const p = prompt('New password for @'+t+' (min 4 characters)'); if (!p) return; r = await api('adminResetPassword', {target:t, password:p}); if (r.success) toast('Password changed'); }
+    if (v === 'del') { if (!confirm('Delete @'+t+' and all progress?')) return; r = await api('adminDeleteUser', {target:t}); }
+    if (!r.success) return toast(r.error);
+    users();
+  },
+  savelang: async () => { await api('updateProfile', {lang:$('langsel').value}); toast('Language updated 🌐'); load(); },
+  rename: async () => { const n = prompt('Your name', S.user.displayName); if (!n) return; await api('updateProfile', {displayName:n}); load(); },
+  changepw: () => changePwSheet(),
+  dopw: async () => {
+    const o = $('pw_old').value, n = $('pw_new').value, n2 = $('pw_new2').value;
+    if (n !== n2) return toast('New passwords do not match');
+    const r = await api('changePassword', {oldPassword:o, newPassword:n});
+    if (!r.success) return toast(r.error);
+    closeSheet('sheet2'); toast('Password changed ✓');
+  },
+  install: () => { if (deferred) { deferred.prompt(); deferred = null; } },
+  logout
 };
-document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t&&A[t.dataset.a]){e.preventDefault();A[t.dataset.a](t.dataset.v,t)}});
-document.addEventListener('input',e=>{if(e.target.id==='vs'){vq=e.target.value;$('vl').innerHTML=vList()}});
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('authv').classList.contains('hide'))A.auth()});
-let deferred;addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;const b=$('inst');if(b)b.classList.remove('hide')});
-if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-const saved=localStorage.getItem('nk_user');
-if(saved){S.user={username:saved};load().then(ok=>{if(!ok)showAuth()})}else showAuth();
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-a]');
+  if (t && A[t.dataset.a]) { e.preventDefault(); A[t.dataset.a](t.dataset.v, t); }
+});
+document.addEventListener('input', e => { if (e.target.id === 'vs') { vq = e.target.value; $('vl').innerHTML = vList(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && !$('authv').classList.contains('hide')) A.auth(); });
+
+let deferred;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; const b = $('inst'); if (b) b.classList.remove('hide'); });
+if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+
+/* ---------- BOOT ---------- */
+const savedToken = localStorage.getItem('nk_token');
+if (savedToken) {
+  S.token = savedToken;
+  load().then(ok => { if (!ok) { S.token = null; showAuth(); } });
+} else {
+  showAuth();
+}
 </script>
 </body>
 </html>
